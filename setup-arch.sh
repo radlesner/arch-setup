@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Auto Arch Setup Script
-# Version: 1.0
+# Version: 1.0.1
 # Author: Radek Lesner (https://github.com/radlesner)
 #
 # This script is free software: you can redistribute it and/or modify
@@ -112,10 +112,20 @@ install_extra_packages() {
   echo "[i] Enabling CUPS service..."
   systemctl enable cups
 
-  echo "[i] PipeWire services will be activated upon DE login session."
-
-  echo "[i] Installing extra packages completed!"
+  echo "[✓] Installing extra packages completed!"
   clear_cache
+}
+
+install_audio() {
+  echo "[i] Installing audio packages..."
+  pacman -S --noconfirm --needed \
+    pipewire \
+    pipewire-alsa \
+    pipewire-jack \
+    wireplumber
+
+  echo "[i] PipeWire services will be activated upon DE login session."
+  echo "[✓] Installing audio packages completed!"
 }
 
 install_xfce() {
@@ -141,6 +151,8 @@ install_xfce() {
     gnome-keyring \
     seahorse \
     blueman
+
+  install_audio
 
   echo "[✓] XFCE installation completed! System restart required."
   clear_cache
@@ -186,6 +198,8 @@ install_plasma() {
     bluedevil \
     power-profiles-daemon
 
+  install_audio
+
   echo "[i] Enabling sddm..."
   systemctl enable sddm
 
@@ -193,9 +207,35 @@ install_plasma() {
   systemctl enable bluetooth
 
   echo "[✓] KDE Plasma installation completed! System restart required."
+
   clear_cache
   ask_reboot
 }
+
+install_hyperland() {
+  pacman_update
+  install_xorg "wayland"
+
+  echo "[i] Installing Hyperland (Wayland compositor)..."
+  pacman -S --noconfirm --needed \
+    hyprland \
+    hyprpaper \
+    hyprlock \
+    hypridle \
+    foot \
+    wl-clipboard \
+    xdg-desktop-portal-hyprland \
+    xdg-desktop-portal \
+    polkit-kde-agent
+
+  install_audio
+
+  echo "[✓] Hyperland environment installation completed!"
+
+  clear_cache
+  ask_reboot
+}
+
 
 install_xorg() {
   local mode=$1
@@ -257,19 +297,25 @@ case "$1" in
   plasma)
     install_plasma
     ;;
+  hyperland)
+    install_hyperland
+    ;;
   yay-install)
     install_yay
     ;;
   -h|--help)
-    echo "  grub        - install GRUB bootloader (EFI)"
-    echo "  main        - install base packages and enable services"
-    echo "  extra       - install optional packages (audio, printing)"
-    echo "  xfce        - install XFCE desktop environment"
-    echo "  plasma      - install KDE Plasma desktop environment"
-    echo "  yay-instal  - install yay package"
+    echo "        grub        - install GRUB bootloader (EFI)"
+    echo "        main        - install base packages and enable services"
+    echo "        extra       - install optional packages (audio, printing)"
+    echo "        yay-instal  - install yay package"
+    echo ""
+    echo ">>> Dekstop enviroment options:"
+    echo "        xfce        - install XFCE desktop"
+    echo "        plasma      - install KDE Plasma desktop"
+    echo "        hyperland   - install hyperland desktop"
     ;;
   *)
-    echo "Usage: $0 {--help|grub|main|extra|xfce|plasma}"
+    echo "Use --help"
     exit 1
     ;;
 esac
