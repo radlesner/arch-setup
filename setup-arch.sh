@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Auto Arch Setup Script
-# Version: 1.0.1
+# Version: 1.0.2
 # Author: Radek Lesner (https://github.com/radlesner)
 #
 # This script is free software: you can redistribute it and/or modify
@@ -102,10 +102,6 @@ install_extra_packages() {
     base-devel \
     cups \
     cups-filters \
-    pipewire \
-    pipewire-alsa \
-    pipewire-jack \
-    wireplumber \
     gparted \
     firefox
 
@@ -115,6 +111,73 @@ install_extra_packages() {
   echo "[✓] Installing extra packages completed!"
   clear_cache
 }
+
+install_virtualbox() {
+  echo "[i] Checking virtualization support..."
+  if grep -E '(vmx|svm)' /proc/cpuinfo > /dev/null; then
+      echo "[✓] CPU does support virtualization."
+  else
+      echo "[!] CPU does not support virtualization, try enable virtualization in BIOS. Installation aborted."
+      exit 1
+  fi
+
+  if lsmod | grep -q 'kvm'; then
+      echo "[i] KVM modules is active, disabling KVM..."
+
+      if [ ! -f /etc/modprobe.d/disable-kvm.conf ]; then
+        touch /etc/modprobe.d/disable-kvm.conf
+      fi
+
+      echo "blacklist kvm" > /etc/modprobe.d/disable-kvm.conf
+
+      cpu_vendor=$(grep -m 1 'vendor_id' /proc/cpuinfo | awk '{print $3}')
+      if [[ "$cpu_vendor" == "GenuineIntel" ]]; then
+          echo "blacklist kvm_intel" >> /etc/modprobe.d/disable-kvm.conf
+      elif [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
+          echo "blacklist kvm_amd" >> /etc/modprobe.d/disable-kvm.conf
+      else
+          echo "[!] Could not recognize processor manufacturer. Installation Virtualbox aborted"
+          rm -rf /etc/modprobe.d/disable-kvm.conf
+          exit 1
+      fi
+  fi
+
+  echo "[i] Generating initramfs images..."
+  mkinitcpio -P
+
+  echo "[i] Installing VirtualBox package..."
+  echo "[i] Checking latest VirtualBox version..."
+
+  latest_version=$(curl -s https://download.virtualbox.org/virtualbox/LATEST.TXT)
+
+  if [ -z "$latest_version" ]; then
+    echo "[!] Could not fetch latest version info."
+    return 1
+  fi
+
+  echo "[i] Latest VirtualBox version: $latest_version"
+
+  url="https://download.virtualbox.org/virtualbox/${latest_version}/VirtualBox-${latest_version}-Linux_amd64.run"
+
+  echo "[i] Downloading VirtualBox ${latest_version}..."
+  wget "$url" -O /tmp/virtualbox.run
+
+  echo "[i] Making installer executable..."
+  chmod +x /tmp/virtualbox.run
+
+  echo "[i] Installing VirtualBox..."
+  /tmp/virtualbox.run
+
+  echo "[i] Installing VirtualBox linux headers..."
+  pacman -S linux-headers
+
+  echo "[i] Building VirtualBox kernel modules..."
+  '/sbin/vboxconfig'
+
+  echo "[✓] VirtualBox ${latest_version} installed!"
+  ask_reboot
+}
+
 
 install_audio() {
   echo "[i] Installing audio packages..."
@@ -303,11 +366,15 @@ case "$1" in
   yay-install)
     install_yay
     ;;
-  -h|--help)
+  vbox)
+   install_virtualbox
+   ;;
+  --help)
     echo "        grub        - install GRUB bootloader (EFI)"
     echo "        main        - install base packages and enable services"
     echo "        extra       - install optional packages (audio, printing)"
     echo "        yay-instal  - install yay package"
+    echo "        vbox        - install VirtualBox"
     echo ""
     echo ">>> Dekstop enviroment options:"
     echo "        xfce        - install XFCE desktop"
@@ -315,7 +382,7 @@ case "$1" in
     echo "        hyperland   - install hyperland desktop"
     ;;
   *)
-    echo "Use --help"
+    echo "Use: --help options"
     exit 1
     ;;
 esac
