@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Auto Arch Setup Script
-# Version: 1.0.2.1
+# Version: 1.0.3
 # Author: Radek Lesner (https://github.com/radlesner)
 #
 # This script is free software: you can redistribute it and/or modify
@@ -60,6 +60,35 @@ install_grub() {
   fi
 }
 
+setting_postinstall() {
+  echo "[i] Configuring locale..."
+  locale-gen
+  localectl set-locale LANG=en_US.UTF-8
+  echo "KEYMAP=pl" > /etc/vconsole.conf
+  echo "FONT=Lat2-Terminus16" >> /etc/vconsole.conf
+  echo "FONT_MAP=8859-2" >> /etc/vconsole.conf
+  echo "[✓] Locale configuration complete"
+
+  echo "[i] Configure timezone..."
+  ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
+  hwclock --systohc
+  echo "[✓] Timezone configuration complete"
+
+  echo "[i] Configuring hostname..."
+  read -rp "Enter hostname for this system: " HOSTNAME
+  if [[ -z "$HOSTNAME" ]]; then
+    echo "[!] No hostname entered, using default: archlinux"
+    HOSTNAME="archlinux"
+  fi
+  echo "$HOSTNAME" > /etc/hostname
+  echo "[✓] Hostname configuration complete"
+
+  echo "[i] Setting root password..."
+  passwd
+
+  ask_reboot
+}
+
 install_base_packages() {
   pacman_update
   echo "[i] Installing essential packages..."
@@ -75,22 +104,10 @@ install_base_packages() {
     which \
     wget
 
-  if [ ! -f /etc/vconsole.conf ]; then
-    touch /etc/vconsole.conf
-  fi
-
-  echo "[i] Setting locale..."
-  localectl set-locale LANG=en_US.UTF-8
-  echo "KEYMAP=pl" > /etc/vconsole.conf
-
   echo "[i] Enabling NetworkManager..."
   systemctl enable NetworkManager
 
-  echo "[i] Enabling Bluetooth..."
-  systemctl enable bluetooth
-
-  echo "[i] Cleaning package cache..."
-  pacman -Sc --noconfirm
+  clear_cache
 
   echo "[✓] Base setup completed!"
 }
