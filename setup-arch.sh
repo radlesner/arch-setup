@@ -363,6 +363,9 @@ clear_cache() {
 # -------------------------------------------------------- MAIN --------------------------------------------------------
 
 case "$1" in
+  postinstall)
+    setting_postinstall
+    ;;
   grub)
     install_grub
     ;;
@@ -388,6 +391,7 @@ case "$1" in
    install_virtualbox
    ;;
   --help)
+    echo "        postinstall - configure postinstall system"
     echo "        grub        - install GRUB bootloader (EFI)"
     echo "        main        - install base packages and enable services"
     echo "        extra       - install optional packages (audio, printing)"
