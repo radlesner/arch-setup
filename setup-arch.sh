@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Auto Arch Setup Script
-# Version: 1.0.3
+# Version: 1.0.3.1
 # Author: Radek Lesner (https://github.com/radlesner)
 #
 # This script is free software: you can redistribute it and/or modify
@@ -94,6 +94,7 @@ install_base_packages() {
   echo "[i] Installing essential packages..."
   pacman -S --noconfirm --needed \
     sudo \
+    btrfs-progs \
     networkmanager \
     openssh \
     nano \
@@ -307,7 +308,14 @@ install_hyperland() {
     wl-clipboard \
     xdg-desktop-portal-hyprland \
     xdg-desktop-portal \
-    polkit-kde-agent
+    polkit-kde-agent \
+    greetd greetd-tuigreet
+
+  cat <<EOF > /etc/greetd/config.toml
+[default_session]
+command = "tuigreet --cmd Hyprland"
+user = "greeter"
+EOF
 
   install_audio
 
