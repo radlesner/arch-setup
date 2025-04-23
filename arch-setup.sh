@@ -294,30 +294,36 @@ install_plasma() {
   ask_reboot
 }
 
-install_hyperland() {
+install_hyprland() {
   pacman_update
+  install_audio
   install_xorg "wayland"
 
   echo "[i] Installing Hyperland (Wayland compositor)..."
-  pacman -S --noconfirm --needed \
+  pacman -S --noconfirm --needed\
     hyprland \
     hyprpaper \
     hyprlock \
     hypridle \
-    foot \
+    swaylock \
     wl-clipboard \
     xdg-desktop-portal-hyprland \
     xdg-desktop-portal \
+    xdg-utils \
     polkit-kde-agent \
-    greetd greetd-tuigreet
+    greetd greetd-tuigreet \
+    waybar \
+    rofi \
+    kitty \
+    thunar \
+    network-manager-applet \
+    bluez \
+    bluez-utils \
+    blueman \
+    pavucontrol
 
-  cat <<EOF > /etc/greetd/config.toml
-[default_session]
-command = "tuigreet --cmd Hyprland"
-user = "greeter"
-EOF
-
-  install_audio
+  echo "[i] Enabling bluetooth..."
+  systemctl enable bluetooth
 
   echo "[✓] Hyperland environment installation completed!"
 
@@ -336,7 +342,10 @@ case "$mode" in
     pacman -S --noconfirm --needed xorg xorg-xinit
     ;;
   wayland)
-    pacman -S --noconfirm --needed xorg xorg-xinit xorg-xwayland
+    pacman -S --noconfirm --needed \
+      wayland \
+      wayland-protocols \
+      xorg-xwayland
     ;;
   *)
     echo "[!] Unknown mode: $mode. Use 'x11' or 'wayland'."
@@ -389,8 +398,8 @@ case "$1" in
   plasma)
     install_plasma
     ;;
-  hyperland)
-    install_hyperland
+  hyprland)
+    install_hyprland
     ;;
   yay-install)
     install_yay
@@ -409,7 +418,7 @@ case "$1" in
     echo ">>> Dekstop enviroment options:"
     echo "        xfce        - install XFCE desktop"
     echo "        plasma      - install KDE Plasma desktop"
-    echo "        hyperland   - install hyperland desktop"
+    echo "        hyprland    - install hyprland desktop"
     ;;
   *)
     echo "Use: --help options"
