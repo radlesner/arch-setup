@@ -165,15 +165,17 @@ install_virtualbox() {
           echo "blacklist kvm_intel" >> /etc/modprobe.d/disable-kvm.conf
       elif [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
           echo "blacklist kvm_amd" >> /etc/modprobe.d/disable-kvm.conf
-
-          echo "[i] Generating initramfs images..."
-          mkinitcpio -P
       else
           echo "[!] Could not recognize processor manufacturer. Installation Virtualbox aborted"
           rm -rf /etc/modprobe.d/disable-kvm.conf
           exit 1
       fi
+      echo "[i] Generating initramfs images..."
+      mkinitcpio -P
   fi
+
+  echo "[i] Installing linux-headers, otherwise skipping..."
+  pacman -S --noconfirm --needed linux-headers
 
   echo "[i] Installing VirtualBox package..."
   echo "[i] Checking latest VirtualBox version..."
@@ -187,7 +189,7 @@ install_virtualbox() {
 
   echo "[i] Latest VirtualBox version: $latest_version"
 
-  url="https://download.virtualbox.org/virtualbox/${latest_version}/VirtualBox-${latest_version}-Linux_amd64.run"
+  url="https://download.virtualbox.org/virtualbox/${latest_version}/VirtualBox-${latest_version}-168469-Linux_amd64.run"
 
   echo "[i] Downloading VirtualBox ${latest_version}..."
   wget "$url" -O /tmp/virtualbox.run
@@ -197,11 +199,6 @@ install_virtualbox() {
 
   echo "[i] Installing VirtualBox..."
   /tmp/virtualbox.run
-
-  if ! pacman -Qs linux-headers > /dev/null; then
-      echo "[!] linux-headers are not installed, installing them now."
-      pacman -S linux-headers
-  fi
 
   echo "[i] Building VirtualBox kernel modules..."
   '/sbin/vboxconfig'
@@ -268,8 +265,9 @@ install_plasma() {
     plasma-desktop \
     konsole \
     dolphin \
-    kate \
+    mousepad \
     systemsettings \
+    kinfocenter \
     kscreen \
     kde-cli-tools \
     kio \
