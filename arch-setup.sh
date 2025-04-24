@@ -19,16 +19,20 @@
 
 set -e
 
-if [ "$(id -u)" -ne 0 ]; then
-  echo "[!] This script must be run as root."
-  exit 1
-fi
+root_check() {
+  if [ "$(id -u)" -ne 0 ]; then
+    echo "[!] This script option must be run as root."
+    exit 1
+  fi
+}
 
 pacman_update() {
   pacman -Syu --noconfirm
 }
 
 install_grub() {
+  root_check
+
   if ! mount | grep -q '/boot type vfat'; then
     echo "[!] /boot is not mounted or is not a vfat EFI partition!"
     exit 1
@@ -61,6 +65,8 @@ install_grub() {
 }
 
 setting_postinstall() {
+  root_check
+
   echo "[i] Configuring locale..."
   locale-gen
   localectl set-locale LANG=en_US.UTF-8
@@ -90,6 +96,8 @@ setting_postinstall() {
 }
 
 install_base_packages() {
+  root_check
+
   pacman_update
   echo "[i] Installing essential packages..."
   pacman -S --noconfirm --needed \
@@ -114,6 +122,8 @@ install_base_packages() {
 }
 
 install_extra_packages() {
+  root_check
+
   pacman_update
   echo "[i] Installing extra packages..."
   pacman -S --noconfirm --needed \
@@ -131,6 +141,8 @@ install_extra_packages() {
 }
 
 install_virtualbox() {
+  root_check
+
   echo "[i] Checking virtualization support..."
   if grep -E '(vmx|svm)' /proc/cpuinfo > /dev/null; then
       echo "[✓] CPU does support virtualization."
@@ -199,6 +211,8 @@ install_virtualbox() {
 }
 
 install_audio() {
+  root_check
+
   echo "[i] Installing audio packages..."
   pacman -S --noconfirm --needed \
     pipewire \
@@ -211,7 +225,10 @@ install_audio() {
 }
 
 install_xfce() {
+  root_check
+
   pacman_update
+  install_audio
   install_xorg "x11"
 
   echo "[i] Installing XFCE desktop environment..."
@@ -234,25 +251,26 @@ install_xfce() {
     seahorse \
     blueman
 
-  install_audio
-
   echo "[✓] XFCE installation completed! System restart required."
   clear_cache
   ask_reboot
 }
 
 install_plasma() {
+  root_check
+
   pacman_update
+  install_audio
   install_xorg "wayland"
 
   echo "[i] Installing KDE Plasma desktop environment..."
   pacman -S --noconfirm --needed \
     plasma-desktop \
-    plasma-systemmonitor \
     konsole \
     dolphin \
     kate \
     systemsettings \
+    kscreen \
     kde-cli-tools \
     kio \
     kio-extras \
@@ -280,8 +298,6 @@ install_plasma() {
     bluedevil \
     power-profiles-daemon
 
-  install_audio
-
   echo "[i] Enabling sddm..."
   systemctl enable sddm
 
@@ -295,6 +311,8 @@ install_plasma() {
 }
 
 install_hyprland() {
+  root_check
+
   pacman_update
   install_audio
   install_xorg "wayland"
@@ -333,6 +351,8 @@ install_hyprland() {
 
 
 install_xorg() {
+  root_check
+
   local mode=$1
 
   echo "[i] Installing X server packages for '$mode'..."
@@ -359,7 +379,7 @@ esac
 install_yay() {
   if ! command -v yay &>/dev/null; then
     echo "[i] Installing yay AUR helper..."
-    pacman -S --noconfirm --needed git base-devel
+    sudo pacman -S --noconfirm --needed git base-devel
     git clone https://aur.archlinux.org/yay.git /tmp/yay
     (cd /tmp/yay && makepkg -si --noconfirm)
   else
@@ -374,7 +394,7 @@ ask_reboot() {
 
 clear_cache() {
   echo "[i] Clearing cache..."
-  pacman -Sc --noconfirm
+  pacman -Sc
 }
 
 # -------------------------------------------------------- MAIN --------------------------------------------------------
