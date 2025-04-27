@@ -211,8 +211,9 @@ install_audio() {
   root_check
 
   echo "[i] Installing audio packages..."
-  pacman -S --noconfirm --needed \
+  pacman -S --noconfirm \
     pipewire \
+    pipewire-pulse \
     pipewire-alsa \
     pipewire-jack \
     wireplumber
@@ -278,6 +279,9 @@ install_plasma() {
     plasma-workspace \
     plasma-pa \
     plasma-nm \
+    gtk-engine-murrine \
+    gtk2 \
+    gtk3 \
     powerdevil \
     xdg-desktop-portal-kde \
     ffmpegthumbs \
@@ -318,10 +322,9 @@ install_hyprland() {
   echo "[i] Installing Hyperland (Wayland compositor)..."
   pacman -S --noconfirm --needed\
     hyprland \
-    hyprpaper \
-    hyprlock \
     hypridle \
-    swaylock \
+    hyprlock \
+    swaybg \
     wl-clipboard \
     xdg-desktop-portal-hyprland \
     xdg-desktop-portal \
@@ -329,14 +332,25 @@ install_hyprland() {
     polkit-kde-agent \
     greetd greetd-tuigreet \
     waybar \
-    rofi \
+    ttf-font-awesome \
+    ttf-nerd-fonts-symbols \
+    brightnessctl \
+    wofi \
     kitty \
     thunar \
+    gvfs \
+    gvfs-smb \
+    thunar-archive-plugin zip unzip unrar p7zip xarchiver\
+    gnome-keyring \
     network-manager-applet \
     bluez \
     bluez-utils \
     blueman \
-    pavucontrol
+    pavucontrol \
+    ly
+
+  echo "[i] Enabling ly login manager..."
+  systemctl enable ly.service
 
   echo "[i] Enabling bluetooth..."
   systemctl enable bluetooth
