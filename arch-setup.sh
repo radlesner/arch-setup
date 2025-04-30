@@ -347,6 +347,9 @@ install_hyprland() {
     bluez-utils \
     blueman \
     pavucontrol \
+    grim \
+    slurp \
+    mako \
     ly
 
   echo "[i] Enabling ly login manager..."
