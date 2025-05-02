@@ -324,7 +324,7 @@ install_hyprland() {
     hyprland \
     hypridle \
     hyprlock \
-    swaybg \
+    hyprpaper \
     wl-clipboard \
     xdg-desktop-portal-hyprland \
     xdg-desktop-portal \
