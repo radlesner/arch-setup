@@ -367,6 +367,21 @@ install_hyprland() {
   echo "[✓] Hyperland environment installation completed!"
 
   clear_cache
+
+  read -p "[?] Do you want to copy hyprland config to .config? [Y/n]: " confirm
+  confirm=${confirm,,}
+  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako")
+
+    for cfg in "${COPY_FOLDERS[@]}"; do
+        SRC="./hyprland-config/$cfg"
+        if [ -d "$SRC" ]; then
+            echo "[i] Copying $cfg config..."
+            cp -rf "$SRC" "$HOME/.config"
+        fi
+    done
+  fi
+
   ask_reboot
 }
 
