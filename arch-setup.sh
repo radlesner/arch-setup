@@ -89,6 +89,13 @@ setting_postinstall() {
   echo "$HOSTNAME" > /etc/hostname
   echo "[✓] Hostname configuration complete"
 
+  echo "[i] Configuring pacman..."
+  sed -i 's/^#Color/Color/' /etc/pacman.conf
+  sed -i 's/^#CheckSpace/CheckSpace/' /etc/pacman.conf
+  sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf
+  sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
+  sed -i 's/^#DownloadUser = alpm/DownloadUser = alpm/' /etc/pacman.conf
+
   echo "[i] Setting root password..."
   passwd
 
