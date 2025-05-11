@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Auto Arch Setup Script
-# Version: 1.0.3.1
+# Version: 1.0.4
 # Author: Radek Lesner (https://github.com/radlesner)
 #
 # This script is free software: you can redistribute it and/or modify
@@ -139,6 +139,9 @@ install_base_packages() {
 
   echo "[i] Enabling NetworkManager..."
   systemctl enable NetworkManager
+
+  echo "[i] Configuring the /etc/sudoers file for the wheel group..."
+  sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/pacman.conf
 
   clear_cache
 
