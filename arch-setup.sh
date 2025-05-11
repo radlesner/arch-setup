@@ -99,6 +99,23 @@ setting_postinstall() {
   echo "[i] Setting root password..."
   passwd
 
+  read -p "[?] Do you want create the new user? [Y/n]" confirm
+  confirm=${confirm,,}
+  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+    read -p "[?] Enter username for the new user: " username
+    if id "$username" &>/dev/null; then
+      echo "[i] User $username already exists."
+    else
+      echo "[i] Creating new user $username..."
+      mkdir -p /home/$username
+      useradd -M -d /home/$username/ -s /usr/bin/bash $username
+      chown -R $username:$username /home/$username
+
+      echo "[i] Configuring new user $username..."
+      usermod -aG wheel,uucp $username
+    fi
+  fi
+
   ask_reboot
 }
 
