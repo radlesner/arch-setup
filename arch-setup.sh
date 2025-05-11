@@ -130,7 +130,6 @@ install_extra_packages() {
     base-devel \
     cups \
     cups-filters \
-    gparted \
     firefox
 
   echo "[i] Enabling CUPS service..."
@@ -323,8 +322,8 @@ install_hyprland() {
   pacman -S --noconfirm --needed\
     hyprland \
     hypridle \
-    hyprlock \
     hyprpaper \
+    swaylock \
     wl-clipboard \
     xdg-desktop-portal-hyprland \
     xdg-desktop-portal \
