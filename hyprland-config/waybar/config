@@ -6,7 +6,7 @@
     "margin-right": 20,
     "margin-bottom": 0,
     "height": 30,
-    "spacing": 4,
+    "spacing": 0,
     "modules-left": [
         "hyprland/workspaces",
         "custom/media"
@@ -29,6 +29,7 @@
         "battery",
         // "battery#bat0",
         // "battery#bat1",
+        "custom/logout",
         "custom/reboot",
         "custom/power"
     ],
@@ -234,7 +235,6 @@
     },
     "custom/media": {
         "format": "{icon} {text}",
-        // "format": "{icon}",
         "return-type": "json",
         "max-length": 40,
         "format-icons": {
@@ -246,8 +246,7 @@
         "on-click": "playerctl play-pause",
         "on-scroll-up": "playerctl next",
         "on-scroll-down": "playerctl previous",
-        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null"
     },
     "custom/power": {
         "format": "",
@@ -256,9 +255,15 @@
         "interval": 0
     },
     "custom/reboot": {
-        "format": "🔄",
+        "format": "",
         "tooltip": false,
         "on-click": "reboot",
+        "interval": 0
+    },
+    "custom/logout": {
+        "format": "󰗽",
+        "tooltip": false,
+        "on-click": "hyprctl dispatch exit",
         "interval": 0
     }
 }

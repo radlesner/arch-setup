@@ -27,13 +27,39 @@
 #power-profiles-daemon,
 #mpd,
 #custom-power,
-#custom-reboot {
+#custom-reboot,
+#custom-logout {
     margin-top: 4px;
     margin-bottom: 4px;
+    margin-right: 4px;
     padding: 0 10px;
     color: #ffffff;
     transition: all 0.5s ease;
     border-radius: 10px;
+}
+
+#backlight,
+#temperature,
+#disk,
+#cpu,
+#memory,
+#battery {
+    padding: 0 5px;
+    margin-right: 0px;
+    border-radius: 0;
+}
+
+#cpu {
+    padding-left: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+#battery {
+    padding-right: 10px;
+    margin-right: 4px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 window#waybar.hidden {
@@ -64,7 +90,6 @@ window#waybar.chromium {
 #network,
 #pulseaudio {
     background: rgba(255, 255, 255, 0.2);
-    padding: 0 10px;
     font-size: 14px;
 }
 
@@ -101,7 +126,6 @@ window#waybar.chromium {
 }
 
 #workspaces button.active {
-    /* background: rgb(88, 64, 145); */
     background: #1780d3;
 }
 
@@ -110,8 +134,18 @@ window#waybar.chromium {
     box-shadow: inset 0 -3px #ffffff;
 }
 
+@keyframes blUrgent {
+    to {
+        background-color: #ff5454;
+    }
+}
+
 #workspaces button.urgent {
-    background-color: #ff5454;
+    animation-name: blUrgent;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 /* ------------------------------------------------------- TIME & DATE */
@@ -169,7 +203,7 @@ window#waybar.chromium {
 
 @keyframes blink {
     to {
-        background-color: #ff5454;
+        color: #ff5454;
     }
 }
 
@@ -218,7 +252,7 @@ label:focus {
 
 /* ------------------------------------------------------- CPU */
 #temperature.critical {
-    background-color: #ff5454;
+    color: #ff5454;
 }
 
 /* ------------------------------------------------------- TRAY MODULE */
@@ -322,6 +356,7 @@ label:focus {
 #custom-power {
     background: rgb(194, 55, 0);
     margin-right: 4px;
+    font-size: 16;
 }
 
 #custom-power:hover {
@@ -330,8 +365,18 @@ label:focus {
 
 #custom-reboot {
     background: rgb(32, 158, 0);
+    font-size: 16;
 }
 
 #custom-reboot:hover {
     background: rgba(32, 158, 0, 0.5);
+}
+
+#custom-logout {
+    background: rgb(172, 129, 0);
+    font-size: 16;
+}
+
+#custom-logout:hover {
+    background: rgba(172, 129, 0, 0.5);
 }
