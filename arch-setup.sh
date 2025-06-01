@@ -391,18 +391,23 @@ install_hyprland() {
   read -p "[?] Do you want to copy hyprland config to .config? [Y/n]: " confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako")
-
-    for cfg in "${COPY_FOLDERS[@]}"; do
-        SRC="./hyprland-config/$cfg"
-        if [ -d "$SRC" ]; then
-            echo "[i] Copying $cfg config..."
-            cp -rf "$SRC" "$HOME/.config"
-        fi
-    done
+    hypr-copy-config
   fi
 
   ask_reboot
+}
+
+hypr-copy-config () {
+  COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako")
+
+  for cfg in "${COPY_FOLDERS[@]}"; do
+      SRC="./hyprland-config/$cfg"
+
+      if [ -d "$SRC" ]; then
+          echo "[i] Copying $cfg config..."
+          cp -rf "$SRC" "$HOME/.config"
+      fi
+  done
 }
 
 
@@ -477,6 +482,9 @@ case "$1" in
   hyprland)
     install_hyprland
     ;;
+  hypr-copy-config)
+    hypr-copy-config
+    ;;
   yay-install)
     install_yay
     ;;
@@ -484,17 +492,18 @@ case "$1" in
    install_virtualbox
    ;;
   --help)
-    echo "        postinstall - configure postinstall system"
-    echo "        grub        - install GRUB bootloader (EFI)"
-    echo "        main        - install base packages and enable services"
-    echo "        extra       - install optional packages (audio, printing)"
-    echo "        yay-instal  - install yay package"
-    echo "        vbox        - install VirtualBox"
+    echo "        postinstall      - configure postinstall system"
+    echo "        grub             - install GRUB bootloader (EFI)"
+    echo "        main             - install base packages and enable services"
+    echo "        extra            - install optional packages (audio, printing)"
+    echo "        yay-instal       - install yay package"
+    echo "        vbox             - install VirtualBox"
     echo ""
     echo ">>> Dekstop enviroment options:"
-    echo "        xfce        - install XFCE desktop"
-    echo "        plasma      - install KDE Plasma desktop"
-    echo "        hyprland    - install hyprland desktop"
+    echo "        xfce             - install XFCE desktop"
+    echo "        plasma           - install KDE Plasma desktop"
+    echo "        hyprland         - install Hyprland desktop"
+    echo "        hypr-copy-config - copy Hyprland config files"
     ;;
   *)
     echo "Use: --help options"
