@@ -1,32 +1,11 @@
-# Kolory i przezroczystość
-background-color=#1e1e2eff
-text-color=#ffffffff
-border-color=#5e81acff
-
-# Rozmiar i rozmieszczenie
-border-size=2
-padding=10
-margin=10
-width=300
-height=100
-anchor=top-right
-
-# Czcionka
-font=JetBrainsMono Nerd Font 10
-
-# Czas wyświetlania
+background-color=#00000080
+progress-color=#ffffff20
+font=nunito
+border-size=0
+margin=24,36,0
+border-radius=12
 default-timeout=5000
 ignore-timeout=false
-
-# Maksymalna liczba powiadomień na raz
 max-history=10
-
-# Zaokrąglenie rogów (działa z niektórymi compositorami)
-#corner-radius=10
-
-# Ikony (jeśli chcesz)
 icons=true
 icon-path=/usr/share/icons
-
-# Dodatkowe opcje
-markup=true
