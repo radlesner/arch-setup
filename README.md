@@ -4,8 +4,6 @@
 
 ## What does this script do?
 
-- Automates partitioning and formatting  
-- Mounts filesystems  
 - Installs a minimal and essential set of Arch Linux packages  
 - Configures basic system settings (locale, keymap, hostname, network)  
 - Installs and configures the bootloader (GRUB)  
