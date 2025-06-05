@@ -388,26 +388,26 @@ install_hyprland() {
 
   clear_cache
 
-  read -p "[?] Do you want to copy hyprland config to .config? [Y/n]: " confirm
-  confirm=${confirm,,}
-  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    hypr-copy-config
-  fi
+  hypr_copy_config
 
   ask_reboot
 }
 
-hypr-copy-config () {
-  COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako")
+hypr_copy_config () {
+  read -p "[?] Do you want to copy hyprland config to .config? [Y/n]: " confirm
+  confirm=${confirm,,}
+  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako")
 
-  for cfg in "${COPY_FOLDERS[@]}"; do
-      SRC="./hyprland-config/$cfg"
+    for cfg in "${COPY_FOLDERS[@]}"; do
+        SRC="./hyprland-config/$cfg"
 
-      if [ -d "$SRC" ]; then
-          echo "[i] Copying $cfg config..."
-          cp -rf "$SRC" "$HOME/.config"
-      fi
-  done
+        if [ -d "$SRC" ]; then
+            echo "[i] Copying $cfg config..."
+            cp -rf "$SRC" "$HOME/.config"
+        fi
+    done
+  fi
 }
 
 
@@ -483,7 +483,7 @@ case "$1" in
     install_hyprland
     ;;
   hypr-copy-config)
-    hypr-copy-config
+    hypr_copy_config
     ;;
   yay-install)
     install_yay

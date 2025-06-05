@@ -123,6 +123,8 @@ window#waybar.chromium {
 
 #workspaces button:hover {
     background: rgba(23, 129, 211, 0.5);
+    box-shadow: inherit;
+    text-shadow: inherit;
 }
 
 #workspaces button.active {
@@ -141,6 +143,7 @@ window#waybar.chromium {
 }
 
 #workspaces button.urgent {
+    background: #ffffff;
     animation-name: blUrgent;
     animation-duration: 0.5s;
     animation-timing-function: steps(12);
