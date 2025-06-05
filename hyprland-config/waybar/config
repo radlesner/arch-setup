@@ -261,7 +261,7 @@
         "interval": 0
     },
     "custom/logout": {
-        "format": "󰗽",
+        "format": "󰿅",
         "tooltip": false,
         "on-click": "hyprctl dispatch exit",
         "interval": 0
