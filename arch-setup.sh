@@ -345,7 +345,7 @@ install_hyprland() {
   install_audio
   install_xorg "wayland"
 
-  echo "[i] Installing Hyperland (Wayland compositor)..."
+  echo "[i] Installing Hyprland (Wayland compositor)..."
   pacman -S --noconfirm --needed\
     hyprland \
     hypridle \
@@ -384,7 +384,7 @@ install_hyprland() {
   echo "[i] Enabling bluetooth..."
   systemctl enable bluetooth
 
-  echo "[✓] Hyperland environment installation completed!"
+  echo "[✓] Hyprland environment installation completed!"
 
   clear_cache
 
