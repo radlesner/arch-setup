@@ -137,18 +137,39 @@ window#waybar.chromium {
 }
 
 @keyframes blUrgent {
-    to {
+    0% {
+        background-color: #ffffff;
+        color: #ff5454;
+    }
+
+    25% {
+        background-color: #ffffff;
+        color: #ff5454;
+    }
+
+    50% {
         background-color: #ff5454;
+        color: #ffffff;
+    }
+
+    75% {
+        background-color: #ff5454;
+        color: #ffffff;
+    }
+
+    100% {
+        background-color: #ffffff;
+        color: #ff5454;
     }
 }
 
 #workspaces button.urgent {
-    background: #ffffff;
+    background-color: #ffffff;
+    color: #ff5454;
     animation-name: blUrgent;
-    animation-duration: 0.5s;
-    animation-timing-function: steps(12);
+    animation-duration: 2s;
+    animation-timing-function: linear;
     animation-iteration-count: infinite;
-    animation-direction: alternate;
 }
 
 /* ------------------------------------------------------- TIME & DATE */
