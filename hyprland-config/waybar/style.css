@@ -138,28 +138,28 @@ window#waybar.chromium {
 
 @keyframes blUrgent {
     0% {
-        background-color: #ffffff;
-        color: #ff5454;
+        background-color: #ff5454;
+        color: #ffffff;
     }
 
     25% {
-        background-color: #ffffff;
-        color: #ff5454;
+        background-color: #ff5454;
+        color: #ffffff;
     }
 
     50% {
-        background-color: #ff5454;
-        color: #ffffff;
+        background-color: #ffffff;
+        color: #ff5454;
     }
 
     75% {
-        background-color: #ff5454;
-        color: #ffffff;
+        background-color: #ffffff;
+        color: #ff5454;
     }
 
     100% {
-        background-color: #ffffff;
-        color: #ff5454;
+        background-color: #ff5454;
+        color: #ffffff;
     }
 }
 
