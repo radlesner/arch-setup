@@ -363,10 +363,11 @@ install_hyprland() {
     brightnessctl \
     wofi \
     kitty \
-    thunar \
+    pcmanfm \
+    xbindkeys xdotool \
     gvfs \
     gvfs-smb \
-    thunar-archive-plugin zip unzip unrar p7zip xarchiver\
+    zip unzip unrar p7zip xarchiver\
     gnome-keyring \
     network-manager-applet \
     bluez \
@@ -383,6 +384,14 @@ install_hyprland() {
 
   echo "[i] Enabling bluetooth..."
   systemctl enable bluetooth
+
+  echo "[i] Configuring xbindkeys..."
+  cat <<EOF >> /home/$USER/.xbindkeysrc
+"xdotool key Alt+Left"
+b:8
+"xdotool key Alt+Right"
+b:9
+EOF
 
   echo "[✓] Hyprland environment installation completed!"
 
