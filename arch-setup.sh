@@ -363,6 +363,7 @@ install_hyprland() {
     brightnessctl \
     wofi \
     kitty \
+    gnome-themes-extra \
     pcmanfm \
     xbindkeys xdotool \
     gvfs \
