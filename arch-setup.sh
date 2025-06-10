@@ -364,6 +364,7 @@ install_hyprland() {
     wofi \
     kitty \
     gnome-themes-extra \
+    lxappearance \
     pcmanfm \
     xbindkeys xdotool \
     gvfs \
