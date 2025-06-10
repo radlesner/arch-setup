@@ -355,8 +355,6 @@ install_hyprland() {
     xdg-desktop-portal-hyprland \
     xdg-desktop-portal \
     xdg-utils \
-    polkit-kde-agent \
-    greetd greetd-tuigreet \
     waybar \
     ttf-font-awesome \
     ttf-nerd-fonts-symbols \
