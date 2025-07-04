@@ -363,12 +363,14 @@ install_hyprland() {
     kitty \
     gnome-themes-extra \
     lxappearance \
-    pcmanfm \
-    xbindkeys xdotool \
+    filezilla \
+    thunar \
+    thunar-archive-plugin \
     gvfs \
     gvfs-smb \
     zip unzip unrar p7zip xarchiver\
     gnome-keyring \
+    xbindkeys xdotool \
     network-manager-applet \
     bluez \
     bluez-utils \
