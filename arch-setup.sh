@@ -126,6 +126,7 @@ install_base_packages() {
   echo "[i] Installing essential packages..."
   pacman -S --noconfirm --needed \
     sudo \
+    usbutils \
     btrfs-progs \
     networkmanager \
     openssh \
