@@ -170,16 +170,49 @@ install_extra_packages() {
 install_virtualbox() {
   root_check
 
+  echo
+  echo "[i] Select VirtualBox installation method:"
+  echo "  1) Install from Arch repository"
+  echo "  2) Install from official .run installer"
+  read -rp "[?] Enter choice [1/2]: " choice
+
+  ### REPOSITORY INSTALLER
+
+  if [[ "$choice" == "1" ]]; then
+      echo "[i] Installing VirtualBox from Arch repository..."
+      pacman -S --noconfirm --needed linux-headers virtualbox virtualbox-host-modules-arch
+
+      echo "[i] Loading VirtualBox kernel modules..."
+      modprobe vboxdrv
+
+      if lsmod | grep -q vboxdrv; then
+          echo "[✓] VirtualBox modules loaded successfully."
+      else
+          echo "[!] VirtualBox modules failed to load. You may need to reboot."
+      fi
+
+      echo "[✓] VirtualBox successfully installed from repository."
+      ask_reboot
+      return 0
+  fi
+
+  if [[ "$choice" != "2" ]]; then
+      echo "[!] Invalid selection. Installation aborted."
+      return 1
+  fi
+
+  ### RUN FILE INSTALLER
+
   echo "[i] Checking virtualization support..."
   if grep -E '(vmx|svm)' /proc/cpuinfo > /dev/null; then
       echo "[✓] CPU does support virtualization."
   else
-      echo "[!] CPU does not support virtualization, try enable virtualization in BIOS. Installation aborted."
+      echo "[!] CPU does not support virtualization. Enable it in BIOS/UEFI. Installation aborted."
       exit 1
   fi
 
   if lsmod | grep -q 'kvm'; then
-      echo "[i] KVM modules is active, disabling KVM..."
+      echo "[i] KVM modules are active, disabling KVM..."
 
       if [ ! -f /etc/modprobe.d/disable-kvm.conf ]; then
         touch /etc/modprobe.d/disable-kvm.conf
@@ -193,46 +226,49 @@ install_virtualbox() {
       elif [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
           echo "blacklist kvm_amd" >> /etc/modprobe.d/disable-kvm.conf
       else
-          echo "[!] Could not recognize processor manufacturer. Installation Virtualbox aborted"
-          rm -rf /etc/modprobe.d/disable-kvm.conf
+          echo "[!] Could not recognize processor manufacturer. Installation aborted."
+          rm -f /etc/modprobe.d/disable-kvm.conf
           exit 1
       fi
-      echo "[i] Generating initramfs images..."
+
+      echo "[i] Regenerating initramfs images..."
       mkinitcpio -P
   fi
 
-  echo "[i] Installing linux-headers, otherwise skipping..."
+  echo "[i] Installing linux-headers if needed..."
   pacman -S --noconfirm --needed linux-headers
 
-  echo "[i] Installing VirtualBox package..."
-  echo "[i] Checking latest VirtualBox version..."
-
+  echo "[i] Fetching latest VirtualBox version..."
   latest_version=$(curl -s https://download.virtualbox.org/virtualbox/LATEST.TXT)
 
   if [ -z "$latest_version" ]; then
-    echo "[!] Could not fetch latest version info."
-    return 1
+      echo "[!] Could not fetch latest version. Installation aborted."
+      return 1
   fi
 
   echo "[i] Latest VirtualBox version: $latest_version"
-
   url="https://download.virtualbox.org/virtualbox/${latest_version}/VirtualBox-${latest_version}-168469-Linux_amd64.run"
 
-  echo "[i] Downloading VirtualBox ${latest_version}..."
+  echo "[i] Downloading VirtualBox installer..."
   wget "$url" -O /tmp/virtualbox.run
 
   echo "[i] Making installer executable..."
   chmod +x /tmp/virtualbox.run
 
-  echo "[i] Installing VirtualBox..."
+  echo "[i] Running installer..."
   /tmp/virtualbox.run
 
   echo "[i] Building VirtualBox kernel modules..."
-  '/sbin/vboxconfig'
+  if [ -x /sbin/vboxconfig ]; then
+      /sbin/vboxconfig
+  else
+      echo "[!] vboxconfig not found, you may need to manually load modules."
+  fi
 
-  echo "[✓] VirtualBox ${latest_version} installed!"
+  echo "[✓] VirtualBox successfully installed from official .run installer."
   ask_reboot
 }
+
 
 install_audio() {
   root_check
@@ -367,6 +403,7 @@ install_hyprland() {
     filezilla \
     thunar \
     thunar-archive-plugin \
+    thunar-media-tags-plugin \
     gvfs \
     gvfs-smb \
     zip unzip unrar p7zip xarchiver\
