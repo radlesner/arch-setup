@@ -57,6 +57,9 @@ install_grub() {
       echo "[i] Configuring GRUB..."
       sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=1/' /etc/default/grub
       grub-mkconfig -o /boot/grub/grub.cfg
+
+      echo "[i] Installing GRUB theme..."
+      ./grub-theme/install.sh
     else
       echo "[!] GRUB installation aborted!"
       exit 0
