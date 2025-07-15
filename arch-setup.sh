@@ -26,10 +26,6 @@ root_check() {
   fi
 }
 
-pacman_update() {
-  pacman -Syu --noconfirm
-}
-
 install_grub() {
   root_check
 
@@ -44,7 +40,7 @@ install_grub() {
     read -p "[?] Do you want to install GRUB loader? [Y/n]: " confirm
     confirm=${confirm,,}
     if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-      pacman_update
+      pacman -Syu --noconfirm
       echo "[i] Installing grub packages..."
       pacman -S --noconfirm --needed \
         grub \
@@ -122,7 +118,7 @@ setting_postinstall() {
 install_base_packages() {
   root_check
 
-  pacman_update
+
   echo "[i] Installing essential packages..."
   pacman -S --noconfirm --needed \
     sudo \
@@ -301,7 +297,6 @@ install_xfce() {
 }
 
 install_plasma() {
-  pacman_update
   install_audio
   install_xorg "wayland"
 
@@ -357,7 +352,6 @@ install_plasma() {
 }
 
 install_hyprland() {
-  pacman_update
   install_audio
   install_xorg "wayland"
 
