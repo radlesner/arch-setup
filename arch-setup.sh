@@ -57,9 +57,6 @@ install_grub() {
       echo "[i] Configuring GRUB..."
       sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=1/' /etc/default/grub
       grub-mkconfig -o /boot/grub/grub.cfg
-
-      echo "[i] Installing GRUB theme..."
-      ./grub-theme/install.sh
     else
       echo "[!] GRUB installation aborted!"
       exit 0
@@ -119,7 +116,7 @@ setting_postinstall() {
     fi
   fi
 
-  ask_reboot
+  install_base_packages
 }
 
 install_base_packages() {
@@ -139,35 +136,23 @@ install_base_packages() {
     neofetch \
     screen \
     which \
-    wget
+    wget \
+    base-devel \
+    cups \
+    cups-filters \
 
   echo "[i] Enabling NetworkManager..."
   systemctl enable NetworkManager
 
+  echo "[i] Enabling CUPS service..."
+  sudo systemctl enable cups
+
   echo "[i] Configuring the /etc/sudoers file for the wheel group..."
-  sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/pacman.conf
+  sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
   clear_cache
 
   echo "[✓] Base setup completed!"
-}
-
-install_extra_packages() {
-  root_check
-
-  pacman_update
-  echo "[i] Installing extra packages..."
-  pacman -S --noconfirm --needed \
-    base-devel \
-    cups \
-    cups-filters \
-    firefox
-
-  echo "[i] Enabling CUPS service..."
-  systemctl enable cups
-
-  echo "[✓] Installing extra packages completed!"
-  clear_cache
 }
 
 install_virtualbox() {
@@ -274,10 +259,8 @@ install_virtualbox() {
 
 
 install_audio() {
-  root_check
-
   echo "[i] Installing audio packages..."
-  pacman -S --noconfirm \
+  sudo pacman -S --noconfirm \
     pipewire \
     pipewire-pulse \
     pipewire-alsa \
@@ -289,8 +272,6 @@ install_audio() {
 }
 
 install_xfce() {
-  root_check
-
   pacman_update
   install_audio
   install_xorg "x11"
@@ -321,14 +302,12 @@ install_xfce() {
 }
 
 install_plasma() {
-  root_check
-
   pacman_update
   install_audio
   install_xorg "wayland"
 
   echo "[i] Installing KDE Plasma desktop environment..."
-  pacman -S --noconfirm --needed \
+  sudo pacman -S --noconfirm --needed \
     plasma-desktop \
     konsole \
     dolphin \
@@ -367,10 +346,10 @@ install_plasma() {
     power-profiles-daemon
 
   echo "[i] Enabling sddm..."
-  systemctl enable sddm
+  sudo systemctl enable sddm
 
   echo "[i] Enabling bluetooth..."
-  systemctl enable bluetooth
+  sudo systemctl enable bluetooth
 
   echo "[✓] KDE Plasma installation completed! System restart required."
 
@@ -379,14 +358,12 @@ install_plasma() {
 }
 
 install_hyprland() {
-  root_check
-
   pacman_update
   install_audio
   install_xorg "wayland"
 
   echo "[i] Installing Hyprland (Wayland compositor)..."
-  pacman -S --noconfirm --needed\
+  sudo pacman -S --noconfirm --needed\
     hyprland \
     hypridle \
     hyprpaper \
@@ -411,7 +388,6 @@ install_hyprland() {
     gvfs-smb \
     zip unzip unrar p7zip xarchiver\
     gnome-keyring \
-    xbindkeys xdotool \
     network-manager-applet \
     bluez \
     bluez-utils \
@@ -423,18 +399,14 @@ install_hyprland() {
     ly
 
   echo "[i] Enabling ly login manager..."
-  systemctl enable ly.service
+  sudo systemctl enable ly.service
 
   echo "[i] Enabling bluetooth..."
-  systemctl enable bluetooth
+  sudo systemctl enable bluetooth
 
-  echo "[i] Configuring xbindkeys..."
-  cat <<EOF >> /home/$USER/.xbindkeysrc
-"xdotool key Alt+Left"
-b:8
-"xdotool key Alt+Right"
-b:9
-EOF
+  echo "[i] Enabling audio..."
+  systemctl --user enable --now pipewire.service
+  systemctl --user enable --now wireplumber.service
 
   echo "[✓] Hyprland environment installation completed!"
 
@@ -464,18 +436,16 @@ hypr_copy_config () {
 
 
 install_xorg() {
-  root_check
-
   local mode=$1
 
   echo "[i] Installing X server packages for '$mode'..."
 
 case "$mode" in
   x11)
-    pacman -S --noconfirm --needed xorg xorg-xinit
+    sudo pacman -S --noconfirm --needed xorg xorg-xinit
     ;;
   wayland)
-    pacman -S --noconfirm --needed \
+    sudo pacman -S --noconfirm --needed \
       wayland \
       wayland-protocols \
       xorg-xwayland
@@ -507,7 +477,7 @@ ask_reboot() {
 
 clear_cache() {
   echo "[i] Clearing cache..."
-  pacman -Sc
+  sudo pacman -Sc
 }
 
 # -------------------------------------------------------- MAIN --------------------------------------------------------
@@ -521,9 +491,6 @@ case "$1" in
     ;;
   main)
     install_base_packages
-    ;;
-  extra)
-    install_extra_packages
     ;;
   xfce)
     install_xfce
@@ -547,7 +514,6 @@ case "$1" in
     echo "        postinstall      - configure postinstall system"
     echo "        grub             - install GRUB bootloader (EFI)"
     echo "        main             - install base packages and enable services"
-    echo "        extra            - install optional packages (audio, printing)"
     echo "        yay-instal       - install yay package"
     echo "        vbox             - install VirtualBox"
     echo ""
