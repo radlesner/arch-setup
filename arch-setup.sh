@@ -133,7 +133,6 @@ install_base_packages() {
     nano \
     zsh \
     git \
-    neofetch \
     screen \
     which \
     wget \
