@@ -374,6 +374,10 @@ install_hyprland() {
     gnome-themes-extra \
     lxappearance \
     filezilla \
+    firefox \
+    thunderbird \
+    mpv \
+    mousepad \
     thunar \
     thunar-archive-plugin \
     thunar-media-tags-plugin \
@@ -476,45 +480,48 @@ clear_cache() {
 # -------------------------------------------------------- MAIN --------------------------------------------------------
 
 case "$1" in
-  postinstall)
+  --chroot-postinstall)
     setting_postinstall
     ;;
-  grub)
+  --install-grub)
     install_grub
     ;;
-  main)
+  --install-base)
     install_base_packages
     ;;
-  xfce)
+  --install-xfce)
     install_xfce
     ;;
-  plasma)
+  --install-plasma)
     install_plasma
     ;;
-  hyprland)
+  --install-hyprland)
     install_hyprland
     ;;
-  hypr-copy-config)
+  --copy-hypr-config)
     hypr_copy_config
     ;;
-  yay-install)
+  --install-yay)
     install_yay
     ;;
-  vbox)
-   install_virtualbox
-   ;;
+  --install-vbox)
+    install_virtualbox
+    ;;
   --help)
-    echo "        postinstall      - configure postinstall system"
-    echo "        grub             - install GRUB bootloader (EFI)"
-    echo "        main             - install base packages and enable services"
-    echo "        yay-instal       - install yay package"
-    echo "        vbox             - install VirtualBox"
     echo ""
-    echo ">>> Dekstop enviroment options:"
-    echo "        xfce             - install XFCE desktop"
-    echo "        plasma           - install KDE Plasma desktop"
-    echo "        hyprland         - install Hyprland desktop"
-    echo "        hypr-copy-config - copy Hyprland config files"
+    echo ">>> System installation options:"
+    echo "    --chroot-postinstall    - Configure post-installation system settings"
+    echo "    --install-base          - Install base packages and enable services"
+    echo "    --install-grub          - Install GRUB bootloader (EFI)"
+    echo "    --install-yay           - Install yay AUR helper"
+    echo "    --install-vbox          - Install VirtualBox"
+    echo ""
+    echo ">>> Desktop environment installation options:"
+    echo "    --install-xfce          - Install XFCE desktop environment"
+    echo "    --install-plasma        - Install KDE Plasma desktop environment"
+    echo "    --install-hyprland      - Install Hyprland Wayland compositor"
+    echo "    --copy-hypr-config      - Copy custom Hyprland configuration files"
+    echo ""
     ;;
   *)
     echo "Use: --help options"
