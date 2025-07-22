@@ -384,6 +384,7 @@ install_hyprland() {
     gvfs \
     gvfs-smb \
     zip unzip unrar p7zip xarchiver\
+    imv \
     gnome-keyring \
     network-manager-applet \
     bluez \
@@ -405,6 +406,10 @@ install_hyprland() {
   systemctl --user enable --now pipewire.service
   systemctl --user enable --now wireplumber.service
 
+  echo "[i] Installing icons...";
+  tar -xf ./environment-resources/icons/01-Flat-Remix-Blue-20250709.tar.xz -C ~/.icons/
+  gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Blue-Dark'
+
   echo "[✓] Hyprland environment installation completed!"
 
   clear_cache
@@ -421,7 +426,7 @@ hypr_copy_config () {
     COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako")
 
     for cfg in "${COPY_FOLDERS[@]}"; do
-        SRC="./hyprland-config/$cfg"
+        SRC="./environment-resources/hyprland-config/$cfg"
 
         if [ -d "$SRC" ]; then
             echo "[i] Copying $cfg config..."
