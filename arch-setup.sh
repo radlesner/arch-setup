@@ -95,7 +95,7 @@ setting_postinstall() {
   echo "[i] Setting root password..."
   passwd
 
-  read -p "[?] Do you want create the new user? [Y/n]" confirm
+  read -p "[?] Do you want create the new user? [Y/n]:" confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
     read -p "[?] Enter username for the new user: " username
@@ -106,6 +106,7 @@ setting_postinstall() {
       mkdir -p /home/$username
       useradd -M -d /home/$username/ -s /usr/bin/bash $username
       chown -R $username:$username /home/$username
+      passwd $username
 
       echo "[i] Configuring new user $username..."
       usermod -aG wheel,uucp $username
@@ -356,45 +357,61 @@ install_hyprland() {
   install_xorg "wayland"
 
   echo "[i] Installing Hyprland (Wayland compositor)..."
-  sudo pacman -S --noconfirm --needed\
+  sudo pacman -S --noconfirm --needed \
     hyprland \
-    hypridle \
-    hyprpaper \
-    swaylock \
-    wl-clipboard \
     xdg-desktop-portal-hyprland \
     xdg-desktop-portal \
     xdg-utils \
+    wl-clipboard \
+    \
+    hypridle \
+    hyprpaper \
+    swaylock \
+    \
     waybar \
-    ttf-font-awesome \
-    ttf-nerd-fonts-symbols \
+    mako \
     brightnessctl \
+    \
+    grim \
+    slurp \
+    \
     wofi \
     kitty \
-    gnome-themes-extra \
-    lxappearance \
-    filezilla \
-    firefox \
-    thunderbird \
-    mpv \
     mousepad \
+    \
     thunar \
     thunar-archive-plugin \
     thunar-media-tags-plugin \
     gvfs \
     gvfs-smb \
-    zip unzip unrar p7zip xarchiver\
-    imv \
-    gnome-keyring \
+    zip \
+    unzip \
+    unrar \
+    p7zip \
+    xarchiver \
+    \
     network-manager-applet \
     bluez \
     bluez-utils \
     blueman \
+    \
     pavucontrol \
-    grim \
-    slurp \
-    mako \
-    ly
+    \
+    ttf-font-awesome \
+    ttf-nerd-fonts-symbols \
+    gnome-themes-extra \
+    lxappearance \
+    gnome-keyring \
+    \
+    ly \
+    \
+    firefox \
+    thunderbird \
+    filezilla \
+    \
+    mpv \
+    imv \
+    libreoffice-fresh
 
   echo "[i] Enabling ly login manager..."
   sudo systemctl enable ly.service
