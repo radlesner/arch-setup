@@ -437,13 +437,30 @@ install_hyprland() {
 }
 
 hypr_copy_config () {
+  echo "[i] Select Hyprland config to copy:"
+  echo "  1) Laptop"
+  echo "  2) Desktop"
+  read -rp "[?] Enter choice [1/2]: " choice
+
+  case "$choice" in
+    1)
+      HYPR_CONFIG_OPTION="hyprland-config-01"
+      ;;
+    2)
+      HYPR_CONFIG_OPTION="hyprland-config-02"
+      ;;
+    *)
+      echo "[!] Invalid choice. Aborting."
+      ;;
+  esac
+
   read -p "[?] Do you want to copy hyprland config to .config? [Y/n]: " confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
     COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako")
 
     for cfg in "${COPY_FOLDERS[@]}"; do
-        SRC="./environment-resources/hyprland-config/$cfg"
+        SRC="./environment-resources/$HYPR_CONFIG_OPTION/$cfg"
 
         if [ -d "$SRC" ]; then
             echo "[i] Copying $cfg config..."
