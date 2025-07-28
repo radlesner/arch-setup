@@ -438,8 +438,9 @@ install_hyprland() {
 
 hypr_copy_config () {
   echo "[i] Select Hyprland config to copy:"
-  echo "  1) Laptop"
-  echo "  2) Desktop"
+  echo "  1) Config 01 for laptop"
+  echo "  2) Config 02 fot desktop"
+  echo "  0) Exit the script."
   read -rp "[?] Enter choice [1/2]: " choice
 
   case "$choice" in
@@ -449,8 +450,14 @@ hypr_copy_config () {
     2)
       HYPR_CONFIG_OPTION="hyprland-config-02"
       ;;
+    0)
+      echo "[i] Exiting the script."
+      return
+      ;;
     *)
       echo "[!] Invalid choice. Aborting."
+      echo "[!] Use: --help options"
+      return
       ;;
   esac
 

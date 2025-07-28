@@ -121,13 +121,13 @@ window#waybar.chromium {
 }
 
 #workspaces button:hover {
-    background: rgba(23, 129, 211, 0.5);
+    background: rgba(211, 70, 70, 0.5);
     box-shadow: inherit;
     text-shadow: inherit;
 }
 
 #workspaces button.active {
-    background: #1780d3;
+    background: rgb(211, 70, 16);
 }
 
 #workspaces button.focused {
