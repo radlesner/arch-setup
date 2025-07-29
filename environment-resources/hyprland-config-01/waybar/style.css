@@ -26,6 +26,8 @@
 #scratchpad,
 #power-profiles-daemon,
 #mpd,
+#custom-uptime,
+#custom-kernel,
 #custom-power,
 #custom-reboot,
 #custom-logout {
@@ -43,6 +45,8 @@
 #disk,
 #cpu,
 #memory,
+#custom-uptime,
+#custom-kernel,
 #battery {
     padding: 0 5px;
     margin-right: 0px;
@@ -83,6 +87,8 @@ window#waybar.chromium {
 }
 
 #cpu,
+#custom-uptime,
+#custom-kernel,
 #temperature,
 #memory,
 #backlight,

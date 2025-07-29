@@ -95,7 +95,7 @@ setting_postinstall() {
   echo "[i] Setting root password..."
   passwd
 
-  read -p "[?] Do you want create the new user? [Y/n]:" confirm
+  read -p "[?] Do you want create the new user? [Y/n]: " confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
     read -p "[?] Enter username for the new user: " username
@@ -476,7 +476,6 @@ hypr_copy_config () {
     done
   fi
 }
-
 
 install_xorg() {
   local mode=$1

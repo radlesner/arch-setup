@@ -12,12 +12,9 @@
         "custom/media"
     ],
     "modules-center": [
-        // "hyprland/window",
         "clock"
     ],
     "modules-right": [
-        // "mpd",
-        // "idle_inhibitor",
         "pulseaudio",
         "network",
         "power-profiles-daemon",
@@ -65,65 +62,6 @@
                 10
             ]
         }
-    },
-    "keyboard-state": {
-        "numlock": true,
-        "capslock": true,
-        "format": "{name} {icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
-    },
-    "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>"
-    },
-    "sway/scratchpad": {
-        "format": "{icon} {count}",
-        "show-empty": false,
-        "format-icons": [
-            "",
-            ""
-        ],
-        "tooltip": true,
-        "tooltip-format": "{app}: {title}"
-    },
-    "mpd": {
-        "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ",
-        "format-disconnected": "Disconnected ",
-        "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
-        "unknown-tag": "N/A",
-        "interval": 5,
-        "consume-icons": {
-            "on": " "
-        },
-        "random-icons": {
-            "off": "<span color=\"#f53c3c\"></span> ",
-            "on": " "
-        },
-        "repeat-icons": {
-            "on": " "
-        },
-        "single-icons": {
-            "on": "1 "
-        },
-        "state-icons": {
-            "paused": "",
-            "playing": ""
-        },
-        "tooltip-format": "MPD (connected)",
-        "tooltip-format-disconnected": "MPD (disconnected)"
-    },
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": ""
-        }
-    },
-    "tray": {
-        // "icon-size": 21,
-        "spacing": 10
     },
     "clock": {
         // "timezone": "America/New_York",
@@ -203,7 +141,6 @@
         }
     },
     "network": {
-        // "interface": "wlp2*", // (Optional) To force the use of this interface
         "format-wifi": " {essid} ({signalStrength}%)",
         "format-ethernet": " {ipaddr}/{cidr}",
         "tooltip-format": " {ifname} via {gwaddr}",
@@ -212,7 +149,6 @@
         "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
     "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
         "format": "{icon} {volume}%  {format_source}",
         "format-bluetooth": "{icon} {volume}%  {format_source}",
         "format-bluetooth-muted": " {icon}  {format_source}",
@@ -266,5 +202,18 @@
         "tooltip": false,
         "on-click": "hyprctl dispatch exit",
         "interval": 0
+    },
+    "custom/kernel": {
+        "format": " {}",
+        "exec": "uname -r",
+        "tooltip": true,
+        "tooltip-format": "Kernel version"
+    },
+    "custom/uptime": {
+        "format": " {}",
+        "exec": "bash -c 'u=$(uptime -p); h=$(echo $u | grep -oP \"\\d+(?= hour)\" || echo 0); m=$(echo $u | grep -oP \"\\d+(?= minute)\" || echo 0); printf \"%d:%02d\n\" \"$h\" \"$m\"'",
+        "interval": 60,
+        "tooltip": true,
+        "tooltip-format": "Uptime"
     }
 }

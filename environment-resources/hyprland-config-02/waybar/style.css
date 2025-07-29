@@ -26,6 +26,8 @@
 #scratchpad,
 #power-profiles-daemon,
 #mpd,
+#custom-uptime,
+#custom-kernel,
 #custom-power,
 #custom-reboot,
 #custom-logout {
@@ -42,6 +44,8 @@
 #temperature,
 #disk,
 #cpu,
+#custom-uptime,
+#custom-kernel,
 #memory {
     padding: 0 5px;
     margin-right: 0px;
@@ -54,7 +58,7 @@
     border-top-left-radius: 10px;
 }
 
-#temperature {
+#custom-kernel {
     padding-right: 10px;
     margin-right: 4px;
     border-bottom-right-radius: 10px;
@@ -84,6 +88,8 @@ window#waybar.chromium {
 #cpu,
 #temperature,
 #memory,
+#custom-uptime,
+#custom-kernel,
 #backlight,
 #battery,
 #network,
@@ -121,7 +127,7 @@ window#waybar.chromium {
 }
 
 #workspaces button:hover {
-    background: rgba(211, 70, 70, 0.5);
+    background: rgba(211, 70, 16, 0.5);
     box-shadow: inherit;
     text-shadow: inherit;
 }
