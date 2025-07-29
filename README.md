@@ -23,12 +23,6 @@
 2. Run the installation script on a freshly installed Arch Linux
 3. Follow the instructions displayed in the terminal
 
-## Requirements
-
-- Arch Linux live environment
-- Basic knowledge of Arch Linux and terminal usage
-- Internet connection during installation
-
 ---
 
 Feel free to customize the script and make it your own!
