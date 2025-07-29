@@ -21,8 +21,9 @@
         "cpu",
         "memory",
         "temperature",
+        "custom/uptime",
+        "custom/kernel",
         "backlight",
-        "keyboard-state",
         "battery",
         // "battery#bat0",
         // "battery#bat1",
@@ -205,7 +206,7 @@
     },
     "custom/kernel": {
         "format": " {}",
-        "exec": "uname -r",
+        "exec": "uname -r | cut -d '-' -f1",
         "tooltip": true,
         "tooltip-format": "Kernel version"
     },
