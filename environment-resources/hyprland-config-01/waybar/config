@@ -20,9 +20,9 @@
         "power-profiles-daemon",
         "cpu",
         "memory",
+        "disk",
         "temperature",
         "custom/uptime",
-        "custom/kernel",
         "backlight",
         "battery",
         // "battery#bat0",
@@ -65,9 +65,10 @@
         }
     },
     "clock": {
-        // "timezone": "America/New_York",
-        "format": "{:%H:%M - %d.%m.%Y}",
-        "tooltip": false
+        "timezone": "Europe/Warsaw",
+        "format": "{:%H:%M:%S - %d.%m.%Y}",
+        "tooltip": false,
+        "interval": 1
         // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
     "cpu": {
@@ -76,6 +77,9 @@
     },
     "memory": {
         "format": " {}%"
+    },
+    "disk": {
+        "format": " {}%"
     },
     "temperature": {
         // "thermal-zone": 2,
@@ -206,7 +210,7 @@
     },
     "custom/kernel": {
         "format": " {}",
-        "exec": "uname -r | cut -d '-' -f1",
+        "exec": "uname -r",
         "tooltip": true,
         "tooltip-format": "Kernel version"
     },

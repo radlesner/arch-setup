@@ -46,7 +46,8 @@
 #cpu,
 #custom-uptime,
 #custom-kernel,
-#memory {
+#memory,
+#disk {
     padding: 0 5px;
     margin-right: 0px;
     border-radius: 0;
@@ -88,6 +89,7 @@ window#waybar.chromium {
 #cpu,
 #temperature,
 #memory,
+#disk,
 #custom-uptime,
 #custom-kernel,
 #backlight,
@@ -222,59 +224,7 @@ window#waybar.chromium {
     color: #ffffff;
 }
 
-/* ------------------------------------------------------- BATTERY MODULE */
-
-#battery.charging,
-#battery.plugged {
-    /* color: #26A65B; */
-    color: #0ef06c;
-}
-
-@keyframes blink {
-    to {
-        color: #ff5454;
-    }
-}
-
-#battery.critical:not(.charging) {
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: steps(12);
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-}
-
-#power-profiles-daemon {
-    padding-right: 15px;
-}
-
-#power-profiles-daemon.performance {
-    background-color: #ff5454;
-    color: #ffffff;
-}
-
-#power-profiles-daemon.balanced {
-    background-color: #2980b9;
-    color: #ffffff;
-}
-
-#power-profiles-daemon.power-saver {
-    background-color: #2ecc71;
-    color: #000000;
-}
-
-label:focus {
-    background-color: #000000;
-}
-
-/* ------------------------------------------------------- DISK & MEMORY MODULE */
-
-#disk {
-    background-color: #964B00;
-}
-
 /* ------------------------------------------------------- NETWORK */
-
 #network.disconnected {
     color: #ff5454;
 }
@@ -282,103 +232,6 @@ label:focus {
 /* ------------------------------------------------------- CPU */
 #temperature.critical {
     color: #ff5454;
-}
-
-/* ------------------------------------------------------- TRAY MODULE */
-#tray {
-    background-color: #2980b9;
-}
-
-#tray>.passive {
-    -gtk-icon-effect: dim;
-}
-
-#tray>.needs-attention {
-    -gtk-icon-effect: highlight;
-    background-color: #ff5454;
-}
-
-#idle_inhibitor {
-    background-color: #2d3436;
-}
-
-#idle_inhibitor.activated {
-    background-color: #ecf0f1;
-    color: #2d3436;
-}
-
-/* ------------------------------------------------------- MPD MODULE */
-#mpd {
-    background-color: #66cc99;
-    color: #2a5c45;
-}
-
-#mpd.disconnected {
-    background-color: #ff5454;
-}
-
-#mpd.stopped {
-    background-color: #90b1b1;
-}
-
-#mpd.paused {
-    background-color: #51a37a;
-}
-
-
-/* ------------------------------------------------------- KEYBOARD */
-#language {
-    background: #00b093;
-    color: #740864;
-    padding: 0 5px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state {
-    background: #97e1ad;
-    color: #000000;
-    padding: 0 0px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state>label {
-    padding: 0 5px;
-}
-
-#keyboard-state>label.locked {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-#scratchpad {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-#scratchpad.empty {
-    background-color: transparent;
-}
-
-/* ------------------------------------------------------- PRIVACY MODULES */
-#privacy {
-    padding: 0;
-}
-
-#privacy-item {
-    padding: 0 5px;
-    color: white;
-}
-
-#privacy-item.screenshare {
-    background-color: #cf5700;
-}
-
-#privacy-item.audio-in {
-    background-color: #1ca000;
-}
-
-#privacy-item.audio-out {
-    background-color: #0069d4;
 }
 
 /* ------------------------------------------------------- POWER BUTTONS */
