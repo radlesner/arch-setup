@@ -74,8 +74,15 @@
     "memory": {
         "format": " {}%"
     },
-    "disk": {
-        "format": " {}%"
+    "custom/disk-root": {
+        "exec": "~/.config/waybar/scripts/disk-used-root.sh",
+        "interval": 30,
+        "tooltip": true
+    },
+    "custom/disk-home": {
+        "exec": "~/.config/waybar/scripts/disk-used-home.sh",
+        "interval": 30,
+        "tooltip": true
     },
     "temperature": {
         // "thermal-zone": 2,
@@ -143,7 +150,7 @@
         "on-click": "playerctl play-pause",
         "on-scroll-up": "playerctl next",
         "on-scroll-down": "playerctl previous",
-        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null"
+        "exec": "~/.config/waybar/scripts/mediaplayer.py 2> /dev/null"
     },
     "custom/power": {
         "format": "",
@@ -171,9 +178,8 @@
     },
     "custom/uptime": {
         "format": " {}",
-        "exec": "bash -c 'u=$(uptime -p); h=$(echo $u | grep -oP \"\\d+(?= hour)\" || echo 0); m=$(echo $u | grep -oP \"\\d+(?= minute)\" || echo 0); printf \"%d:%02d\n\" \"$h\" \"$m\"'",
+        "exec": "~/.config/waybar/scripts/uptime.sh",
         "interval": 60,
-        "tooltip": true,
-        "tooltip-format": "Uptime"
+        "tooltip": true
     }
 }

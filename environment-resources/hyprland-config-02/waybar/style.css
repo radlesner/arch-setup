@@ -13,7 +13,8 @@
 #battery,
 #cpu,
 #memory,
-#disk,
+#custom-disk-root,
+#custom-disk-home,
 #temperature,
 #backlight,
 #network,
@@ -42,12 +43,12 @@
 
 #backlight,
 #temperature,
-#disk,
 #cpu,
 #custom-uptime,
 #custom-kernel,
 #memory,
-#disk {
+#custom-disk-root,
+#custom-disk-home {
     padding: 0 5px;
     margin-right: 0px;
     border-radius: 0;
@@ -89,7 +90,8 @@ window#waybar.chromium {
 #cpu,
 #temperature,
 #memory,
-#disk,
+#custom-disk-root,
+#custom-disk-home,
 #custom-uptime,
 #custom-kernel,
 #backlight,
