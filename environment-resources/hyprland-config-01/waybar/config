@@ -19,10 +19,10 @@
         "network",
         "power-profiles-daemon",
         "cpu",
+        "temperature",
         "memory",
         "custom/disk-root",
         "custom/disk-home",
-        "temperature",
         "custom/uptime",
         "backlight",
         "battery",
@@ -81,12 +81,12 @@
     },
     "custom/disk-root": {
         "exec": "~/.config/waybar/scripts/disk-used-root.sh",
-        "interval": 30,
+        "interval": 10,
         "tooltip": true
     },
     "custom/disk-home": {
         "exec": "~/.config/waybar/scripts/disk-used-home.sh",
-        "interval": 30,
+        "interval": 10,
         "tooltip": true
     },
     "temperature": {
@@ -219,7 +219,7 @@
     "custom/uptime": {
         "format": " {}",
         "exec": "~/.config/waybar/scripts/uptime.sh",
-        "interval": 60,
+        "interval": 10,
         "tooltip": true
     }
 }
