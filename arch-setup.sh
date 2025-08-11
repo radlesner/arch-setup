@@ -119,7 +119,6 @@ setting_postinstall() {
 install_base_packages() {
   root_check
 
-
   echo "[i] Installing essential packages..."
   pacman -S --noconfirm --needed \
     sudo \
@@ -512,6 +511,24 @@ install_yay() {
   fi
 }
 
+install_fingerprint() {
+  echo -e "\e[32m[i] Installing fingerprint login method...\e[0m"
+  echo -e "\e[32m[i] Update repository...\e[0m"
+  sudo pacman -Syu --noconfirm
+
+  echo -e "\e[32m[i] Installing fprintd & pam...\e[0m"
+  sudo pacman -S --noconfirm --needed \
+    fprintd \
+    pam
+
+  echo -e "\e[32m[i] Scaning finger print, please scan your finger...\e[0m"
+  sudo fprintd-enroll $(whoami)
+
+  sudo cp ./environment-resources/pam/ly                  /etc/pam.d/
+  sudo cp ./environment-resources/pam/swaylock            /etc/pam.d/
+  sudo cp ./environment-resources/pam/system-local-login  /etc/pam.d/
+}
+
 ask_reboot() {
   read -p "[?] Do you want to restart system? [Y/n]: " confirm
   [[ "$confirm" =~ ^(n|no)$ ]] || reboot
@@ -551,6 +568,9 @@ case "$1" in
     ;;
   --install-vbox)
     install_virtualbox
+    ;;
+  --install-fingerprint)
+    install_fingerprint
     ;;
   --help)
     echo ""
