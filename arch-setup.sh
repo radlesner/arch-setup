@@ -601,6 +601,7 @@ case "$1" in
     echo "    --chroot-postinstall    - Configure post-installation system settings"
     echo "    --install-base          - Install base packages and enable services"
     echo "    --install-grub          - Install GRUB bootloader (EFI)"
+    echo "    --install-grub-theme    - Install GRUB themes"
     echo "    --install-yay           - Install yay AUR helper"
     echo "    --install-vbox          - Install VirtualBox"
     echo ""
