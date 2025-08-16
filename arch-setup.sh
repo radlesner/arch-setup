@@ -59,10 +59,24 @@ install_grub() {
       echo "${BLUE}[i] Configuring GRUB...${RESET}"
       sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=1/' /etc/default/grub
       grub-mkconfig -o /boot/grub/grub.cfg
+
+      echo "${GREEN}[✓] GRUB installation complete${RESET}"
+      install_grub_theme
     else
       echo "${RED}[!] GRUB installation aborted!${RESET}"
       exit 0
     fi
+  fi
+}
+
+install_grub_theme() {
+  root_check
+
+  read -r -p "${YELLOW}[?] Do you want to install GRUB theme (Particle-circle-window)? [Y/n]: ${RESET}" confirm
+  confirm=${confirm,,}
+  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+    echo "${BLUE}[i] Installing GRUB theme...${RESET}"
+    bash ./environment-resources/grub-theme/install-Particle-circle-window.sh
   fi
 }
 
@@ -553,6 +567,9 @@ case "$1" in
     ;;
   --install-grub)
     install_grub
+    ;;
+  --install-grub-theme)
+    install_grub_theme
     ;;
   --install-base)
     install_base_packages
