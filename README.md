@@ -23,13 +23,13 @@
 2. Run the installation script on a freshly installed Arch Linux
 3. Follow the instructions displayed in the terminal
 
-## GRUB Theme
+## Credits
 
-This project includes the **Particle-circle-window** GRUB theme.
-The theme is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+**GRUB themes**
+- **Particle-circle-window**: by [yeyushengfan258](https://github.com/yeyushengfan258/Particle-circle-grub-theme) (GPL-3.0)
 
-- Original author: [[yeyushengfan258](https://github.com/yeyushengfan258/Particle-circle-grub-theme)]
-- License: [GNU GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
+**Icons**
+- **Flat Remix**: by [daniruiz](https://github.com/daniruiz/Flat-Remix) (GPL-3.0)
 
 ---
 
