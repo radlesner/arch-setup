@@ -72,12 +72,58 @@ install_grub() {
 install_grub_theme() {
   root_check
 
-  read -r -p "${YELLOW}[?] Do you want to install GRUB theme (Particle-circle-window)? [Y/n]: ${RESET}" confirm
-  confirm=${confirm,,}
-  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    echo "${BLUE}[i] Installing GRUB theme...${RESET}"
-    bash ./environment-resources/grub-theme/install-Particle-circle-window.sh
-  fi
+  echo "${BLUE}[i] Select GRUB theme to install:${RESET}"
+  echo "  1) Particle"
+  echo "  2) Particle-circle"
+  echo "  3) Matrix"
+  echo "  4) Matrix-circle"
+  echo "  4) Solara-grub2"
+  echo "  0) Exit the script."
+  read -r -p "${YELLOW}[?] Enter choice: ${RESET}" choice
+
+  case "$choice" in
+    1)
+      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+      bash "$SCRIPT_DIR/environment-resources/grub-theme/Particle-grub-theme/install.sh"
+      ;;
+    2)
+      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+      bash "$SCRIPT_DIR/environment-resources/grub-theme/Particle-circle-grub-theme/install.sh"
+      ;;
+    3)
+      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+      bash "$SCRIPT_DIR/environment-resources/grub-theme/Matrix-circle-grub-theme/install.sh"
+    ;;
+    4)
+      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+      bash "$SCRIPT_DIR/environment-resources/grub-theme/Matrix-circle-grub-theme/install.sh"
+    ;;
+    5)
+      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+      bash "$SCRIPT_DIR/environment-resources/grub-theme/Solara-grub2-theme/install.sh"
+    ;;
+    0)
+      echo "${BLUE}[i] Exiting the script.${RESET}"
+      return
+      ;;
+    *)
+      echo "${RED}[!] Invalid choice. Aborting.${RESET}"
+      echo "${RED}[!] Use: --help options${RESET}"
+      return
+      ;;
+  esac
+
+  # read -r -p "${YELLOW}[?] Do you want to install GRUB theme (Particle-circle-window)? [Y/n]: ${RESET}" confirm
+  # confirm=${confirm,,}
+  # if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+  #   echo "${BLUE}[i] Installing GRUB theme...${RESET}"
+  #   bash ./environment-resources/grub-theme/install-Particle-circle-window.sh
+  # fi
 }
 
 setting_postinstall() {
