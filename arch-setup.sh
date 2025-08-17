@@ -77,7 +77,7 @@ install_grub_theme() {
   echo "  2) Particle-circle"
   echo "  3) Matrix"
   echo "  4) Matrix-circle"
-  echo "  4) Solara-grub2"
+  echo "  5) Solara-grub2"
   echo "  0) Exit the script."
   read -r -p "${YELLOW}[?] Enter choice: ${RESET}" choice
 
