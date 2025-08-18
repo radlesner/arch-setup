@@ -117,13 +117,6 @@ install_grub_theme() {
       return
       ;;
   esac
-
-  # read -r -p "${YELLOW}[?] Do you want to install GRUB theme (Particle-circle-window)? [Y/n]: ${RESET}" confirm
-  # confirm=${confirm,,}
-  # if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-  #   echo "${BLUE}[i] Installing GRUB theme...${RESET}"
-  #   bash ./environment-resources/grub-theme/install-Particle-circle-window.sh
-  # fi
 }
 
 setting_postinstall() {
@@ -141,6 +134,11 @@ setting_postinstall() {
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
   echo "${GREEN}[✓] Timezone configuration complete${RESET}"
+
+  echo "${BLUE}[i] Configure NTP clock...${RESET}"
+  systemctl enable systemd-timesyncd.service
+  timedatectl set-ntp true
+  echo "${GREEN}[✓] NTP clock configuration complete${RESET}"
 
   echo "${BLUE}[i] Configuring hostname...${RESET}"
   read -r -p "${YELLOW}Enter hostname for this system: ${RESET}" HOSTNAME
