@@ -397,7 +397,7 @@ install_program() {
   elif has_command yum; then
     yum install "$@"
   elif has_command pacman; then
-    pacman -S --noconfirm "$@"
+    pacman -S --noconfirm --needed "$@"
   fi
 }
 
