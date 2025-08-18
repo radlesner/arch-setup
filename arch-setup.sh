@@ -61,10 +61,27 @@ install_grub() {
       grub-mkconfig -o /boot/grub/grub.cfg
 
       echo "${GREEN}[✓] GRUB installation complete${RESET}"
-      install_grub_theme
     else
       echo "${RED}[!] GRUB installation aborted!${RESET}"
       exit 0
+    fi
+  fi
+}
+
+remove_grub() {
+  root_check
+
+  read -r -p "${YELLOW}[?] Do you realy want remove GRUB bootloader? [N/y]: ${RESET}" confirm
+  confirm=${confirm,,}
+  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+    if [ -d /boot/EFI ]; then
+      echo "${BLUE}[i] Deleting /boot/EFI...${RESET}"
+      rm -rf /boot/EFI
+    fi
+
+    if [ -d /boot/grub ]; then
+      echo "${BLUE}[i] Deleting /boot/grub...${RESET}"
+      rm -rf /boot/grub
     fi
   fi
 }
@@ -605,12 +622,29 @@ clear_cache() {
 
 # -------------------------------------------------------- MAIN --------------------------------------------------------
 
+force=false
+
+for arg in "$@"; do
+    if [[ "$arg" == "-f" || "$arg" == "--force" ]]; then
+        force=true
+        break
+    fi
+done
+
 case "$1" in
   --chroot-postinstall)
     setting_postinstall
     ;;
   --install-grub)
-    install_grub
+    if $force; then
+      remove_grub
+      install_grub
+    else
+      install_grub
+    fi
+    ;;
+  --remove-grub)
+    remove_grub
     ;;
   --install-grub-theme)
     install_grub_theme
@@ -645,6 +679,7 @@ case "$1" in
     echo "    --chroot-postinstall    - Configure post-installation system settings"
     echo "    --install-base          - Install base packages and enable services"
     echo "    --install-grub          - Install GRUB bootloader (EFI)"
+    echo "    --remove-grub           - Remove GRUB bootloader (EFI)"
     echo "    --install-grub-theme    - Install GRUB themes"
     echo "    --install-yay           - Install yay AUR helper"
     echo "    --install-vbox          - Install VirtualBox"
@@ -654,6 +689,9 @@ case "$1" in
     echo "    --install-plasma        - Install KDE Plasma desktop environment"
     echo "    --install-hyprland      - Install Hyprland Wayland compositor"
     echo "    --copy-hypr-config      - Copy custom Hyprland configuration files"
+    echo ""
+    echo ">>> Additional options:"
+    echo "    -f, --force             - Force reinstall (e.g., overwrite existing GRUB installation)"
     echo ""
     ;;
   *)
