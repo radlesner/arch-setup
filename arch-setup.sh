@@ -210,12 +210,14 @@ install_base_packages() {
     nano \
     zsh \
     git \
+    cmake \
     screen \
     which \
     wget \
     base-devel \
     cups \
     cups-filters \
+    htop
 
   echo "${BLUE}[i] Enabling NetworkManager...${RESET}"
   systemctl enable NetworkManager
@@ -464,6 +466,7 @@ install_hyprland() {
     thunar-media-tags-plugin \
     gvfs \
     gvfs-smb \
+    gvfs-nfs \
     zip \
     unzip \
     unrar \
@@ -477,7 +480,7 @@ install_hyprland() {
     \
     pavucontrol \
     \
-    ttf-font-awesome \
+    otf-font-awesome \
     ttf-nerd-fonts-symbols \
     gnome-themes-extra \
     lxappearance \
@@ -504,14 +507,30 @@ install_hyprland() {
   systemctl --user enable --now wireplumber.service
 
   echo "${BLUE}[i] Installing icons..."${RESET};
+  mkdir -p ~/.icons
   tar -xf ./environment-resources/icons/01-Flat-Remix-Blue-20250709.tar.xz -C ~/.icons/
   gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Blue-Dark'
+
+  check_yay_installed
+  if [ $? -eq 0 ]; then
+    echo "${BLUE}[i] Found yay, moving on to installing packages from AUR...${RESET}"
+  else
+    echo "${BLUE}[i] No yay found, starting yay install...${RESET}"
+    install_yay
+  fi
+
+  echo "${BLUE}[i] Installing AUR packages...${RESET}"
+  yay -S --noconfirm \
+    neofetch \
+    ookla-speedtest-bin \
+    spotify \
+    vscodium-bin
 
   echo "${GREEN}[✓] Hyprland environment installation completed!${RESET}"
 
   clear_cache
-
   hypr_copy_config
+
 
   ask_reboot
 }
@@ -592,6 +611,15 @@ install_yay() {
   fi
 }
 
+check_yay_installed() {
+  if ! command -v yay &>/dev/null; then
+    return 1
+  else
+    return 0
+  fi
+}
+
+
 install_fingerprint() {
   echo -e "\e[32m[i] Installing fingerprint login method...\e[0m"
   echo -e "\e[32m[i] Update repository...\e[0m"
@@ -605,9 +633,9 @@ install_fingerprint() {
   echo -e "\e[32m[i] Scaning finger print, please scan your finger...\e[0m"
   sudo fprintd-enroll $(whoami)
 
-  sudo cp ./environment-resources/pam/ly                  /etc/pam.d/
-  sudo cp ./environment-resources/pam/swaylock            /etc/pam.d/
-  sudo cp ./environment-resources/pam/system-local-login  /etc/pam.d/
+  # sudo cp ./environment-resources/pam/ly                  /etc/pam.d/
+  # sudo cp ./environment-resources/pam/swaylock            /etc/pam.d/
+  # sudo cp ./environment-resources/pam/system-local-login  /etc/pam.d/
 }
 
 ask_reboot() {
@@ -683,6 +711,7 @@ case "$1" in
     echo "    --install-grub-theme    - Install GRUB themes"
     echo "    --install-yay           - Install yay AUR helper"
     echo "    --install-vbox          - Install VirtualBox"
+    echo "    --install-fingerprint   - Install fingerprint login option (Untested yet, not work with pam configuration)"
     echo ""
     echo ">>> Desktop environment installation options:"
     echo "    --install-xfce          - Install XFCE desktop environment"
