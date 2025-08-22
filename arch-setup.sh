@@ -233,6 +233,28 @@ install_base_packages() {
   echo "${GREEN}[✓] Base setup completed!${RESET}"
 }
 
+install_hamradio_packages() {
+  check_yay_installed
+  if [ $? -eq 0 ]; then
+    echo "${BLUE}[i] Found yay, moving on to installing packages from AUR...${RESET}"
+  else
+    echo "${BLUE}[i] No yay found, starting yay install...${RESET}"
+    install_yay
+  fi
+
+  yay -S --noconfirm --needed \
+    cqrlog-bin \
+
+  echo "${BLUE}[i] Copying 99.usb-serial.rules to /etc/udev/rules.d...${RESET}"
+  sudo cp environment-resources/udev-rules/99.usb-serial.rules /etc/udev/rules.d
+
+  echo "${BLUE}[i] Resfreshing udev rules...${RESET}"
+  sudo udevadm control --reload-rules
+  sudo udevadm trigger
+
+  echo "${GREEN}[✓] Setup udev rules completed!${RESET}"
+}
+
 install_virtualbox() {
   root_check
 
@@ -520,7 +542,7 @@ install_hyprland() {
   fi
 
   echo "${BLUE}[i] Installing AUR packages...${RESET}"
-  yay -S --noconfirm \
+  yay -S --noconfirm --needed \
     neofetch \
     ookla-speedtest-bin \
     spotify \
@@ -680,6 +702,9 @@ case "$1" in
   --install-base)
     install_base_packages
     ;;
+  --install-hamradio-setup)
+    install_hamradio_packages
+    ;;
   --install-xfce)
     install_xfce
     ;;
@@ -704,23 +729,24 @@ case "$1" in
   --help)
     echo ""
     echo ">>> System installation options:"
-    echo "    --chroot-postinstall    - Configure post-installation system settings"
-    echo "    --install-base          - Install base packages and enable services"
-    echo "    --install-grub          - Install GRUB bootloader (EFI)"
-    echo "    --remove-grub           - Remove GRUB bootloader (EFI)"
-    echo "    --install-grub-theme    - Install GRUB themes"
-    echo "    --install-yay           - Install yay AUR helper"
-    echo "    --install-vbox          - Install VirtualBox"
-    echo "    --install-fingerprint   - Install fingerprint login option (Untested yet, not work with pam configuration)"
+    echo "    --chroot-postinstall     - Configure post-installation system settings"
+    echo "    --install-base           - Install base packages and enable services"
+    echo "    --install-grub           - Install GRUB bootloader (EFI)"
+    echo "    --remove-grub            - Remove GRUB bootloader (EFI)"
+    echo "    --install-grub-theme     - Install GRUB themes"
+    echo "    --install-yay            - Install yay AUR helper"
+    echo "    --install-vbox           - Install VirtualBox"
+    echo "    --install-fingerprint    - Install fingerprint login option (Untested yet, not work with pam configuration)"
+    echo "    --install-hamradio-setup - Install Ham Radio setup"
     echo ""
     echo ">>> Desktop environment installation options:"
-    echo "    --install-xfce          - Install XFCE desktop environment"
-    echo "    --install-plasma        - Install KDE Plasma desktop environment"
-    echo "    --install-hyprland      - Install Hyprland Wayland compositor"
-    echo "    --copy-hypr-config      - Copy custom Hyprland configuration files"
+    echo "    --install-xfce           - Install XFCE desktop environment"
+    echo "    --install-plasma         - Install KDE Plasma desktop environment"
+    echo "    --install-hyprland       - Install Hyprland Wayland compositor"
+    echo "    --copy-hypr-config       - Copy custom Hyprland configuration files"
     echo ""
     echo ">>> Additional options:"
-    echo "    -f, --force             - Force reinstall (e.g., overwrite existing GRUB installation)"
+    echo "    -f, --force              - Force reinstall (e.g., overwrite existing GRUB installation)"
     echo ""
     ;;
   *)
