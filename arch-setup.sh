@@ -242,8 +242,9 @@ install_hamradio_packages() {
     install_yay
   fi
 
-  yay -S --noconfirm --needed \
+  yay -S --removemake --noconfirm --needed \
     cqrlog-bin \
+    chirp-next
 
   echo "${BLUE}[i] Copying 99.usb-serial.rules to /etc/udev/rules.d...${RESET}"
   sudo cp environment-resources/udev-rules/99.usb-serial.rules /etc/udev/rules.d
@@ -542,7 +543,7 @@ install_hyprland() {
   fi
 
   echo "${BLUE}[i] Installing AUR packages...${RESET}"
-  yay -S --noconfirm --needed \
+  yay -S --removemake --noconfirm --needed \
     neofetch \
     ookla-speedtest-bin \
     spotify \
