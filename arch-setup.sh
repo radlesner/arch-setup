@@ -32,6 +32,13 @@ root_check() {
   fi
 }
 
+install_from_archinstall() (
+  local user_config="environment-resources/archinstall-config/user_configuration.json"
+  local user_creds="environment-resources/archinstall-config/user_credentials.json"
+
+  archinstall --config $user_config --creds $user_creds
+)
+
 install_grub() {
   root_check
 
@@ -673,6 +680,9 @@ for arg in "$@"; do
 done
 
 case "$1" in
+  --archinstall)
+    install_from_archinstall
+    ;;
   --chroot-postinstall)
     setting_postinstall
     ;;
@@ -720,6 +730,7 @@ case "$1" in
   --help)
     echo ""
     echo ">>> System installation options:"
+    echo "    --archinstall            - Install from archinstall script with custom config"
     echo "    --chroot-postinstall     - Configure post-installation system settings"
     echo "    --install-base           - Install base packages and enable services"
     echo "    --install-grub           - Install GRUB bootloader (EFI)"
