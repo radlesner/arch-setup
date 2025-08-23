@@ -234,13 +234,7 @@ install_base_packages() {
 }
 
 install_hamradio_packages() {
-  check_yay_installed
-  if [ $? -eq 0 ]; then
-    echo "${BLUE}[i] Found yay, moving on to installing packages from AUR...${RESET}"
-  else
-    echo "${BLUE}[i] No yay found, starting yay install...${RESET}"
-    install_yay
-  fi
+  install_yay
 
   yay -S --removemake --noconfirm --needed \
     cqrlog-bin \
@@ -534,13 +528,7 @@ install_hyprland() {
   tar -xf ./environment-resources/icons/01-Flat-Remix-Blue-20250709.tar.xz -C ~/.icons/
   gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Blue-Dark'
 
-  check_yay_installed
-  if [ $? -eq 0 ]; then
-    echo "${BLUE}[i] Found yay, moving on to installing packages from AUR...${RESET}"
-  else
-    echo "${BLUE}[i] No yay found, starting yay install...${RESET}"
-    install_yay
-  fi
+  install_yay
 
   echo "${BLUE}[i] Installing AUR packages...${RESET}"
   yay -S --removemake --noconfirm --needed \
@@ -552,6 +540,9 @@ install_hyprland() {
   echo "${BLUE}[i] Copying VSCodium settings to ~/.config/VSCodium/User...${RESET}"
   mkdir -p ~/.config/VSCodium/User/
   cp environment-resources/vscodium/settings.json ~/.config/VSCodium/User/
+
+  echo "${BLUE}[i] Installing oh-my-zsh..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
   echo "${GREEN}[✓] Hyprland environment installation completed!${RESET}"
 
@@ -635,14 +626,6 @@ install_yay() {
     (cd /tmp/yay && makepkg -si --noconfirm)
   else
     echo "${GREEN}[✓] yay already installed.${RESET}"
-  fi
-}
-
-check_yay_installed() {
-  if ! command -v yay &>/dev/null; then
-    return 1
-  else
-    return 0
   fi
 }
 
