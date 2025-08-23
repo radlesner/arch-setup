@@ -501,7 +501,10 @@ install_hyprland() {
     ttf-nerd-fonts-symbols \
     gnome-themes-extra \
     lxappearance \
+    polkit-gnome \
     gnome-keyring \
+    seahorse \
+    gparted \
     \
     ly \
     \
@@ -607,7 +610,8 @@ case "$mode" in
     sudo pacman -S --noconfirm --needed \
       wayland \
       wayland-protocols \
-      xorg-xwayland
+      xorg-xwayland \
+      xorg-xhost
     ;;
   *)
     echo "${RED}[!] Unknown mode: $mode. Use 'x11' or 'wayland'.${RESET}"
