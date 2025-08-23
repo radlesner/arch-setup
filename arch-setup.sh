@@ -552,7 +552,11 @@ install_hyprland() {
   cp environment-resources/vscodium/settings.json ~/.config/VSCodium/User/
 
   echo "${BLUE}[i] Installing oh-my-zsh..."
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="bira"/' ~/.zshrc
+
+  echo "${BLUE}[i] Copying nano configuration...${RESET}"
+  cp environment-resources/nano-config/.nanorc ~/
 
   echo "${GREEN}[✓] Hyprland environment installation completed!${RESET}"
 
