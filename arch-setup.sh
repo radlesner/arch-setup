@@ -549,6 +549,10 @@ install_hyprland() {
     spotify \
     vscodium-bin
 
+  echo "${BLUE}[i] Copying VSCodium settings to ~/.config/VSCodium/User...${RESET}"
+  mkdir -p ~/.config/VSCodium/User/
+  cp environment-resources/vscodium/settings.json ~/.config/VSCodium/User/
+
   echo "${GREEN}[✓] Hyprland environment installation completed!${RESET}"
 
   clear_cache
@@ -641,7 +645,6 @@ check_yay_installed() {
     return 0
   fi
 }
-
 
 install_fingerprint() {
   echo -e "\e[32m[i] Installing fingerprint login method...\e[0m"

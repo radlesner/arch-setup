@@ -1,0 +1,34 @@
+{
+    "explorer.confirmDelete": false,
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "editor.renderWhitespace": "none",
+    "explorer.confirmDragAndDrop": false,
+    "http.proxySupport": "off",
+    "arduino.defaultBaudRate": 9600,
+    "cmake.configureOnOpen": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "trailing-spaces.trimOnSave": true,
+    "editor.minimap.showSlider": "always",
+    "terminal.integrated.fontFamily": "DejaVu Sans Mono",
+    "editor.fontSize": 13,
+    "editor.cursorBlinking": "expand",
+    "workbench.sideBar.location": "right",
+    "arduino.useArduinoCli": true,
+    "git.confirmSync": false,
+    "C_Cpp.clang_format_path": "~/.vscode/clang-format",
+    "editor.formatOnSave": true,
+    "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "editor.codeLensFontFamily": "Source Code Pro Light",
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
+    "workbench.colorTheme": "Default Dark+",
+    "window.confirmSaveUntitledWorkspace": false,
+    "terminal.integrated.fontSize": 17
+}
