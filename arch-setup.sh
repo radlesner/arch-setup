@@ -34,8 +34,9 @@ root_check() {
 
 install_from_archinstall() (
   local user_config="environment-resources/archinstall-config/user_configuration.json"
+  local user_creds="environment-resources/archinstall-config/user_credentials.json"
 
-  archinstall --config $user_config
+  archinstall --config $user_config --creds $user_creds
 )
 
 install_grub() {

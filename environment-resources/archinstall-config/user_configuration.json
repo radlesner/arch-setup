@@ -148,7 +148,7 @@
         }
     },
     "services": [],
-    "swap": true,
+    "swap": false,
     "timezone": "Poland",
     "version": null
 }
