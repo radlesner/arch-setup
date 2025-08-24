@@ -1,8 +1,7 @@
 #!/bin/bash
 #
 # Auto Arch Setup Script
-# Version: 1.0.4
-# Author: Radek Lesner (https://github.com/radlesner)
+# Author: Radoslaw Lesner (https://github.com/radlesner)
 #
 # This script is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -496,6 +495,7 @@ install_hyprland() {
     unrar \
     p7zip \
     xarchiver \
+    rsync \
     \
     network-manager-applet \
     bluez \
