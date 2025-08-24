@@ -29,11 +29,12 @@ BACKUP_BASE="./backup"
 DATE=$(date +%Y%m%d-%H%M)
 BACKUP_DIR="$BACKUP_BASE/$DATE"
 
-do_backup() {
+do_backup_local() {
+  echo "${BLUE}[i] Starting backup.${RESET}"
   mkdir -p "$BACKUP_DIR"
 
   if [ ! -f "$LIST" ]; then
-    echo "❌ No list file: $LIST"
+    echo "${RED}[!] No list file: $LIST${RESET}"
     exit 1
   fi
 
@@ -43,47 +44,48 @@ do_backup() {
       ITEM_EXPANDED=$(realpath -m "$ITEM_EXPANDED")
 
       if [ -e "$ITEM_EXPANDED" ]; then
-        echo "➡️  Copying: $ITEM_EXPANDED"
+        echo ">>> Copying: $ITEM_EXPANDED"
         rsync -a --relative "$ITEM_EXPANDED" "$BACKUP_DIR"
       else
-        echo "⚠️  File not found: $ITEM_EXPANDED"
+        echo "${YELLOW}>>> File not found: $ITEM_EXPANDED${RESET}"
       fi
   done < "$LIST"
 
-  echo "✅ Backup completed: $BACKUP_DIR"
+  echo "${GREEN}[✓] Backup completed: $BACKUP_DIR${RESET}"
 }
 
-do_restore() {
+do_restore_local() {
   if [ -z "$1" ]; then
-    echo "❌ You must provide a backup directory (np. $BACKUP_BASE/$DATE)"
+    echo "${RED}[!] You must provide a backup directory (e.g. $BACKUP_BASE/$DATE)${RESET}"
     exit 1
   fi
 
   SRC="$1"
 
   if [ ! -d "$SRC" ]; then
-    echo "❌ Backup directory not found: $SRC"
+    echo "${RED}[!] Backup directory not found: $SRC${RESET}"
     exit 1
   fi
 
-  echo "➡️  Restoring backup from $SRC"
+  echo "${BLUE}[i] Restoring backup from $SRC${RESET}"
 
-  # Przechodzimy do katalogu backupu i kopiujemy wszystko z zachowaniem ścieżek
   cd "$SRC" || exit 1
   rsync -a --relative . /
 
-  echo "✅ Restore completed."
+  echo "${GREEN}[✓] Restore completed.${RESET}"
 }
 
 case "$1" in
-  --backup)
-    do_backup
+  --backup-local)
+    do_backup_local
     ;;
-  --restore)
-    do_restore "$2"
+  --restore-local)
+    do_restore_local "$2"
     ;;
   *)
-    echo "Usage: $0 {--backup|--restore <backup_directory>}"
+    echo ">>> System installation options:"
+    echo "    --backup-local                     - Creating a local disk backup"
+    echo "    --restore-local <backup_directory> - Restoring a local backup"
     exit 1
     ;;
 esac
