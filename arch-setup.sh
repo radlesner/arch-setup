@@ -212,6 +212,7 @@ install_base_packages() {
     usbutils \
     btrfs-progs \
     networkmanager \
+    inetutils \
     openssh \
     nano \
     zsh \

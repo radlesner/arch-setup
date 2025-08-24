@@ -27,10 +27,10 @@ RESET=$'\e[0m'
 LIST="backup_list"
 BACKUP_BASE="./backup"
 DATE=$(date +%Y%m%d-%H%M)
-BACKUP_DIR="$BACKUP_BASE/$DATE"
+BACKUP_DIR="$BACKUP_BASE/$(whoami)-on-$(hostname)-backup-$DATE"
 
 do_backup_local() {
-  echo "${BLUE}[i] Starting backup.${RESET}"
+  echo "${BLUE}[i] Starting backup to $BACKUP_DIR${RESET}"
   mkdir -p "$BACKUP_DIR"
 
   if [ ! -f "$LIST" ]; then
