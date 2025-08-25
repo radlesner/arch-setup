@@ -21,8 +21,7 @@
         "cpu",
         "temperature",
         "memory",
-        "custom/disk-root",
-        "custom/disk-home",
+        "custom/disk-usage",
         "custom/uptime",
         "backlight",
         "battery",
@@ -79,13 +78,8 @@
     "memory": {
         "format": " {}%"
     },
-    "custom/disk-root": {
-        "exec": "~/.config/waybar/scripts/disk-used-root.sh",
-        "interval": 10,
-        "tooltip": true
-    },
-    "custom/disk-home": {
-        "exec": "~/.config/waybar/scripts/disk-used-home.sh",
+    "custom/disk-usage": {
+        "exec": "~/.config/waybar/scripts/disk-used.sh /dev/nvme0n1p2",
         "interval": 10,
         "tooltip": true
     },
