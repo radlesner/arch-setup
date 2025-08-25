@@ -18,3 +18,11 @@
 ~/.wireguard/
 ~/.gitconfig
 ~/.nanorc
+
+~/.config/heroic/
+~/.config/MangoHud/
+~/.config/ppsspp/
+~/.config/RawTherapee/
+~/.local/share/Steam/config/
+~/.local/share/Steam/userdata/
+~/.local/share/Steam/steamapps/libraryfolders.vdf
