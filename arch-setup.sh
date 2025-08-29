@@ -570,8 +570,8 @@ install_hyprland() {
 
 hypr_copy_config () {
   echo "${BLUE}[i] Select Hyprland config to copy:${RESET}"
-  echo "  1) Config 01 for laptop"
-  echo "  2) Config 02 fot desktop"
+  echo "  1) Config 1 for laptop"
+  echo "  2) Config 2 fot desktop"
   echo "  0) Exit the script."
   read -r -p "${YELLOW}[?] Enter choice [1/2]: ${RESET}" choice
 
@@ -602,10 +602,11 @@ hypr_copy_config () {
         SRC="./environment-resources/$HYPR_CONFIG_OPTION/$cfg"
 
         if [ -d "$SRC" ]; then
-            echo "${BLUE}[i] Copying $cfg config...${RESET}"
+            echo "--> Copying $cfg config..."
             cp -rf "$SRC" "$HOME/.config"
         fi
     done
+    echo "${BLUE}[i] Hyprland configuration $choice copy completed${RESET}"
   fi
 }
 
