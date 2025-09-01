@@ -596,14 +596,19 @@ hypr_copy_config () {
   read -r -p "${YELLOW}[?] Do you want to copy hyprland config to .config? [Y/n]${RESET}: " confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "Thunar")
+    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "Thunar" "mimeapps.list")
 
     for cfg in "${COPY_FOLDERS[@]}"; do
         SRC="./environment-resources/$HYPR_CONFIG_OPTION/$cfg"
 
         if [ -d "$SRC" ]; then
-            echo "--> Copying $cfg config..."
-            cp -rf "$SRC" "$HOME/.config"
+          echo "--> Copying directory $cfg..."
+          cp -rf "$SRC" "$HOME/.config"
+        elif [ -f "$SRC" ]; then
+          echo "--> Copying file $cfg..."
+          cp -f "$SRC" "$HOME/.config/"
+        else
+          echo "!! $cfg not found, skipping"
         fi
     done
     echo "${BLUE}[i] Hyprland configuration $choice copy completed${RESET}"
