@@ -611,6 +611,27 @@ hypr_copy_config () {
           echo "!! $cfg not found, skipping"
         fi
     done
+
+    WALLPAPER_DIR="$HOME/.config/hypr/wallpapers"
+    ZIP_FILE="/tmp/wallpapers.zip"
+    DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
+
+    if [ ! -d "$WALLPAPER_DIR" ] || [ -z "$(ls -A "$WALLPAPER_DIR")" ]; then
+      printf "${BLUE}[i] Downloading wallpapers... ${RESET}"
+      wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
+      printf "${GREEN}Done${RESET}\n"
+
+      printf "${BLUE}[i] Extracting wallpapers... ${RESET}"
+      unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
+      printf "${GREEN}Done${RESET}\n"
+
+      printf "${BLUE}[i] Removing /tmp/wallpapers.zip... ${RESET}"
+      rm "$ZIP_FILE"
+      printf "${GREEN}Done${RESET}\n"
+    else
+      echo "${BLUE}[i] Wallpapers already exist, skipping download.${RESET}"
+    fi
+
     echo "${BLUE}[i] Hyprland configuration $choice copy completed${RESET}"
   fi
 }
