@@ -44,10 +44,10 @@ do_backup_local() {
       ITEM_EXPANDED=$(realpath -m "$ITEM_EXPANDED")
 
       if [ -e "$ITEM_EXPANDED" ]; then
-        echo ">>> Copying: $ITEM_EXPANDED"
+        echo "--> Copying: $ITEM_EXPANDED"
         rsync -a --relative "$ITEM_EXPANDED" "$BACKUP_DIR"
       else
-        echo "${YELLOW}>>> File or directory not found: $ITEM_EXPANDED${RESET}"
+        echo "${YELLOW}--> File or directory not found: $ITEM_EXPANDED${RESET}"
       fi
   done < "$LIST"
 
