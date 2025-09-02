@@ -596,7 +596,7 @@ hypr_copy_config () {
   read -r -p "${YELLOW}[?] Do you want to copy hyprland config to .config? [Y/n]${RESET}: " confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "Thunar" "mimeapps.list")
+    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list")
 
     for cfg in "${COPY_FOLDERS[@]}"; do
         SRC="./environment-resources/$HYPR_CONFIG_OPTION/$cfg"
