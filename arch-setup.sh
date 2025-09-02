@@ -596,20 +596,37 @@ hypr_copy_config () {
   read -r -p "${YELLOW}[?] Do you want to copy hyprland config to .config? [Y/n]${RESET}: " confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list")
+    COPY_CONFIG_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list")
+    COPY_LOCAL_SHARE_FOLDERS=("Thunar")
 
-    for cfg in "${COPY_FOLDERS[@]}"; do
-        SRC="./environment-resources/$HYPR_CONFIG_OPTION/$cfg"
+    mkdir -p "$HOME/.config"
+    for cfg in "${COPY_CONFIG_FOLDERS[@]}"; do
+        SRC="./environment-resources/$HYPR_CONFIG_OPTION/config/$cfg"
 
         if [ -d "$SRC" ]; then
-          echo "--> Copying directory $cfg..."
+          echo "--> Copying directory $cfg to ~/.config"
           cp -rf "$SRC" "$HOME/.config"
         elif [ -f "$SRC" ]; then
-          echo "--> Copying file $cfg..."
+          echo "--> Copying file $cfg ~/.config"
           cp -f "$SRC" "$HOME/.config/"
         else
           echo "!! $cfg not found, skipping"
         fi
+    done
+
+    mkdir -p "$HOME/.local/share"
+    for cfg in "${COPY_LOCAL_SHARE_FOLDERS[@]}"; do
+      SRC="./environment-resources/$HYPR_CONFIG_OPTION/local/$cfg"
+
+      if [ -d "$SRC" ]; then
+        echo "--> Copying directory $cfg to ~/.local/share"
+        cp -rf "$SRC" "$HOME/.local/share"
+      elif [ -f "$SRC" ]; then
+        echo "--> Copying file $cfg to ~/.local/share"
+        cp -f "$SRC" "$HOME/.local/share/"
+      else
+        echo "!! $cfg not found, skipping"
+      fi
     done
 
     WALLPAPER_DIR="$HOME/.config/hypr/wallpapers"
