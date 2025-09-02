@@ -5,11 +5,33 @@
 	<name>Open Terminal Here</name>
 	<submenu></submenu>
 	<unique-id>1756039040222978-1</unique-id>
-	<command>exo-open --working-directory --launch TerminalEmulator</command>
-	<description>Open in terminal action</description>
+	<command>exo-open --working-directory %f --launch TerminalEmulator</command>
+	<description>Open terminal in containing directory</description>
 	<range></range>
 	<patterns>*</patterns>
 	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>utilities-root-terminal</icon>
+	<name>Open as Root Terminal Here</name>
+	<submenu></submenu>
+	<unique-id>1756845198353315-1</unique-id>
+	<command>pkexec exo-open --working-directory %f --launch TerminalEmulator</command>
+	<description>Open as Root terminal in containing directory</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon>krusader_root</icon>
+	<name>Open as Root</name>
+	<submenu></submenu>
+	<unique-id>1756845458199497-2</unique-id>
+	<command>pkexec thunar %f</command>
+	<description>Open the folder with administration privileges</description>
+	<range></range>
+	<patterns>*</patterns>
 	<directories/>
 </action>
 </actions>
