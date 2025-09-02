@@ -649,7 +649,7 @@ hypr_copy_config () {
       echo "${BLUE}[i] Wallpapers already exist, skipping download.${RESET}"
     fi
 
-    echo "${BLUE}[i] Hyprland configuration $choice copy completed${RESET}"
+    echo "${GREEN}[✓] Hyprland configuration $choice copy completed${RESET}"
   fi
 }
 
