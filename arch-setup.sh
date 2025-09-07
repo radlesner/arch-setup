@@ -550,7 +550,7 @@ install_hyprland() {
 
   echo "${BLUE}[i] Copying VSCodium settings to ~/.config/VSCodium/User...${RESET}"
   mkdir -p ~/.config/VSCodium/User/
-  cp environment-resources/vscodium/settings.json ~/.config/VSCodium/User/
+  cp -f environment-resources/vscodium/settings.json ~/.config/VSCodium/User/
 
   echo "${BLUE}[i] Installing oh-my-zsh..."
   RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
