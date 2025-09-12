@@ -24,9 +24,14 @@ RED=$'\e[31m'
 BLUE=$'\e[94m'
 RESET=$'\e[0m'
 
+log_info() { echo -e "${BLUE}[i] $1${RESET} "; }
+log_error() { echo -e "${RED}[!] $1${RESET} "; }
+log_qa() { printf "${YELLOW}[?] %s${RESET} " "$1"; }
+log_succes() { echo -e "${GREEN}[✓] $1${RESET}"; }
+
 root_check() {
   if [ "$(id -u)" -ne 0 ]; then
-    echo "${RED}[!] This script option must be run as root.${RESET}"
+    log_error "This script option must be run as root."
     exit 1
   fi
 }
@@ -42,33 +47,33 @@ install_grub() {
   root_check
 
   if ! mount | grep -q '/boot type vfat'; then
-    echo "${RED}[!] /boot is not mounted or is not a vfat EFI partition!${RESET}"
+    log_error "/boot is not mounted or is not a vfat EFI partition!"
     exit 1
   fi
 
   if [ -d /boot/EFI/GRUB ]; then
-    echo "${BLUE}[i] GRUB seems to be already installed.${RESET}"
+    log_info "[i] GRUB seems to be already installed."
   else
-    read -r -p "${YELLOW}[?] Do you want to install GRUB loader? [Y/n]: ${RESET}" confirm
+    read -r -p "$(log_qa "Do you want to install GRUB loader? [Y/n]: ")" confirm
     confirm=${confirm,,}
     if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
       pacman -Syu --noconfirm
-      echo "${BLUE}[i] Installing grub packages...${RESET}"
+      log_info "Installing grub packages..."
       pacman -S --noconfirm --needed \
         grub \
         efibootmgr \
         dosfstools
 
-      echo "${BLUE}[i] Installing GRUB...${RESET}"
+      log_info "Installing GRUB..."
       grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=GRUB
 
-      echo "${BLUE}[i] Configuring GRUB...${RESET}"
+      log_info "Configuring GRUB..."
       sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=1/' /etc/default/grub
       grub-mkconfig -o /boot/grub/grub.cfg
 
-      echo "${GREEN}[✓] GRUB installation complete${RESET}"
+      log_succes "GRUB installation complete"
     else
-      echo "${RED}[!] GRUB installation aborted!${RESET}"
+      log_error "GRUB installation aborted!"
       exit 0
     fi
   fi
@@ -81,12 +86,12 @@ remove_grub() {
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
     if [ -d /boot/EFI ]; then
-      echo "${BLUE}[i] Deleting /boot/EFI...${RESET}"
+      log_info "Deleting /boot/EFI..."
       rm -rf /boot/EFI
     fi
 
     if [ -d /boot/grub ]; then
-      echo "${BLUE}[i] Deleting /boot/grub...${RESET}"
+      log_info "Deleting /boot/grub..."
       rm -rf /boot/grub
     fi
   fi
@@ -95,48 +100,48 @@ remove_grub() {
 install_grub_theme() {
   root_check
 
-  echo "${BLUE}[i] Select GRUB theme to install:${RESET}"
+  log_info "Select GRUB theme to install:"
   echo "  1) Particle"
   echo "  2) Particle-circle"
   echo "  3) Matrix"
   echo "  4) Matrix-circle"
   echo "  5) Solara-grub2"
   echo "  0) Exit the script."
-  read -r -p "${YELLOW}[?] Enter choice: ${RESET}" choice
+  read -r -p "${YELLOW}[?] Enter choice: " choice
 
   case "$choice" in
     1)
-      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      log_info "Installing Particle GRUB theme..."
       SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
       bash "$SCRIPT_DIR/environment-resources/grub-theme/Particle-grub-theme/install.sh"
       ;;
     2)
-      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      log_info "Installing Particle GRUB theme..."
       SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
       bash "$SCRIPT_DIR/environment-resources/grub-theme/Particle-circle-grub-theme/install.sh"
       ;;
     3)
-      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      log_info "Installing Particle GRUB theme..."
       SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
       bash "$SCRIPT_DIR/environment-resources/grub-theme/Matrix-circle-grub-theme/install.sh"
     ;;
     4)
-      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      log_info "Installing Particle GRUB theme..."
       SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
       bash "$SCRIPT_DIR/environment-resources/grub-theme/Matrix-circle-grub-theme/install.sh"
     ;;
     5)
-      echo "${BLUE}[i] Installing Particle GRUB theme...${RESET}"
+      log_info "Installing Particle GRUB theme..."
       SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
       bash "$SCRIPT_DIR/environment-resources/grub-theme/Solara-grub2-theme/install.sh"
     ;;
     0)
-      echo "${BLUE}[i] Exiting the script.${RESET}"
+      log_info "Exiting the script."
       return
       ;;
     *)
-      echo "${RED}[!] Invalid choice. Aborting.${RESET}"
-      echo "${RED}[!] Use: --help options${RESET}"
+      log_error "Invalid choice. Aborting."
+      log_error "Use: --help options"
       return
       ;;
   esac
@@ -145,57 +150,57 @@ install_grub_theme() {
 setting_postinstall() {
   root_check
 
-  echo "${BLUE}[i] Configuring locale...${RESET}"
+  log_info "Configuring locale..."
   locale-gen
   localectl set-locale LANG=en_US.UTF-8
   echo "KEYMAP=pl" > /etc/vconsole.conf
   echo "FONT=Lat2-Terminus16" >> /etc/vconsole.conf
   echo "FONT_MAP=8859-2" >> /etc/vconsole.conf
-  echo "${GREEN}[✓] Locale configuration complete${RESET}"
+  log_succes "Locale configuration complete"
 
-  echo "${BLUE}[i] Configure timezone...${RESET}"
+  log_info "Configure timezone..."
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
-  echo "${GREEN}[✓] Timezone configuration complete${RESET}"
+  log_succes "Timezone configuration complete"
 
-  echo "${BLUE}[i] Configure NTP clock...${RESET}"
+  log_info "Configure NTP clock..."
   systemctl enable systemd-timesyncd.service
   timedatectl set-ntp true
-  echo "${GREEN}[✓] NTP clock configuration complete${RESET}"
+  log_succes "NTP clock configuration complete"
 
-  echo "${BLUE}[i] Configuring hostname...${RESET}"
-  read -r -p "${YELLOW}Enter hostname for this system: ${RESET}" HOSTNAME
+  log_info "Configuring hostname..."
+  read -r -p "${YELLOW}Enter hostname for this system: " HOSTNAME
   if [[ -z "$HOSTNAME" ]]; then
-    echo "${RED}[!] No hostname entered, using default: archlinux${RESET}"
+    log_error "No hostname entered, using default: archlinux"
     HOSTNAME="archlinux"
   fi
   echo "$HOSTNAME" > /etc/hostname
-  echo "${GREEN}[✓] Hostname configuration complete${RESET}"
+  log_succes "Hostname configuration complete"
 
-  echo "${BLUE}[i] Configuring pacman...${RESET}"
+  log_info "Configuring pacman..."
   sed -i 's/^#Color/Color/' /etc/pacman.conf
   sed -i 's/^#CheckSpace/CheckSpace/' /etc/pacman.conf
   sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' /etc/pacman.conf
   sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
   sed -i 's/^#DownloadUser = alpm/DownloadUser = alpm/' /etc/pacman.conf
 
-  echo "${BLUE}[i] Setting root password...${RESET}"
+  log_info "Setting root password..."
   passwd
 
-  read -r -p "${YELLOW}[?] Do you want create the new user? [Y/n]: ${RESET}" confirm
+  read -r -p "${YELLOW}[?] Do you want create the new user? [Y/n]: " confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    read -r -p "${YELLOW}[?] Enter username for the new user: ${RESET}" username
+    read -r -p "${YELLOW}[?] Enter username for the new user: " username
     if id "$username" &>/dev/null; then
-      echo "${BLUE}[i] User $username already exists.${RESET}"
+      log_info "User $username already exists."
     else
-      echo "${BLUE}[i] Creating new user $username...${RESET}"
+      log_info "Creating new user $username..."
       mkdir -p /home/$username
       useradd -M -d /home/$username/ -s /usr/bin/bash $username
       chown -R $username:$username /home/$username
       passwd $username
 
-      echo "${BLUE}[i] Configuring new user $username...${RESET}"
+      log_info "Configuring new user $username..."
       usermod -aG wheel,uucp $username
     fi
   fi
@@ -206,7 +211,7 @@ setting_postinstall() {
 install_base_packages() {
   root_check
 
-  echo "${BLUE}[i] Installing essential packages...${RESET}"
+  log_info "Installing essential packages..."
   pacman -S --noconfirm --needed \
     sudo \
     usbutils \
@@ -226,18 +231,18 @@ install_base_packages() {
     cups-filters \
     htop
 
-  echo "${BLUE}[i] Enabling NetworkManager...${RESET}"
+  log_info "Enabling NetworkManager..."
   systemctl enable NetworkManager
 
-  echo "${BLUE}[i] Enabling CUPS service...${RESET}"
+  log_info "Enabling CUPS service..."
   sudo systemctl enable cups
 
-  echo "${BLUE}[i] Configuring the /etc/sudoers file for the wheel group...${RESET}"
+  log_info "Configuring the /etc/sudoers file for the wheel group..."
   sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
   clear_cache
 
-  echo "${GREEN}[✓] Base setup completed!${RESET}"
+  log_succes "Base setup completed!"
 }
 
 install_hamradio_packages() {
@@ -247,62 +252,62 @@ install_hamradio_packages() {
     cqrlog-bin \
     chirp-next
 
-  echo "${BLUE}[i] Copying 99.usb-serial.rules to /etc/udev/rules.d...${RESET}"
+  log_info "Copying 99.usb-serial.rules to /etc/udev/rules.d..."
   sudo cp environment-resources/udev-rules/99.usb-serial.rules /etc/udev/rules.d
 
-  echo "${BLUE}[i] Resfreshing udev rules...${RESET}"
+  log_info "Resfreshing udev rules..."
   sudo udevadm control --reload-rules
   sudo udevadm trigger
 
-  echo "${GREEN}[✓] Setup udev rules completed!${RESET}"
+  log_succes "Setup udev rules completed!"
 }
 
 install_virtualbox() {
   root_check
 
   echo
-  echo "${BLUE}[i] Select VirtualBox installation method:${RESET}"
+  log_info "Select VirtualBox installation method:"
   echo "  1) Install from Arch repository"
   echo "  2) Install from official .run installer"
-  read -r -p "${YELLOW}[?] Enter choice [1/2]: ${RESET}" choice
+  read -r -p "$(log_qa "Enter choice [1/2]: ")" choice
 
   ### REPOSITORY INSTALLER
 
   if [[ "$choice" == "1" ]]; then
-      echo "${BLUE}[i] Installing VirtualBox from Arch repository...${RESET}"
+      log_info "Installing VirtualBox from Arch repository..."
       pacman -S --noconfirm --needed linux-headers virtualbox virtualbox-host-modules-arch
 
-      echo "${BLUE}[i] Loading VirtualBox kernel modules...${RESET}"
+      log_info "Loading VirtualBox kernel modules..."
       modprobe vboxdrv
 
       if lsmod | grep -q vboxdrv; then
-          echo "${GREEN}[✓] VirtualBox modules loaded successfully.${RESET}"
+          log_succes "VirtualBox modules loaded successfully."
       else
-          echo "${RED}[!] VirtualBox modules failed to load. You may need to reboot.${RESET}"
+          log_error "VirtualBox modules failed to load. You may need to reboot."
       fi
 
-      echo "${GREEN}[✓] VirtualBox successfully installed from repository.${RESET}"
+      log_succes "VirtualBox successfully installed from repository."
       ask_reboot
       return 0
   fi
 
   if [[ "$choice" != "2" ]]; then
-      echo "${RED}[!] Invalid selection. Installation aborted.${RESET}"
+      log_error "Invalid selection. Installation aborted."
       return 1
   fi
 
   ### RUN FILE INSTALLER
 
-  echo "${BLUE}[i] Checking virtualization support...${RESET}"
+  log_info "Checking virtualization support..."
   if grep -E '(vmx|svm)' /proc/cpuinfo > /dev/null; then
-      echo "${GREEN}[✓] CPU does support virtualization.${RESET}"
+      log_succes "CPU does support virtualization."
   else
-      echo "${RED}[!] CPU does not support virtualization. Enable it in BIOS/UEFI. Installation aborted.${RESET}"
+      log_error "CPU does not support virtualization. Enable it in BIOS/UEFI. Installation aborted."
       exit 1
   fi
 
   if lsmod | grep -q 'kvm'; then
-      echo "${BLUE}[i] KVM modules are active, disabling KVM...${RESET}"
+      log_info "KVM modules are active, disabling KVM..."
 
       if [ ! -f /etc/modprobe.d/disable-kvm.conf ]; then
         touch /etc/modprobe.d/disable-kvm.conf
@@ -316,52 +321,52 @@ install_virtualbox() {
       elif [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
           echo "blacklist kvm_amd" >> /etc/modprobe.d/disable-kvm.conf
       else
-          echo "${RED}[!] Could not recognize processor manufacturer. Installation aborted.${RESET}"
+          log_error "Could not recognize processor manufacturer. Installation aborted."
           rm -f /etc/modprobe.d/disable-kvm.conf
           exit 1
       fi
 
-      echo "${BLUE}[i] Regenerating initramfs images...${RESET}"
+      log_info "Regenerating initramfs images..."
       mkinitcpio -P
   fi
 
-  echo "${BLUE}[i] Installing linux-headers if needed...${RESET}"
+  log_info "Installing linux-headers if needed..."
   pacman -S --noconfirm --needed linux-headers
 
-  echo "${BLUE}[i] Fetching latest VirtualBox version...${RESET}"
+  log_info "Fetching latest VirtualBox version..."
   latest_version=$(curl -s https://download.virtualbox.org/virtualbox/LATEST.TXT)
 
   if [ -z "$latest_version" ]; then
-      echo "${RED}[!] Could not fetch latest version. Installation aborted.${RESET}"
+      log_error "Could not fetch latest version. Installation aborted."
       return 1
   fi
 
-  echo "${BLUE}[i] Latest VirtualBox version: $latest_version${RESET}"
+  log_info "Latest VirtualBox version: $latest_version"
   url="https://download.virtualbox.org/virtualbox/${latest_version}/VirtualBox-${latest_version}-168469-Linux_amd64.run"
 
-  echo "${BLUE}[i] Downloading VirtualBox installer...${RESET}"
+  log_info "Downloading VirtualBox installer..."
   wget "$url" -O /tmp/virtualbox.run
 
-  echo "${BLUE}[i] Making installer executable...${RESET}"
+  log_info "Making installer executable..."
   chmod +x /tmp/virtualbox.run
 
-  echo "${BLUE}[i] Running installer...${RESET}"
+  log_info "Running installer..."
   /tmp/virtualbox.run
 
-  echo "${BLUE}[i] Building VirtualBox kernel modules...${RESET}"
+  log_info "Building VirtualBox kernel modules..."
   if [ -x /sbin/vboxconfig ]; then
       /sbin/vboxconfig
   else
-      echo "${RED}[!] vboxconfig not found, you may need to manually load modules.${RESET}"
+      log_error "vboxconfig not found, you may need to manually load modules."
   fi
 
-  echo "${GREEN}[✓] VirtualBox successfully installed from official .run installer.${RESET}"
+  log_succes "VirtualBox successfully installed from official .run installer."
   ask_reboot
 }
 
 
 install_audio() {
-  echo "${BLUE}[i] Installing audio packages...${RESET}"
+  log_info "Installing audio packages..."
   sudo pacman -S --noconfirm \
     pipewire \
     pipewire-pulse \
@@ -369,8 +374,8 @@ install_audio() {
     pipewire-jack \
     wireplumber
 
-  echo "${BLUE}[i] PipeWire services will be activated upon DE login session.${RESET}"
-  echo "${GREEN}[✓] Installing audio packages completed!${RESET}"
+  log_info "PipeWire services will be activated upon DE login session."
+  log_succes "Installing audio packages completed!"
 }
 
 install_xfce() {
@@ -378,7 +383,7 @@ install_xfce() {
   install_audio
   install_xorg "x11"
 
-  echo "${BLUE}[i] Installing XFCE desktop environment...${RESET}"
+  log_info "Installing XFCE desktop environment..."
   pacman -S --noconfirm --needed \
     xfce4 \
     xfce4-goodies \
@@ -398,7 +403,7 @@ install_xfce() {
     seahorse \
     blueman
 
-  echo "${GREEN}[✓] XFCE installation completed! System restart required.${RESET}"
+  log_succes "XFCE installation completed! System restart required."
   clear_cache
   ask_reboot
 }
@@ -407,7 +412,7 @@ install_plasma() {
   install_audio
   install_xorg "wayland"
 
-  echo "${BLUE}[i] Installing KDE Plasma desktop environment...${RESET}"
+  log_info "Installing KDE Plasma desktop environment..."
   sudo pacman -S --noconfirm --needed \
     plasma-desktop \
     konsole \
@@ -446,13 +451,13 @@ install_plasma() {
     bluedevil \
     power-profiles-daemon
 
-  echo "${BLUE}[i] Enabling sddm...${RESET}"
+  log_info "Enabling sddm..."
   sudo systemctl enable sddm
 
-  echo "${BLUE}[i] Enabling bluetooth...${RESET}"
+  log_info "Enabling bluetooth..."
   sudo systemctl enable bluetooth
 
-  echo "${GREEN}[✓] KDE Plasma installation completed! System restart required.${RESET}"
+  log_succes "KDE Plasma installation completed! System restart required."
 
   clear_cache
   ask_reboot
@@ -462,7 +467,7 @@ install_hyprland() {
   install_audio
   install_xorg "wayland"
 
-  echo "${BLUE}[i] Installing Hyprland (Wayland compositor)...${RESET}"
+  log_info "Installing Hyprland (Wayland compositor)..."
   sudo pacman -S --noconfirm --needed \
     hyprland \
     xdg-desktop-portal-hyprland \
@@ -524,42 +529,42 @@ install_hyprland() {
     imv \
     libreoffice-fresh
 
-  echo "${BLUE}[i] Enabling ly login manager...${RESET}"
+  log_info "Enabling ly login manager..."
   sudo systemctl enable ly.service
 
-  echo "${BLUE}[i] Enabling bluetooth...${RESET}"
+  log_info "Enabling bluetooth..."
   sudo systemctl enable bluetooth
 
-  echo "${BLUE}[i] Enabling audio...${RESET}"
+  log_info "Enabling audio..."
   systemctl --user enable --now pipewire.service
   systemctl --user enable --now wireplumber.service
 
-  echo "${BLUE}[i] Installing icons..."${RESET};
+  log_info "Installing icons...";
   mkdir -p ~/.icons
   tar -xf ./environment-resources/icons/01-Flat-Remix-Blue-20250709.tar.xz -C ~/.icons/
   gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Blue-Dark'
 
   install_yay
 
-  echo "${BLUE}[i] Installing AUR packages...${RESET}"
+  log_info "Installing AUR packages..."
   yay -S --removemake --noconfirm --needed \
     neofetch \
     ookla-speedtest-bin \
     spotify \
     vscodium-bin
 
-  echo "${BLUE}[i] Copying VSCodium settings to ~/.config/VSCodium/User...${RESET}"
+  log_info "Copying VSCodium settings to ~/.config/VSCodium/User..."
   mkdir -p ~/.config/VSCodium/User/
   cp -f environment-resources/vscodium/settings.json ~/.config/VSCodium/User/
 
-  echo "${BLUE}[i] Installing oh-my-zsh..."
+  log_info "Installing oh-my-zsh..."
   RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="bira"/' ~/.zshrc
 
-  echo "${BLUE}[i] Copying nano configuration...${RESET}"
+  log_info "Copying nano configuration..."
   cp environment-resources/nano-config/.nanorc ~/
 
-  echo "${GREEN}[✓] Hyprland environment installation completed!${RESET}"
+  log_succes "Hyprland environment installation completed!"
 
   clear_cache
   hypr_copy_config
@@ -569,11 +574,11 @@ install_hyprland() {
 }
 
 hypr_copy_config () {
-  echo "${BLUE}[i] Select Hyprland config to copy:${RESET}"
+  log_info "Select Hyprland config to copy:"
   echo "  1) Config 1 for laptop"
   echo "  2) Config 2 fot desktop"
   echo "  0) Exit the script."
-  read -r -p "${YELLOW}[?] Enter choice [1/2]: ${RESET}" choice
+  read -r -p "$(log_qa "Enter choice [1/2]: ")" choice
 
   case "$choice" in
     1)
@@ -583,17 +588,16 @@ hypr_copy_config () {
       HYPR_CONFIG_OPTION="hyprland-config-02"
       ;;
     0)
-      echo "${BLUE}[i] Exiting the script.${RESET}"
+      log_info "Exiting the script."
       return
       ;;
     *)
-      echo "${RED}[!] Invalid choice. Aborting.${RESET}"
-      echo "${RED}[!] Use: --help options${RESET}"
+      log_error "Invalid choice. Aborting."
+      log_error "Use: --help options"
       return
       ;;
   esac
-
-  read -r -p "${YELLOW}[?] Do you want to copy hyprland config to .config? [Y/n]${RESET}: " confirm
+  read -r -p "$(log_qa "Do you want to copy hyprland config to .config? [Y/n]:")" confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
     COPY_CONFIG_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list")
@@ -646,17 +650,17 @@ hypr_copy_config () {
       rm "$ZIP_FILE"
       printf "${GREEN}Done${RESET}\n"
     else
-      echo "${BLUE}[i] Wallpapers already exist, skipping download.${RESET}"
+      log_info "Wallpapers already exist, skipping download."
     fi
 
-    echo "${GREEN}[✓] Hyprland configuration $choice copy completed${RESET}"
+    log_succes "Hyprland configuration $choice copy completed"
   fi
 }
 
 install_xorg() {
   local mode=$1
 
-  echo "${BLUE}[i] Installing X server packages for '$mode'...${RESET}"
+  log_info "Installing X server packages for '$mode'..."
 
 case "$mode" in
   x11)
@@ -670,22 +674,22 @@ case "$mode" in
       xorg-xhost
     ;;
   *)
-    echo "${RED}[!] Unknown mode: $mode. Use 'x11' or 'wayland'.${RESET}"
+    log_error "Unknown mode: $mode. Use 'x11' or 'wayland'."
     return 1
     ;;
 esac
 
-  echo "${GREEN}[✓] Xorg installation for '$mode' completed!${RESET}"
+  log_succes "Xorg installation for '$mode' completed!"
 }
 
 install_yay() {
   if ! command -v yay &>/dev/null; then
-    echo "${BLUE}[i] Installing yay AUR helper...${RESET}"
+    log_info "Installing yay AUR helper..."
     sudo pacman -S --noconfirm --needed git base-devel
     git clone https://aur.archlinux.org/yay.git /tmp/yay
     (cd /tmp/yay && makepkg -si --noconfirm)
   else
-    echo "${GREEN}[✓] yay already installed.${RESET}"
+    log_succes "yay already installed."
   fi
 }
 
@@ -708,12 +712,12 @@ install_fingerprint() {
 }
 
 ask_reboot() {
-  read -r -p "${YELLOW}[?] Do you want to restart system? [Y/n]: ${RESET}" confirm
+  read -r -p "$(log_qa "Do you want to restart system? [Y/n]:")" confirm
   [[ "$confirm" =~ ^(n|no)$ ]] || reboot
 }
 
 clear_cache() {
-  echo "${BLUE}[i] Clearing cache...${RESET}"
+  log_info "Clearing cache..."
   sudo pacman -Sc
 }
 
