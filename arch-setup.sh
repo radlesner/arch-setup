@@ -54,7 +54,8 @@ install_grub() {
   if [ -d /boot/EFI/GRUB ]; then
     log_info "[i] GRUB seems to be already installed."
   else
-    read -r -p "$(log_qa "Do you want to install GRUB loader? [Y/n]: ")" confirm
+    log_qa "Do you want to install GRUB loader? [Y/n]:"
+    read -r confirm
     confirm=${confirm,,}
     if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
       pacman -Syu --noconfirm
@@ -269,7 +270,8 @@ install_virtualbox() {
   log_info "Select VirtualBox installation method:"
   echo "  1) Install from Arch repository"
   echo "  2) Install from official .run installer"
-  read -r -p "$(log_qa "Enter choice [1/2]: ")" choice
+  log_qa "Enter choice [1/2]:"
+  read -r choice
 
   ### REPOSITORY INSTALLER
 
@@ -578,7 +580,9 @@ hypr_copy_config () {
   echo "  1) Config 1 for laptop"
   echo "  2) Config 2 fot desktop"
   echo "  0) Exit the script."
-  read -r -p "$(log_qa "Enter choice [1/2]: ")" choice
+
+  log_qa "Enter choice [1/2]:"
+  read -r choice
 
   case "$choice" in
     1)
@@ -597,7 +601,8 @@ hypr_copy_config () {
       return
       ;;
   esac
-  read -r -p "$(log_qa "Do you want to copy hyprland config to .config? [Y/n]:")" confirm
+  log_qa "Do you want to copy hyprland config to .config? [Y/n]:"
+  read -r confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
     COPY_CONFIG_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list")
@@ -712,7 +717,8 @@ install_fingerprint() {
 }
 
 ask_reboot() {
-  read -r -p "$(log_qa "Do you want to restart system? [Y/n]:")" confirm
+  log_qa "Do you want to restart system? [Y/n]:"
+  read -r confirm
   [[ "$confirm" =~ ^(n|no)$ ]] || reboot
 }
 
