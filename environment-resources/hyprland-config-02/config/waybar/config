@@ -21,8 +21,7 @@
         "cpu",
         "temperature",
         "memory",
-        "custom/disk-root",
-        "custom/disk-home",
+        "custom/disk-usage",
         "custom/disk-01",
         "custom/disk-02",
         "custom/uptime",
@@ -77,23 +76,18 @@
     "memory": {
         "format": " {}%"
     },
-    "custom/disk-root": {
-        "exec": "~/.config/waybar/scripts/disk-used-root.sh",
-        "interval": 10,
-        "tooltip": true
-    },
-    "custom/disk-home": {
-        "exec": "~/.config/waybar/scripts/disk-used-home.sh",
+    "custom/disk-usage": {
+        "exec": "~/.config/waybar/scripts/disk-used.sh / ",
         "interval": 10,
         "tooltip": true
     },
     "custom/disk-01": {
-        "exec": "~/.config/waybar/scripts/disk-used-disk01.sh",
+        "exec": "~/.config/waybar/scripts/disk-used.sh /home/sp2cha/Games 󰉋",
         "interval": 10,
         "tooltip": true
     },
     "custom/disk-02": {
-        "exec": "~/.config/waybar/scripts/disk-used-disk02.sh",
+        "exec": "~/.config/waybar/scripts/disk-used.sh /home/sp2cha/Pictures 󰉏",
         "interval": 10,
         "tooltip": true
     },

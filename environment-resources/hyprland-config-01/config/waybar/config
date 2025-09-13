@@ -79,7 +79,7 @@
         "format": " {}%"
     },
     "custom/disk-usage": {
-        "exec": "~/.config/waybar/scripts/disk-used.sh /dev/nvme0n1p2",
+        "exec": "~/.config/waybar/scripts/disk-used.sh / ",
         "interval": 10,
         "tooltip": true
     },
