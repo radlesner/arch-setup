@@ -716,6 +716,37 @@ install_fingerprint() {
   # sudo cp ./environment-resources/pam/system-local-login  /etc/pam.d/
 }
 
+install_game_setup() {
+  log_info "Installing game setup..."
+
+  log_info "Enabling miltilib repository..."
+  sudo sed -i '/^\[multilib\]/s/^#//' /etc/pacman.conf
+  sudo sed -i '/Include = \/etc\/pacman.d\/mirrorlist/s/^#//' /etc/pacman.conf
+  sudo pacman -Sy
+
+  log_info "Installing Radeon packages..."
+  sudo pacman -S --noconfirm --needed \
+    mesa \
+    lib32-mesa \
+    vulkan-radeon \
+    lib32-vulkan-radeon \
+    \
+    vulkan-tools \
+    vulkan-icd-loader \
+    lib32-vulkan-icd-loader \
+    vulkan-mesa-layers \
+    \
+    steam
+
+  install_yay
+
+  yay -S --removemake --noconfirm --needed \
+    dxvk-bin \
+    protontricks \
+    \
+    heroic-games-launcher-bin
+}
+
 ask_reboot() {
   log_qa "Do you want to restart system? [Y/n]:"
   read -r confirm
@@ -765,6 +796,9 @@ case "$1" in
   --install-hamradio-setup)
     install_hamradio_packages
     ;;
+  --install-game-setup)
+    install_game_setup
+    ;;
   --install-xfce)
     install_xfce
     ;;
@@ -799,6 +833,7 @@ case "$1" in
     echo "    --install-vbox           - Install VirtualBox"
     echo "    --install-fingerprint    - Install fingerprint login option (Untested yet, not work with pam configuration)"
     echo "    --install-hamradio-setup - Install Ham Radio setup"
+    echo "    --install-game-setup     - Install game setup (Radeon only)"
     echo ""
     echo ">>> Desktop environment installation options:"
     echo "    --install-xfce           - Install XFCE desktop environment"
