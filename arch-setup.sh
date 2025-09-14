@@ -83,7 +83,8 @@ install_grub() {
 remove_grub() {
   root_check
 
-  read -r -p "${YELLOW}[?] Do you realy want remove GRUB bootloader? [N/y]: ${RESET}" confirm
+  log_qa "Do you realy want remove GRUB bootloader? [N/y]:"
+  read -r confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
     if [ -d /boot/EFI ]; then
@@ -108,7 +109,8 @@ install_grub_theme() {
   echo "  4) Matrix-circle"
   echo "  5) Solara-grub2"
   echo "  0) Exit the script."
-  read -r -p "${YELLOW}[?] Enter choice: " choice
+  log_qa "Enter choice:"
+  read -r choice
 
   case "$choice" in
     1)
@@ -170,7 +172,8 @@ setting_postinstall() {
   log_succes "NTP clock configuration complete"
 
   log_info "Configuring hostname..."
-  read -r -p "${YELLOW}Enter hostname for this system: " HOSTNAME
+  log_qa "Enter choice [1/2]:"
+  read -r HOSTNAME
   if [[ -z "$HOSTNAME" ]]; then
     log_error "No hostname entered, using default: archlinux"
     HOSTNAME="archlinux"
@@ -188,10 +191,12 @@ setting_postinstall() {
   log_info "Setting root password..."
   passwd
 
-  read -r -p "${YELLOW}[?] Do you want create the new user? [Y/n]: " confirm
+  log_qa "${YELLOW}[?] Do you want create the new user? [Y/n]:"
+  read -r confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    read -r -p "${YELLOW}[?] Enter username for the new user: " username
+    log_qa "${YELLOW}[?] Enter username for the new user:"
+    read -r username
     if id "$username" &>/dev/null; then
       log_info "User $username already exists."
     else
@@ -266,7 +271,6 @@ install_hamradio_packages() {
 install_virtualbox() {
   root_check
 
-  echo
   log_info "Select VirtualBox installation method:"
   echo "  1) Install from Arch repository"
   echo "  2) Install from official .run installer"
