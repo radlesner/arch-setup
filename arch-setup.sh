@@ -150,7 +150,7 @@ install_grub_theme() {
   esac
 }
 
-setting_postinstall() {
+chroot_postinstall() {
   root_check
 
   log_info "Configuring locale..."
@@ -172,7 +172,7 @@ setting_postinstall() {
   log_succes "NTP clock configuration complete"
 
   log_info "Configuring hostname..."
-  log_qa "Enter choice [1/2]:"
+  log_qa "Enter a new hostname for this system:"
   read -r HOSTNAME
   if [[ -z "$HOSTNAME" ]]; then
     log_error "No hostname entered, using default: archlinux"
@@ -781,7 +781,7 @@ case "$1" in
     install_from_archinstall
     ;;
   --chroot-postinstall)
-    setting_postinstall
+    chroot_postinstall
     ;;
   --install-grub)
     if $force; then
