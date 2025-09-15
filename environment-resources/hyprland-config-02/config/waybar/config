@@ -22,8 +22,9 @@
         "temperature",
         "memory",
         "custom/disk-usage",
-        "custom/disk-01",
         "custom/disk-02",
+        "custom/disk-01",
+        "custom/disk-03",
         "custom/uptime",
         "custom/logout",
         "custom/reboot",
@@ -88,6 +89,11 @@
     },
     "custom/disk-02": {
         "exec": "~/.config/waybar/scripts/disk-used.sh /home/sp2cha/Pictures 󰉏",
+        "interval": 10,
+        "tooltip": true
+    },
+    "custom/disk-03": {
+        "exec": "~/.config/waybar/scripts/disk-used.sh '/home/sp2cha/VirtualBox VMs' 󰉋",
         "interval": 10,
         "tooltip": true
     },
