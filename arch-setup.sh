@@ -784,7 +784,7 @@ case "$1" in
     cp -r ../arch-setup /mnt/root
 
     log_info "Running arch-setup - chroot postinstall..."
-    arch-chroot /mnt /root/arch-setup/arch-setup --chroot-postinstall
+    arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
     ;;
   --chroot-postinstall)
     chroot_postinstall
