@@ -779,6 +779,12 @@ done
 case "$1" in
   --archinstall)
     install_from_archinstall
+
+    log_info "Copying arch-setup repository to chroot to continue ssytem installaton.."
+    cp -r ../arch-setup /root
+
+    log_info "Running arch-setup - chroot postinstall..."
+    arch-chroot /mnt /root/arch-setup/arch-setup --chroot-postinstall
     ;;
   --chroot-postinstall)
     chroot_postinstall
