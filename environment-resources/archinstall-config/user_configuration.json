@@ -4,10 +4,7 @@
         "audio": "No audio server"
     },
     "bootloader": "Systemd-boot",
-    "custom_commands": [
-        "git clone https://github.com/radlesner/arch-setup.git /root/arch-setup",
-        "bash /root/arch-setup/arch-setup.sh --chroot-postinstall"
-    ],
+    "custom_commands": [],
     "hostname": "archlinux",
     "kernels": [
         "linux"
