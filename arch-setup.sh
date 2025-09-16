@@ -99,57 +99,6 @@ remove_grub() {
   fi
 }
 
-install_grub_theme() {
-  root_check
-
-  log_info "Select GRUB theme to install:"
-  echo "  1) Particle"
-  echo "  2) Particle-circle"
-  echo "  3) Matrix"
-  echo "  4) Matrix-circle"
-  echo "  5) Solara-grub2"
-  echo "  0) Exit the script."
-  log_qa "Enter choice:"
-  read -r choice
-
-  case "$choice" in
-    1)
-      log_info "Installing Particle GRUB theme..."
-      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-      bash "$SCRIPT_DIR/environment-resources/grub-theme/Particle-grub-theme/install.sh"
-      ;;
-    2)
-      log_info "Installing Particle GRUB theme..."
-      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-      bash "$SCRIPT_DIR/environment-resources/grub-theme/Particle-circle-grub-theme/install.sh"
-      ;;
-    3)
-      log_info "Installing Particle GRUB theme..."
-      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-      bash "$SCRIPT_DIR/environment-resources/grub-theme/Matrix-circle-grub-theme/install.sh"
-    ;;
-    4)
-      log_info "Installing Particle GRUB theme..."
-      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-      bash "$SCRIPT_DIR/environment-resources/grub-theme/Matrix-circle-grub-theme/install.sh"
-    ;;
-    5)
-      log_info "Installing Particle GRUB theme..."
-      SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-      bash "$SCRIPT_DIR/environment-resources/grub-theme/Solara-grub2-theme/install.sh"
-    ;;
-    0)
-      log_info "Exiting the script."
-      return
-      ;;
-    *)
-      log_error "Invalid choice. Aborting."
-      log_error "Use: --help options"
-      return
-      ;;
-  esac
-}
-
 chroot_postinstall() {
   root_check
 
@@ -800,9 +749,6 @@ case "$1" in
   --remove-grub)
     remove_grub
     ;;
-  --install-grub-theme)
-    install_grub_theme
-    ;;
   --install-base)
     install_base_packages
     ;;
@@ -841,7 +787,6 @@ case "$1" in
     echo "    --install-base           - Install base packages and enable services"
     echo "    --install-grub           - Install GRUB bootloader (EFI)"
     echo "    --remove-grub            - Remove GRUB bootloader (EFI)"
-    echo "    --install-grub-theme     - Install GRUB themes"
     echo "    --install-yay            - Install yay AUR helper"
     echo "    --install-vbox           - Install VirtualBox"
     echo "    --install-fingerprint    - Install fingerprint login option (Untested yet, not work with pam configuration)"

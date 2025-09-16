@@ -25,13 +25,6 @@
 
 ## Credits
 
-**GRUB themes**
-- **Particle-grub-theme**: by [yeyushengfan258](https://github.com/yeyushengfan258/Particle-grub-theme) (GPL-3.0)
-- **Particle-circle-grub-theme**: by [yeyushengfan258](https://github.com/yeyushengfan258/Particle-circle-grub-theme) (GPL-3.0)
-- **Matrices-grub-theme**: by [yeyushengfan258](https://github.com/yeyushengfan258/Matrix-grub-theme) (GPL-3.0)
-- **Matrices-circle-grub-theme**: by [yeyushengfan258](https://github.com/yeyushengfan258/Matrix-circle-grub-theme) (GPL-3.0)
-- **Solara-grub2-theme**: by [vinceliuice](https://github.com/vinceliuice/Solara-grub2-theme) (GPL-3.0)
-
 **Icons**
 - **Flat Remix**: by [daniruiz](https://github.com/daniruiz/Flat-Remix) (GPL-3.0)
 
