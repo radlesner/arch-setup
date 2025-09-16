@@ -688,6 +688,7 @@ install_game_setup() {
     vulkan-icd-loader \
     lib32-vulkan-icd-loader \
     vulkan-mesa-layers \
+    radeontop \
     gamescope \
     gamemode \
     mangohud \
