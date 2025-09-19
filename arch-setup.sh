@@ -215,12 +215,12 @@ chroot_postinstall() {
   hwclock --systohc
   log_succes "Timezone configuration complete"
 
-  log_info "Configure NTP clock..."
-  mkdir -p /etc/systemd/system/multi-user.target.wants
-  ln -sf /usr/lib/systemd/system/systemd-timesyncd.service \
-         /etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
-  timedatectl set-ntp true
-  log_succes "NTP clock configuration complete"
+  # log_info "Configure NTP clock..."
+  # mkdir -p /etc/systemd/system/multi-user.target.wants
+  # ln -sf /usr/lib/systemd/system/systemd-timesyncd.service \
+  #        /etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
+  # timedatectl set-ntp true
+  # log_succes "NTP clock configuration complete"
 
   log_info "Configuring hostname..."
   log_qa "Enter a new hostname for this system:"
@@ -413,14 +413,14 @@ install_base_packages() {
     cups-filters \
     htop
 
-  log_info "Enabling NetworkManager..."
-  mkdir -p /etc/systemd/system/multi-user.target.wants
-  ln -sf /usr/lib/systemd/system/NetworkManager.service \
-         /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+  # log_info "Enabling NetworkManager..."
+  # mkdir -p /etc/systemd/system/multi-user.target.wants
+  # ln -sf /usr/lib/systemd/system/NetworkManager.service \
+  #        /etc/systemd/system/multi-user.target.wants/NetworkManager.service
 
-  log_info "Enabling CUPS service..."
-  ln -sf /usr/lib/systemd/system/cups.service \
-         /etc/systemd/system/multi-user.target.wants/cups.service
+  # log_info "Enabling CUPS service..."
+  # ln -sf /usr/lib/systemd/system/cups.service \
+  #        /etc/systemd/system/multi-user.target.wants/cups.service
 
   log_info "Configuring the /etc/sudoers file for the wheel group..."
   sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
