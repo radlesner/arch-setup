@@ -105,6 +105,44 @@ generate_fstab() {
   genfstab -U /mnt >> /mnt/etc/fstab
 }
 
+install_systemd_boot() {
+  log_info "Installing systemd-boot..."
+  arch-chroot /mnt bootctl install
+
+  log_info "Creating loader.conf..."
+  cat <<EOF > /mnt/boot/loader/loader.conf
+timeout 1
+EOF
+
+  log_info "Creating boot entries..."
+  if [[ "$DISK" == *"nvme"* || "$DISK" == *"mmcblk"* ]]; then
+      P2="${DISK}p2"
+  else
+      P2="${DISK}2"
+  fi
+  ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P2")
+  DATE=$(date +%Y-%m-%d_%H-%M-%S)
+  ENTRY_DIR="/mnt/boot/loader/entries"
+
+  mkdir -p "$ENTRY_DIR"
+
+  cat <<EOF > "$ENTRY_DIR/${DATE}_linux.conf"
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /initramfs-linux.img
+options root=PARTUUID=$ROOT_PARTUUID rootflags=subvol=@ rw rootfstype=btrfs
+EOF
+
+  cat <<EOF > "$ENTRY_DIR/${DATE}_linux-fallback.conf"
+title   Arch Linux (linux-fallback)
+linux   /vmlinuz-linux
+initrd  /initramfs-linux-fallback.img
+options root=PARTUUID=$ROOT_PARTUUID rootflags=subvol=@ rw rootfstype=btrfs
+EOF
+
+  log_succes "systemd-boot has been installed and boot entries created"
+}
+
 install_grub() {
   root_check
 
