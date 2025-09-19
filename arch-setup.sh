@@ -258,6 +258,10 @@ chroot_postinstall() {
 
       log_info "Configuring new user $username..."
       usermod -aG wheel,uucp $username
+
+      log_info "Copying arch-setup to the $username home folder for later desktop environment installation..."
+      cp -r ../arch-setup /home/$username/
+      chown -R $username:$username /home/$username/arch-setup
     fi
   fi
 
@@ -568,6 +572,7 @@ install_xfce() {
   sudo pacman -S --noconfirm --needed \
     xfce4 \
     xfce4-goodies \
+    lightdm \
     ristretto \
     thunar \
     thunar-archive-plugin \
