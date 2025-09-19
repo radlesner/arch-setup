@@ -93,6 +93,16 @@ partition_disk() {
   mount -o subvol=@.snapshots "$P2" /mnt/.snapshots
   mount "$P1" /mnt/boot
 
+  log_info "Mounting the system pseudo-FS..."
+  mkdir -p /mnt/{proc,sys,dev,run}
+  mount -t proc proc /mnt/proc
+  mount --rbind /sys /mnt/sys
+  mount --make-rslave /mnt/sys
+  mount --rbind /dev /mnt/dev
+  mount --make-rslave /mnt/dev
+  mount --rbind /run /mnt/run
+  mount --make-rslave /mnt/run
+
   log_succes "Done! The $DISK disk has been prepared and mounted to /mnt"
   log_info "Now run: genfstab -U /mnt >> /mnt/etc/fstab"
 }
@@ -976,7 +986,7 @@ case "$1" in
       read -r -p "${YELLOW}[?] Would you like to copy this script to /mnt/root to complete the installation? [Y/n]: ${RESET}" confirm
       confirm=${confirm,,}
       if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-        echo "${BLUE}[i] Copying gentoo-setup to /mnt/root...${RESET}"
+        echo "${BLUE}[i] Copying arch-setup to /mnt/root...${RESET}"
         cp -r ../arch-setup /mnt/root/
         arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
         arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot
