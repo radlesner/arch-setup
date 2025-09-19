@@ -260,7 +260,132 @@ chroot_postinstall() {
     fi
   fi
 
+  configure_mirrors
   install_base_packages
+}
+
+configure_mirrors() {
+  log_info "Configuring full mirrorlist (Germany + Poland)..."
+
+  MIRRORS=(
+    # Germany
+    "http://ftp.tu-chemnitz.de/pub/linux/archlinux/\$repo/os/\$arch"
+    "http://ftp.hosteurope.de/mirror/ftp.archlinux.org/\$repo/os/\$arch"
+    "http://ftp.gwdg.de/pub/linux/archlinux/\$repo/os/\$arch"
+    "http://ftp.uni-kl.de/pub/linux/archlinux/\$repo/os/\$arch"
+    "http://ftp.uni-bayreuth.de/linux/archlinux/\$repo/os/\$arch"
+    "http://ftp-stud.hs-esslingen.de/pub/Mirrors/archlinux/\$repo/os/\$arch"
+    "http://ftp.spline.inf.fu-berlin.de/mirrors/archlinux/\$repo/os/\$arch"
+    "https://ftp.spline.inf.fu-berlin.de/mirrors/archlinux/\$repo/os/\$arch"
+    "http://mirror.selfnet.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.selfnet.de/archlinux/\$repo/os/\$arch"
+    "http://ftp.halifax.rwth-aachen.de/archlinux/\$repo/os/\$arch"
+    "https://ftp.halifax.rwth-aachen.de/archlinux/\$repo/os/\$arch"
+    "http://artfiles.org/archlinux.org/\$repo/os/\$arch"
+    "http://mirror.fra10.de.leaseweb.net/archlinux/\$repo/os/\$arch"
+    "https://mirror.fra10.de.leaseweb.net/archlinux/\$repo/os/\$arch"
+    "http://mirrors.n-ix.net/archlinux/\$repo/os/\$arch"
+    "https://mirrors.n-ix.net/archlinux/\$repo/os/\$arch"
+    "http://mirror.netcologne.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.netcologne.de/archlinux/\$repo/os/\$arch"
+    "http://linux.rz.rub.de/archlinux/\$repo/os/\$arch"
+    "http://ftp.fau.de/archlinux/\$repo/os/\$arch"
+    "https://ftp.fau.de/archlinux/\$repo/os/\$arch"
+    "http://mirror.23m.com/archlinux/\$repo/os/\$arch"
+    "https://mirror.23m.com/archlinux/\$repo/os/\$arch"
+    "http://mirror.metalgamer.eu/archlinux/\$repo/os/\$arch"
+    "https://mirror.metalgamer.eu/archlinux/\$repo/os/\$arch"
+    "http://mirrors.niyawe.de/archlinux/\$repo/os/\$arch"
+    "https://mirrors.niyawe.de/archlinux/\$repo/os/\$arch"
+    "http://ftp.uni-hannover.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.pseudoform.org/\$repo/os/\$arch"
+    "http://arch.jensgutermuth.de/\$repo/os/\$arch"
+    "https://arch.jensgutermuth.de/\$repo/os/\$arch"
+    "http://mirror.ubrco.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.ubrco.de/archlinux/\$repo/os/\$arch"
+    "http://archlinux.mirror.iphh.net/\$repo/os/\$arch"
+    "http://archlinux.thaller.ws/\$repo/os/\$arch"
+    "https://archlinux.thaller.ws/\$repo/os/\$arch"
+    "http://de.mirrors.cicku.me/archlinux/\$repo/os/\$arch"
+    "https://de.mirrors.cicku.me/archlinux/\$repo/os/\$arch"
+    "https://mirror.bethselamin.de/\$repo/os/\$arch"
+    "http://packages.oth-regensburg.de/archlinux/\$repo/os/\$arch"
+    "https://packages.oth-regensburg.de/archlinux/\$repo/os/\$arch"
+    "https://dist-mirror.fem.tu-ilmenau.de/archlinux/\$repo/os/\$arch"
+    "https://arch.unixpeople.org/\$repo/os/\$arch"
+    "http://mirror.wtnet.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.wtnet.de/archlinux/\$repo/os/\$arch"
+    "http://arch.phinau.de/\$repo/os/\$arch"
+    "https://arch.phinau.de/\$repo/os/\$arch"
+    "https://mirror.dogado.de/archlinux/\$repo/os/\$arch"
+    "http://mirror.clientvps.com/archlinux/\$repo/os/\$arch"
+    "https://mirror.clientvps.com/archlinux/\$repo/os/\$arch"
+    "https://pkg.fef.moe/archlinux/\$repo/os/\$arch"
+    "http://ftp.agdsn.de/pub/mirrors/archlinux/\$repo/os/\$arch"
+    "https://ftp.agdsn.de/pub/mirrors/archlinux/\$repo/os/\$arch"
+    "http://mirrors.xtom.de/archlinux/\$repo/os/\$arch"
+    "https://mirrors.xtom.de/archlinux/\$repo/os/\$arch"
+    "http://mirror.moson.org/arch/\$repo/os/\$arch"
+    "https://mirror.moson.org/arch/\$repo/os/\$arch"
+    "http://mirror.pagenotfound.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.pagenotfound.de/archlinux/\$repo/os/\$arch"
+    "https://de.arch.mirror.kescher.at/\$repo/os/\$arch"
+    "http://mirrors.janbruckner.de/archlinux/\$repo/os/\$arch"
+    "https://mirrors.janbruckner.de/archlinux/\$repo/os/\$arch"
+    "http://mirror.informatik.tu-freiberg.de/arch/\$repo/os/\$arch"
+    "https://mirror.informatik.tu-freiberg.de/arch/\$repo/os/\$arch"
+    "https://berlin.mirror.pkgbuild.com/\$repo/os/\$arch"
+    "http://mirror.cmt.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.cmt.de/archlinux/\$repo/os/\$arch"
+    "http://mirror.sunred.org/archlinux/\$repo/os/\$arch"
+    "https://mirror.sunred.org/archlinux/\$repo/os/\$arch"
+    "http://mirror.lcarilla.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.lcarilla.de/archlinux/\$repo/os/\$arch"
+    "https://archlinux.richard-neumann.de/\$repo/os/\$arch"
+    "http://mirror.hugo-betrugo.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.hugo-betrugo.de/archlinux/\$repo/os/\$arch"
+    "https://arch.kurdy.org/\$repo/os/\$arch"
+    "http://de.arch.niranjan.co/\$repo/os/\$arch"
+    "https://de.arch.niranjan.co/\$repo/os/\$arch"
+    "https://files.hadiko.de/pub/dists/arch/\$repo/os/\$arch"
+    "https://de-nue.soulharsh007.dev/archlinux/\$repo/os/\$arch"
+    "https://de.repo.c48.uk/arch/\$repo/os/\$arch"
+    "http://mirror.as20647.net/archlinux/\$repo/os/\$arch"
+    "http://mirror.ipb.de/archlinux/\$repo/os/\$arch"
+    "https://mirror.as20647.net/archlinux/\$repo/os/\$arch"
+    "https://mirror.ipb.de/archlinux/\$repo/os/\$arch"
+    "http://mirrors.aminvakil.com/archlinux/\$repo/os/\$arch"
+    "https://mirrors.aminvakil.com/archlinux/\$repo/os/\$arch"
+    "http://mirrors.purring.online/arch/\$repo/os/\$arch"
+    "https://mirrors.purring.online/arch/\$repo/os/\$arch"
+    "http://arch.owochle.app/\$repo/os/\$arch"
+    "https://arch.owochle.app/\$repo/os/\$arch"
+    "https://mirror.thereisno.page/archlinux/\$repo/os/\$arch"
+    "http://arch.mirror.cloud.thatcyberlynx.de/\$repo/os/\$arch"
+    "https://arch.mirror.cloud.thatcyberlynx.de/\$repo/os/\$arch"
+
+    # Poland
+    "http://arch.midov.pl/arch/\$repo/os/\$arch"
+    "https://arch.midov.pl/arch/\$repo/os/\$arch"
+    "http://ftp.icm.edu.pl/pub/Linux/dist/archlinux/\$repo/os/\$arch"
+    "https://ftp.icm.edu.pl/pub/Linux/dist/archlinux/\$repo/os/\$arch"
+    "http://mirror.juniorjpdj.pl/archlinux/\$repo/os/\$arch"
+    "https://mirror.juniorjpdj.pl/archlinux/\$repo/os/\$arch"
+    "http://ftp.psnc.pl/linux/archlinux/\$repo/os/\$arch"
+    "https://ftp.psnc.pl/linux/archlinux/\$repo/os/\$arch"
+    "http://arch.sakamoto.pl/\$repo/os/\$arch"
+    "https://arch.sakamoto.pl/\$repo/os/\$arch"
+    "https://mirror.przekichane.pl/archlinux/\$repo/os/\$arch"
+  )
+
+  mkdir -p /mnt/etc/pacman.d
+  : > /mnt/etc/pacman.d/mirrorlist  # clear file
+
+  for mirror in "${MIRRORS[@]}"; do
+    echo "Server = $mirror" >> /mnt/etc/pacman.d/mirrorlist
+  done
+
+  log_succes "Mirrorlist configured with all Germany + Poland mirrors"
 }
 
 install_base_packages() {
