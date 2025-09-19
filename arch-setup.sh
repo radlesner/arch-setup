@@ -43,6 +43,68 @@ install_from_archinstall() (
   archinstall --config $user_config --creds $user_creds
 )
 
+partition_disk() {
+  root_check
+
+  DISK="$1"
+
+  log_info "Creating a new GPT table on... $DISK"
+
+  parted -s "$DISK" mklabel gpt
+
+  log_info "Creating the EFI partition (512MiB)..."
+  parted -s "$DISK" --align optimal mkpart ESP fat32 1MiB 513MiB
+  parted -s "$DISK" set 1 esp on
+
+  log_info "Creating the root partition (rest of the disk, Btrfs)..."
+  parted -s "$DISK" --align optimal mkpart primary btrfs 513MiB 100%
+
+  log_info "Setting correct partition type GUIDs..."
+  sgdisk --typecode=1:ef00 "$DISK"                                 # EFI System Partition tyoe
+  sgdisk --typecode=2:4f68bce3-e8cd-4db1-96e7-fbcaf984b709 "$DISK" # Linux root (x86_64) type
+
+  if [[ "$DISK" == *"nvme"* || "$DISK" == *"mmcblk"* ]]; then
+      P1="${DISK}p1"
+      P2="${DISK}p2"
+  else
+      P1="${DISK}1"
+      P2="${DISK}2"
+  fi
+
+  log_info "Formatting EFI... ($P1)"
+  mkfs.fat -F32 "$P1"
+
+  log_info "Formatting Btrfs... ($P2)"
+  mkfs.btrfs -f "$P2"
+
+  log_info "Creating Btrfs subvolumes..."
+  mount "$P2" /mnt
+  btrfs subvolume create /mnt/@
+  btrfs subvolume create /mnt/@root
+  btrfs subvolume create /mnt/@home
+  btrfs subvolume create /mnt/@.snapshots
+  umount /mnt
+
+  log_info "Mounting subvolumes..."
+  mount -o subvol=@ "$P2" /mnt
+  mkdir -p /mnt/{root,home,.snapshots,boot}
+  mount -o subvol=@root "$P2" /mnt/root
+  mount -o subvol=@home "$P2" /mnt/home
+  mount -o subvol=@.snapshots "$P2" /mnt/.snapshots
+  mount "$P1" /mnt/boot
+
+  log_succes "Done! The $DISK disk has been prepared and mounted to /mnt"
+  log_info "Now run: genfstab -U /mnt >> /mnt/etc/fstab"
+}
+
+install_pacstrap() {
+  pacstrap -K /mnt base linux linux-firmware
+}
+
+generate_fstab() {
+  genfstab -U /mnt >> /mnt/etc/fstab
+}
+
 install_grub() {
   root_check
 
@@ -736,6 +798,26 @@ case "$1" in
     log_info "Running arch-setup - chroot postinstall..."
     arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
     ;;
+  --install)
+    read -r -p "${YELLOW}[?] Are you sure you want to proceed? This will result in ${RED}DATA LOSS${YELLOW} on the media. [y/N]: ${RESET}" confirm
+    confirm=${confirm,,}
+
+    if [[ "$confirm" != "y" ]]; then
+      echo "Operation cancelled."
+      exit 1
+    else
+      partition_disk "$2"
+      install_pacstrap
+      generate_fstab
+
+      read -r -p "${YELLOW}[?] Would you like to copy this script to /mnt/root to complete the installation? [Y/n]: ${RESET}" confirm
+      confirm=${confirm,,}
+      if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+        echo "${BLUE}[i] Copying gentoo-setup to /mnt/root...${RESET}"
+        cp -r ../arch-setup /mnt/root/
+      fi
+    fi
+    ;;
   --chroot-postinstall)
     chroot_postinstall
     ;;
@@ -784,6 +866,7 @@ case "$1" in
     echo ""
     echo ">>> System installation options:"
     echo "    --archinstall            - Install from archinstall script with custom config"
+    echo "    --install                - Installing the system without using the archinstall script"
     echo "    --chroot-postinstall     - Configure post-installation system settings"
     echo "    --install-base           - Install base packages and enable services"
     echo "    --install-grub           - Install GRUB bootloader (EFI)"
