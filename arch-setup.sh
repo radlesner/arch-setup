@@ -107,10 +107,10 @@ generate_fstab() {
 
 install_systemd_boot() {
   log_info "Installing systemd-boot..."
-  arch-chroot /mnt bootctl install
+  bootctl install
 
   log_info "Creating loader.conf..."
-  cat <<EOF > /mnt/boot/loader/loader.conf
+  cat <<EOF > /boot/loader/loader.conf
 timeout 1
 EOF
 
@@ -122,7 +122,7 @@ EOF
   fi
   ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P2")
   DATE=$(date +%Y-%m-%d_%H-%M-%S)
-  ENTRY_DIR="/mnt/boot/loader/entries"
+  ENTRY_DIR="/boot/loader/entries"
 
   mkdir -p "$ENTRY_DIR"
 
@@ -853,6 +853,8 @@ case "$1" in
       if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
         echo "${BLUE}[i] Copying gentoo-setup to /mnt/root...${RESET}"
         cp -r ../arch-setup /mnt/root/
+        arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
+        arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot
       fi
     fi
     ;;
@@ -907,11 +909,16 @@ case "$1" in
     echo ""
     echo ">>> System installation options:"
     echo "    --archinstall            - Install from archinstall script with custom config"
-    echo "    --install                - Installing the system without using the archinstall script"
+    echo "    --install /dev/sdX       - Installing the system without using the archinstall script"
     echo "    --chroot-postinstall     - Configure post-installation system settings"
     echo "    --install-base           - Install base packages and enable services"
+    echo ""
+    echo ">>> Bootloaders:"
+    echo "    --install-systemd-boot   - Install systemd-boot EFI bootloader"
     echo "    --install-grub           - Install GRUB bootloader (EFI)"
     echo "    --remove-grub            - Remove GRUB bootloader (EFI)"
+    echo ""
+    echo ">>> Packages"
     echo "    --install-yay            - Install yay AUR helper"
     echo "    --install-vbox           - Install VirtualBox"
     echo "    --install-fingerprint    - Install fingerprint login option (Untested yet, not work with pam configuration)"
