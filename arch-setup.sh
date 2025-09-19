@@ -565,7 +565,7 @@ install_xfce() {
   install_xorg "x11"
 
   log_info "Installing XFCE desktop environment..."
-  pacman -S --noconfirm --needed \
+  sudo pacman -S --noconfirm --needed \
     xfce4 \
     xfce4-goodies \
     ristretto \
