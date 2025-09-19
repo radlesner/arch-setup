@@ -106,6 +106,8 @@ generate_fstab() {
 }
 
 install_systemd_boot() {
+  local DISK="$1"
+
   log_info "Installing systemd-boot..."
   bootctl install
 
@@ -215,12 +217,12 @@ chroot_postinstall() {
   hwclock --systohc
   log_succes "Timezone configuration complete"
 
-  # log_info "Configure NTP clock..."
-  # mkdir -p /etc/systemd/system/multi-user.target.wants
-  # ln -sf /usr/lib/systemd/system/systemd-timesyncd.service \
-  #        /etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
-  # timedatectl set-ntp true
-  # log_succes "NTP clock configuration complete"
+  log_info "Configure NTP clock..."
+  mkdir -p /etc/systemd/system/multi-user.target.wants
+  ln -sf /usr/lib/systemd/system/systemd-timesyncd.service \
+         /etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
+  timedatectl set-ntp true
+  log_succes "NTP clock configuration complete"
 
   log_info "Configuring hostname..."
   log_qa "Enter a new hostname for this system:"
@@ -413,14 +415,14 @@ install_base_packages() {
     cups-filters \
     htop
 
-  # log_info "Enabling NetworkManager..."
-  # mkdir -p /etc/systemd/system/multi-user.target.wants
-  # ln -sf /usr/lib/systemd/system/NetworkManager.service \
-  #        /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+  log_info "Enabling NetworkManager..."
+  mkdir -p /etc/systemd/system/multi-user.target.wants
+  ln -sf /usr/lib/systemd/system/NetworkManager.service \
+         /etc/systemd/system/multi-user.target.wants/NetworkManager.service
 
-  # log_info "Enabling CUPS service..."
-  # ln -sf /usr/lib/systemd/system/cups.service \
-  #        /etc/systemd/system/multi-user.target.wants/cups.service
+  log_info "Enabling CUPS service..."
+  ln -sf /usr/lib/systemd/system/cups.service \
+         /etc/systemd/system/multi-user.target.wants/cups.service
 
   log_info "Configuring the /etc/sudoers file for the wheel group..."
   sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
@@ -985,8 +987,30 @@ case "$1" in
       if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
         echo "${BLUE}[i] Copying arch-setup to /mnt/root...${RESET}"
         cp -r ../arch-setup /mnt/root/
+        systemctl --root=/mnt status getty@tty1.service
         arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
-        arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot
+
+        log_info "Select bootloader to install:"
+        echo "  1) systemd-boot"
+        echo "  2) GRUB (EFI)"
+        echo "  0) Exit"
+        log_qa "Enter choice [1/2]:"
+        read -r choice
+
+        case "$choice" in
+          1)
+            arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot "$2"
+            ;;
+          2)
+            arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-grub
+            ;;
+          0)
+            log_info "Exiting the script."
+            return
+            ;;
+          *)
+            ;;
+        esac
       fi
     fi
     ;;
@@ -994,7 +1018,7 @@ case "$1" in
     chroot_postinstall
     ;;
   --install-systemd-boot)
-    install_systemd_boot
+    install_systemd_boot "$2"
     ;;
   --install-grub)
     if $force; then
@@ -1040,28 +1064,28 @@ case "$1" in
   --help)
     echo ""
     echo ">>> System installation options:"
-    echo "    --archinstall            - Install from archinstall script with custom config"
-    echo "    --install /dev/sdX       - Installing the system without using the archinstall script"
-    echo "    --chroot-postinstall     - Configure post-installation system settings"
-    echo "    --install-base           - Install base packages and enable services"
+    echo "    --archinstall                    - Install from archinstall script with custom config"
+    echo "    --install /dev/sdX               - Installing the system without using the archinstall script"
+    echo "    --chroot-postinstall             - Configure post-installation system settings"
+    echo "    --install-base                   - Install base packages and enable services"
     echo ""
     echo ">>> Bootloaders:"
-    echo "    --install-systemd-boot   - Install systemd-boot EFI bootloader"
-    echo "    --install-grub           - Install GRUB bootloader (EFI)"
-    echo "    --remove-grub            - Remove GRUB bootloader (EFI)"
+    echo "    --install-systemd-boot /dev/sdaX - Install systemd-boot EFI bootloader"
+    echo "    --install-grub                   - Install GRUB bootloader (EFI)"
+    echo "    --remove-grub                    - Remove GRUB bootloader (EFI)"
     echo ""
     echo ">>> Packages"
-    echo "    --install-yay            - Install yay AUR helper"
-    echo "    --install-vbox           - Install VirtualBox"
-    echo "    --install-fingerprint    - Install fingerprint login option (Untested yet, not work with pam configuration)"
-    echo "    --install-hamradio-setup - Install Ham Radio setup"
-    echo "    --install-game-setup     - Install game setup (Radeon only)"
+    echo "    --install-yay                    - Install yay AUR helper"
+    echo "    --install-vbox                   - Install VirtualBox"
+    echo "    --install-fingerprint            - Install fingerprint login option (Untested yet, not work with pam configuration)"
+    echo "    --install-hamradio-setup         - Install Ham Radio setup"
+    echo "    --install-game-setup             - Install game setup (Radeon only)"
     echo ""
     echo ">>> Desktop environment installation options:"
-    echo "    --install-xfce           - Install XFCE desktop environment"
-    echo "    --install-plasma         - Install KDE Plasma desktop environment"
-    echo "    --install-hyprland       - Install Hyprland Wayland compositor"
-    echo "    --copy-hypr-config       - Copy custom Hyprland configuration files"
+    echo "    --install-xfce                   - Install XFCE desktop environment"
+    echo "    --install-plasma                 - Install KDE Plasma desktop environment"
+    echo "    --install-hyprland               - Install Hyprland Wayland compositor"
+    echo "    --copy-hypr-config               - Copy custom Hyprland configuration files"
     echo ""
     echo ">>> Additional options:"
     echo "    -f, --force              - Force reinstall (e.g., overwrite existing GRUB installation)"
