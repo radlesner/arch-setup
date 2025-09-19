@@ -561,7 +561,6 @@ install_audio() {
 }
 
 install_xfce() {
-  pacman_update
   install_audio
   install_xorg "x11"
 
