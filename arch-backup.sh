@@ -70,7 +70,7 @@ do_restore_local() {
   echo "${BLUE}[i] Restoring backup from $SRC${RESET}"
 
   cd "$SRC" || exit 1
-  rsync -a --relative . /
+  rsync -a --relative --no-owner --no-group . /
 
   echo "${GREEN}[✓] Restore completed.${RESET}"
 }

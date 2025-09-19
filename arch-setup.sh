@@ -93,16 +93,6 @@ partition_disk() {
   mount -o subvol=@.snapshots "$P2" /mnt/.snapshots
   mount "$P1" /mnt/boot
 
-  log_info "Mounting the system pseudo-FS..."
-  mkdir -p /mnt/{proc,sys,dev,run}
-  mount -t proc proc /mnt/proc
-  mount --rbind /sys /mnt/sys
-  mount --make-rslave /mnt/sys
-  mount --rbind /dev /mnt/dev
-  mount --make-rslave /mnt/dev
-  mount --rbind /run /mnt/run
-  mount --make-rslave /mnt/run
-
   log_succes "Done! The $DISK disk has been prepared and mounted to /mnt"
   log_info "Now run: genfstab -U /mnt >> /mnt/etc/fstab"
 }
@@ -226,7 +216,9 @@ chroot_postinstall() {
   log_succes "Timezone configuration complete"
 
   log_info "Configure NTP clock..."
-  systemctl enable systemd-timesyncd.service
+  mkdir -p /etc/systemd/system/multi-user.target.wants
+  ln -sf /usr/lib/systemd/system/systemd-timesyncd.service \
+         /etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
   timedatectl set-ntp true
   log_succes "NTP clock configuration complete"
 
@@ -250,11 +242,11 @@ chroot_postinstall() {
   log_info "Setting root password..."
   passwd
 
-  log_qa "${YELLOW}[?] Do you want create the new user? [Y/n]:"
+  log_qa "Do you want create the new user? [Y/n]:"
   read -r confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    log_qa "${YELLOW}[?] Enter username for the new user:"
+    log_qa "Enter username for the new user:"
     read -r username
     if id "$username" &>/dev/null; then
       log_info "User $username already exists."
@@ -422,10 +414,13 @@ install_base_packages() {
     htop
 
   log_info "Enabling NetworkManager..."
-  systemctl enable NetworkManager
+  mkdir -p /etc/systemd/system/multi-user.target.wants
+  ln -sf /usr/lib/systemd/system/NetworkManager.service \
+         /etc/systemd/system/multi-user.target.wants/NetworkManager.service
 
   log_info "Enabling CUPS service..."
-  sudo systemctl enable cups
+  ln -sf /usr/lib/systemd/system/cups.service \
+         /etc/systemd/system/multi-user.target.wants/cups.service
 
   log_info "Configuring the /etc/sudoers file for the wheel group..."
   sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
@@ -972,7 +967,8 @@ case "$1" in
     arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
     ;;
   --install)
-    read -r -p "${YELLOW}[?] Are you sure you want to proceed? This will result in ${RED}DATA LOSS${YELLOW} on the media. [y/N]: ${RESET}" confirm
+    log_qa "Are you sure you want to proceed? This will result in ${RED}DATA LOSS${YELLOW} on the media. [y/N]:"
+    read -r confirm
     confirm=${confirm,,}
 
     if [[ "$confirm" != "y" ]]; then
@@ -983,7 +979,8 @@ case "$1" in
       install_pacstrap
       generate_fstab
 
-      read -r -p "${YELLOW}[?] Would you like to copy this script to /mnt/root to complete the installation? [Y/n]: ${RESET}" confirm
+      log_qa "Would you like to copy this script to /mnt/root to complete the installation? [Y/n]:"
+      read -r confirm
       confirm=${confirm,,}
       if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
         echo "${BLUE}[i] Copying arch-setup to /mnt/root...${RESET}"
