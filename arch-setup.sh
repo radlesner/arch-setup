@@ -260,7 +260,7 @@ chroot_postinstall() {
       usermod -aG wheel,uucp $username
 
       log_info "Copying arch-setup to the $username home folder for later desktop environment installation..."
-      cp -r ../arch-setup /home/$username/
+      cp -r /root/arch-setup /home/$username/
       chown -R $username:$username /home/$username/arch-setup
     fi
   fi
