@@ -71,6 +71,8 @@ partition_disk() {
       P2="${DISK}2"
   fi
 
+  ROOTFS_PARTITION=$P2
+
   log_info "Formatting EFI... ($P1)"
   mkfs.fat -F32 "$P1"
 
@@ -117,12 +119,7 @@ timeout 1
 EOF
 
   log_info "Creating boot entries..."
-  if [[ "$DISK" == *"nvme"* || "$DISK" == *"mmcblk"* ]]; then
-      P2="${DISK}p2"
-  else
-      P2="${DISK}2"
-  fi
-  ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$P2")
+  ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$DISK")
   DATE=$(date +%Y-%m-%d_%H-%M-%S)
   ENTRY_DIR="/boot/loader/entries"
 
@@ -999,7 +996,7 @@ case "$1" in
 
         case "$choice" in
           1)
-            arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot "$2"
+            arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot "$ROOTFS_PARTITION"
             ;;
           2)
             arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-grub
@@ -1031,7 +1028,7 @@ case "$1" in
   --remove-grub)
     remove_grub
     ;;
-  --install-base)
+  --install-base-packages)
     install_base_packages
     ;;
   --install-hamradio-setup)
@@ -1067,7 +1064,7 @@ case "$1" in
     echo "    --archinstall                    - Install from archinstall script with custom config"
     echo "    --install /dev/sdX               - Installing the system without using the archinstall script"
     echo "    --chroot-postinstall             - Configure post-installation system settings"
-    echo "    --install-base                   - Install base packages and enable services"
+    echo "    --install-base-packages          - Install base packages and enable services"
     echo ""
     echo ">>> Bootloaders:"
     echo "    --install-systemd-boot /dev/sdaX - Install systemd-boot EFI bootloader"
