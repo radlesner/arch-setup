@@ -589,6 +589,9 @@ install_xfce() {
     seahorse \
     blueman
 
+  log_info "Enabling lightdm login manager..."
+  systemctl enable lightdm.service
+
   log_succes "XFCE installation completed! System restart required."
   ask_reboot
 }
