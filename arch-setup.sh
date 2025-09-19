@@ -549,7 +549,7 @@ install_virtualbox() {
 
 install_audio() {
   log_info "Installing audio packages..."
-  sudo pacman -S --noconfirm \
+  sudo pacman -S --needed --noconfirm \
     pipewire \
     pipewire-pulse \
     pipewire-alsa \
