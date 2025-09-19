@@ -859,6 +859,9 @@ case "$1" in
   --chroot-postinstall)
     chroot_postinstall
     ;;
+  --install-systemd-boot)
+    install_systemd_boot
+    ;;
   --install-grub)
     if $force; then
       remove_grub
