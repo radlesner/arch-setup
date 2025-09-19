@@ -984,7 +984,6 @@ case "$1" in
       if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
         echo "${BLUE}[i] Copying arch-setup to /mnt/root...${RESET}"
         cp -r ../arch-setup /mnt/root/
-        systemctl --root=/mnt enable getty@tty1.service
         arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
 
         log_info "Select bootloader to install:"
