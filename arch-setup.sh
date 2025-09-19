@@ -424,8 +424,6 @@ install_base_packages() {
   log_info "Configuring the /etc/sudoers file for the wheel group..."
   sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
-  clear_cache
-
   log_succes "Base setup completed!"
 }
 
@@ -588,7 +586,6 @@ install_xfce() {
     blueman
 
   log_succes "XFCE installation completed! System restart required."
-  clear_cache
   ask_reboot
 }
 
@@ -642,8 +639,6 @@ install_plasma() {
   sudo systemctl enable bluetooth
 
   log_succes "KDE Plasma installation completed! System restart required."
-
-  clear_cache
   ask_reboot
 }
 
@@ -749,11 +744,7 @@ install_hyprland() {
   cp environment-resources/nano-config/.nanorc ~/
 
   log_succes "Hyprland environment installation completed!"
-
-  clear_cache
   hypr_copy_config
-
-
   ask_reboot
 }
 
@@ -939,11 +930,6 @@ ask_reboot() {
   [[ "$confirm" =~ ^(n|no)$ ]] || reboot
 }
 
-clear_cache() {
-  log_info "Clearing cache..."
-  sudo pacman -Sc
-}
-
 # -------------------------------------------------------- MAIN --------------------------------------------------------
 
 force=false
@@ -996,9 +982,11 @@ case "$1" in
         case "$choice" in
           1)
             arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot "$ROOTFS_PARTITION"
+            ask_reboot
             ;;
           2)
             arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-grub
+            ask_reboot
             ;;
           0)
             log_info "Exiting the script."
