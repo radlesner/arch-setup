@@ -398,7 +398,7 @@ install_base_packages() {
 
   log_info "Installing essential packages..."
   pacman -S --noconfirm --needed \
-    sudo \
+    doas \
     usbutils \
     btrfs-progs \
     networkmanager \
@@ -425,8 +425,11 @@ install_base_packages() {
   ln -sf /usr/lib/systemd/system/cups.service \
          /etc/systemd/system/multi-user.target.wants/cups.service
 
-  log_info "Configuring the /etc/sudoers file for the wheel group..."
-  sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+  # log_info "Configuring the /etc/sudoers file for the wheel group..."
+  # sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+
+  log_info "Configuring the /etc/doas.conf file for the wheel group..."
+  echo "permit persist :wheel" >> /etc/doas.conf
 
   log_succes "Base setup completed!"
 }
