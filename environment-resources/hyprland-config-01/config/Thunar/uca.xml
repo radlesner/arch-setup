@@ -24,4 +24,16 @@
 	<audio-files/>
 	<video-files/>
 </action>
+<action>
+	<icon>application-pdf</icon>
+	<name>Create PDF</name>
+	<submenu></submenu>
+	<unique-id>1758744792026531-1</unique-id>
+	<command>magick %F document.pdf</command>
+	<description>Creating a PDF document from images</description>
+	<range>*</range>
+	<patterns>*.jpg;*.jpeg;*.png</patterns>
+	<image-files/>
+	<other-files/>
+</action>
 </actions>

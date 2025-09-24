@@ -713,7 +713,8 @@ install_hyprland() {
     \
     mpv \
     imv \
-    libreoffice-fresh
+    libreoffice-fresh \
+    imagemagick
 
   log_info "Enabling ly login manager..."
   sudo systemctl enable ly.service
