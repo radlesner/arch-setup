@@ -1,8 +1,8 @@
-background-color=#32323201
+background-color=#32323280
 progress-color=#ffffff20
 font=nunito
 border-size=2
-border-color=#33ccffb3
+border-color=#bebebecc
 margin=30,30,0
 border-radius=12
 default-timeout=5000
