@@ -32,7 +32,7 @@
 	<command>magick %F document.pdf</command>
 	<description>Creating a PDF document from images</description>
 	<range>*</range>
-	<patterns>*.jpg;*.jpeg;*.png</patterns>
+	<patterns>*.jpg;*.jpeg;*.png;*.svg</patterns>
 	<image-files/>
 	<other-files/>
 </action>
