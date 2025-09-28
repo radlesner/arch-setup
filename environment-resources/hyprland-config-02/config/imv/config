@@ -1,0 +1,3 @@
+[options]
+overlay = true
+overlay_font = Monospace:12

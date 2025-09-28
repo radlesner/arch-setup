@@ -786,7 +786,7 @@ hypr_copy_config () {
   read -r confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_CONFIG_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list")
+    COPY_CONFIG_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list" "imv")
     COPY_LOCAL_SHARE_FOLDERS=("Thunar")
 
     mkdir -p "$HOME/.config"
