@@ -679,6 +679,7 @@ install_hyprland() {
     thunar \
     thunar-archive-plugin \
     thunar-media-tags-plugin \
+    gnome-disk-utility \
     gvfs \
     gvfs-smb \
     gvfs-nfs \
