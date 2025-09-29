@@ -157,7 +157,6 @@ install_grub() {
     read -r confirm
     confirm=${confirm,,}
     if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-      pacman -Syu --noconfirm
       log_info "Installing grub packages..."
       pacman -S --noconfirm --needed \
         grub \
@@ -266,6 +265,7 @@ chroot_postinstall() {
   fi
 
   configure_mirrors
+  pacman -Syu --noconfirm
   install_base_packages
 }
 
