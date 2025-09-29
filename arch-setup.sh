@@ -768,9 +768,15 @@ hypr_copy_config () {
   case "$choice" in
     1)
       HYPR_CONFIG_OPTION="hyprland-config-01"
+
+      log_info "Configure Adwaita-dark theme"
+      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
       ;;
     2)
       HYPR_CONFIG_OPTION="hyprland-config-02"
+
+      log_info "Configure Adwaita-dark theme"
+      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
       ;;
     0)
       log_info "Exiting the script."
