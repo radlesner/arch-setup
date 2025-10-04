@@ -928,6 +928,8 @@ install_game_setup() {
     gamemode \
     mangohud \
     \
+    corectrl \
+    \
     steam
 
   install_yay
