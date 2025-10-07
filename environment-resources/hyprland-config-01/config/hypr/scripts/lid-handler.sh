@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-LOGFILE="/tmp/lid-handler.log"
+LOGFILE="/tmp/hyprland-lid-handler.log"
 LOCK_CMD="swaylock -f -c 000000"
 
 INTERNAL="eDP-1"
