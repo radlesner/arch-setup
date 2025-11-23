@@ -73,7 +73,7 @@
 	<icon>object-rotate-right</icon>
 	<name>Image rotate right (magick)</name>
 	<submenu></submenu>
-	<unique-id>1763901490000000-3</unique-id>
+	<unique-id>1763916760494185-1</unique-id>
 	<command>magick %f -rotate 90 %f</command>
 	<description>Rotate image right</description>
 	<range>1</range>
