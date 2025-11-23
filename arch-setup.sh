@@ -400,10 +400,6 @@ install_base_packages() {
   pacman -S --noconfirm --needed \
     sudo \
     usbutils \
-    btrfs-progs \
-    networkmanager \
-    inetutils \
-    openssh \
     nano \
     zsh \
     git \
@@ -411,10 +407,21 @@ install_base_packages() {
     screen \
     which \
     wget \
+    htop \
     base-devel \
+    \
+    networkmanager \
+    inetutils \
+    openssh \
+    \
     cups \
     cups-filters \
-    htop
+    \
+    btrfs-progs \
+    exfatprogs \
+    ntfs-3g \
+    dosfstools \
+    cdrtools
 
   log_info "Enabling NetworkManager..."
   mkdir -p /etc/systemd/system/multi-user.target.wants
@@ -700,7 +707,6 @@ install_hyprland() {
     otf-font-awesome \
     ttf-nerd-fonts-symbols \
     gnome-themes-extra \
-    lxappearance \
     polkit-gnome \
     gnome-keyring \
     seahorse \
