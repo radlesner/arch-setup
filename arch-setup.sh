@@ -687,9 +687,14 @@ install_hyprland() {
     thunar-archive-plugin \
     thunar-media-tags-plugin \
     gnome-disk-utility \
+    \
     gvfs \
     gvfs-smb \
     gvfs-nfs \
+    gvfs-mtp \
+    gvfs-gphoto2 \
+    android-udev \
+    \
     zip \
     unzip \
     unrar \
