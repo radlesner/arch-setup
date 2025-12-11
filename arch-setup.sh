@@ -443,6 +443,8 @@ install_hamradio_packages() {
 
   yay -S --removemake --noconfirm --needed \
     cqrlog-bin \
+    wsjtx-improved \
+    adif-multitool \
     chirp-next
 
   log_info "Copying 99.usb-serial.rules to /etc/udev/rules.d..."
