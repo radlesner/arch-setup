@@ -5,7 +5,6 @@
 ~/Pictures/
 ~/Templates/
 ~/Videos/
-~/.config/cqrlog/
 ~/.config/filezilla/
 ~/.config/gtk-3.0/bookmarks
 ~/.config/Mousepad/
@@ -19,6 +18,10 @@
 ~/.wireguard/
 ~/.gitconfig
 ~/.nanorc
+
+~/.config/cqrlog/
+~/.config/WSJT-X.ini
+~/.local/share/WSJT-X/
 
 ~/.config/heroic/
 ~/.config/MangoHud/
