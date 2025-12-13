@@ -731,7 +731,7 @@ install_hyprland() {
     imagemagick
 
   log_info "Enabling ly login manager..."
-  sudo systemctl enable ly.service
+  sudo systemctl enable ly@tty1.service
 
   log_info "Enabling bluetooth..."
   sudo systemctl enable bluetooth
