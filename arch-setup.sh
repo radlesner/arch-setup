@@ -730,6 +730,10 @@ install_hyprland() {
     libreoffice-fresh \
     imagemagick
 
+  log_info "Disabling & masking getty service on tty1..."
+  sudo systemctl disable getty@tty1.service
+  sudo systemctl mask getty@tty1.service
+
   log_info "Enabling ly login manager..."
   sudo systemctl enable ly@tty1.service
 
