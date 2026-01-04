@@ -413,6 +413,8 @@ install_base_packages() {
     networkmanager \
     inetutils \
     openssh \
+    iperf3 \
+    atftp \
     \
     cups \
     cups-filters \
@@ -671,7 +673,7 @@ install_hyprland() {
     wl-clipboard \
     \
     hypridle \
-    hyprpaper \
+    swaybg \
     swaylock \
     \
     waybar \
@@ -756,7 +758,8 @@ install_hyprland() {
     neofetch \
     ookla-speedtest-bin \
     spotify \
-    vscodium-bin
+    vscodium-bin \
+    downgrade
 
   log_info "Copying VSCodium settings to ~/.config/VSCodium/User..."
   mkdir -p ~/.config/VSCodium/User/
