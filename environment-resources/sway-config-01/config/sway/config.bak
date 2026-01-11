@@ -1,0 +1,182 @@
+# Mod keys
+set $mainMod Mod4    # SUPER
+set $secondMod Mod1  # ALT
+
+# Custom commands
+set $menu wofi --show drun
+set $lockscreen swaylock -f -c 000000
+set $terminal kitty
+set $fileManager thunar
+set $calculator galculator
+
+# Screenshot path (used by grim)
+set $screenshotPath ~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png
+
+exec --no-startup-id waybar
+exec --no-startup-id nm-applet
+exec --no-startup-id wl-paste --watch clipman store
+exec --no-startup-id swaybg -o eDP-1 -i /home/sp2cha/.config/hypr/wallpapers/IMG_4168.jpg -m fill
+exec --no-startup-id swaybg -o DP-5  -i /home/sp2cha/.config/hypr/wallpapers/IMG_4168.jpg -m fill
+exec --no-startup-id swaybg -o DP-6  -i /home/sp2cha/.config/hypr/wallpapers/IMG_4168.jpg -m fill
+exec --no-startup-id mako
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+# Start on workspace 1
+workspace 1
+
+output eDP-1 resolution 1920x1080 position 0,0
+output DP-5 resolution 1920x1080 position 1920,0 transform 180
+output DP-6 resolution 1920x1080 position 3840,0 transform 180
+
+# Assign application classes to workspaces
+assign [class="kitty"] 1
+assign [class="firefox"] 2
+assign [class="Thunderbird"] 3
+assign [class="Thunar"] 4
+assign [class="Mousepad"] 4
+assign [class="codium"] 5
+assign [class="VSCodium"] 5
+assign [class="Cqrlog"] 6
+assign [class="WSJT-X"] 7
+assign [class="Spotify"] 10
+
+# System
+bindsym $mainMod+grave reload
+bindsym $mainMod+L exec $lockscreen
+bindsym $mainMod+space exec $menu
+
+# Applications
+bindsym $mainMod+1 exec $terminal
+bindsym $mainMod+2 exec firefox
+bindsym $mainMod+3 exec thunderbird
+bindsym $mainMod+4 exec $fileManager
+bindsym $mainMod+5 exec codium --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland
+bindsym $mainMod+6 exec cqrlog
+bindsym $mainMod+9 exec discord
+bindsym $mainMod+0 exec spotify
+
+# Switch to workspace N (1–10)
+bindsym $secondMod+1 workspace 1
+bindsym $secondMod+2 workspace 2
+bindsym $secondMod+3 workspace 3
+bindsym $secondMod+4 workspace 4
+bindsym $secondMod+5 workspace 5
+bindsym $secondMod+6 workspace 6
+bindsym $secondMod+7 workspace 7
+bindsym $secondMod+8 workspace 8
+bindsym $secondMod+9 workspace 9
+bindsym $secondMod+0 workspace 10
+
+# Move focused container to workspace N
+bindsym $secondMod+Shift+1 move container to workspace 1
+bindsym $secondMod+Shift+2 move container to workspace 2
+bindsym $secondMod+Shift+3 move container to workspace 3
+bindsym $secondMod+Shift+4 move container to workspace 4
+bindsym $secondMod+Shift+5 move container to workspace 5
+bindsym $secondMod+Shift+6 move container to workspace 6
+bindsym $secondMod+Shift+7 move container to workspace 7
+bindsym $secondMod+Shift+8 move container to workspace 8
+bindsym $secondMod+Shift+9 move container to workspace 9
+bindsym $secondMod+Shift+0 move container to workspace 10
+
+# Move workspace to another output
+bindsym $secondMod+Left move workspace to output left
+bindsym $secondMod+Right move workspace to output right
+
+# Move focus
+bindsym $mainMod+Left focus left
+bindsym $mainMod+Right focus right
+bindsym $mainMod+Up focus up
+bindsym $mainMod+Down focus down
+
+# Move windows (tiling mode)
+bindsym $mainMod+Shift+Left move left
+bindsym $mainMod+Shift+Right move right
+bindsym $mainMod+Shift+Up move up
+bindsym $mainMod+Shift+Down move down
+
+# Toggle floating, kill
+bindsym $mainMod+V floating toggle
+bindsym $mainMod+X kill
+
+floating_modifier $mainMod
+
+bindsym --whole-window $mainMod+button4 workspace prev   # Mod+scroll up
+bindsym --whole-window $mainMod+button5 workspace next   # Mod+scroll down
+
+bindsym Print exec grim -g "$(slurp)" $screenshotPath
+bindsym Shift+Print exec grim $screenshotPath
+bindsym $mainMod+P exec grim -g "$(slurp)" $screenshotPath
+bindsym $mainMod+Shift+P exec grim $screenshotPath
+
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
+bindsym $mainMod+K exec $calculator
+
+gaps inner 5
+gaps outer 20
+default_border pixel 2
+floating_border pixel 2
+
+input * {
+    xkb_layout pl
+    xkb_variant ""
+    xkb_options ""
+    natural_scroll yes
+    tap_to_click yes
+}
+
+input "epic-mouse-v1" {
+    pointer_accel -0.5
+}
+
+# VS Codium open file/folder dialogs
+for_window [class="^(Codium|codium)$" title="^(Open File|Open Folder)$"] floating enable, resize set 1000 600, move position center
+
+# Thunar file operations
+for_window [class="^Thunar$" title="^(File Operation Progress|Rename.*)$"] floating enable, move position center
+
+# MPV media player
+for_window [class="^mpv$"] floating enable, resize set 1200 675, move position center
+
+# IMV image viewer
+for_window [class="^imv$"] floating enable, resize set 1876 986, move absolute position 22 px 72 px
+
+# Pavucontrol (PulseAudio)
+for_window [class="^org\\.pulseaudio\\.pavucontrol$"] floating enable, resize set 800 900, move position center
+
+# Firefox Library window
+for_window [class="^[Ff]irefox$" title="^Library$"] floating enable, resize set 900 450, move position center
+
+# Galculator (calculator)
+for_window [class="^galculator$"] floating enable, resize set 346 342, move position center
+
+# Netcalc
+for_window [class="^netcalc$"] floating enable, move position center
+
+# CQRLOG windows
+for_window [class="^Cqrlog$" title="^New QSO.*"] floating enable, resize set 931 986, move absolute position 22 px 72 px
+for_window [class="^Cqrlog$" title="^CQRLOG for Linux$"] floating enable, resize set 931 658, move absolute position 967 px 72 px
+for_window [class="^Cqrlog$" title="^TRX control$"] floating enable, resize set 275 310, move absolute position 967 px 748 px
+for_window [class="^Cqrlog$" title="^DXCluster$"] floating enable, resize set 638 310, move absolute position 1259 px 748 px
+for_window [class="^Cqrlog$" title="^Preferences$"] floating enable, move position center
+for_window [class="^Cqrlog$" title="^Contest$"] floating enable, resize set 755 145, move position center
+for_window [class="^Cqrlog$" title="^Status of log upload$"] floating enable, resize set 450 630, move position center
+for_window [class="^Cqrlog$" title="^Starting CQRLOG"] floating enable, move position center
+for_window [class="^Cqrlog$" title="^Database connection$"] floating enable, resize set 400 455
+
+# WSJT-X windows
+for_window [class="^WSJT-X$" title="^WSJT-X v.*"] floating enable, resize set 1021 986, move absolute position 22 px 72 px
+for_window [class="^WSJT-X$" title="^WSJT-X - Wide Graph$"] floating enable, resize set 841 880, move absolute position 1057 px 72 px
+for_window [class="^WSJT-X$" title=".*Log QSO$"] floating enable, resize set 417 386, move position center
+

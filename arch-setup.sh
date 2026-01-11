@@ -813,7 +813,18 @@ hypr_copy_config () {
   read -r confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_CONFIG_FOLDERS=("hypr" "kitty" "waybar" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list" "imv")
+    COPY_CONFIG_FOLDERS=("hypr"
+      "kitty"
+      "waybar"
+      "wofi"
+      "mako"
+      "gtk-3.0"
+      "xfce4"
+      "Thunar"
+      "mimeapps.list"
+      "imv"
+    )
+
     COPY_LOCAL_SHARE_FOLDERS=("Thunar")
 
     mkdir -p "$HOME/.config"
@@ -867,6 +878,230 @@ hypr_copy_config () {
     fi
 
     log_succes "Hyprland configuration $choice copy completed"
+  fi
+}
+
+install_sway() {
+  install_audio
+  install_xorg "wayland"
+
+  log_info "Installing Sway..."
+  sudo pacman -S --noconfirm --needed \
+      sway \
+      swayidle \
+      swaybg \
+      swaylock \
+      \
+      xdg-desktop-portal \
+      xdg-desktop-portal-wlr \
+      xdg-utils \
+      wl-clipboard \
+      \
+      waybar \
+      mako \
+      brightnessctl \
+      \
+      grim \
+      slurp \
+      \
+      wofi \
+      kitty \
+      mousepad \
+      \
+      thunar \
+      thunar-archive-plugin \
+      thunar-media-tags-plugin \
+      gnome-disk-utility \
+      \
+      gvfs \
+      gvfs-smb \
+      gvfs-nfs \
+      gvfs-mtp \
+      gvfs-gphoto2 \
+      android-udev \
+      \
+      zip \
+      unzip \
+      unrar \
+      p7zip \
+      xarchiver \
+      rsync \
+      \
+      network-manager-applet \
+      bluez \
+      bluez-utils \
+      blueman \
+      \
+      pavucontrol \
+      \
+      otf-font-awesome \
+      ttf-nerd-fonts-symbols \
+      gnome-themes-extra \
+      polkit-gnome \
+      gnome-keyring \
+      seahorse \
+      gparted \
+      \
+      ly \
+      \
+      firefox \
+      thunderbird \
+      filezilla \
+      \
+      mpv \
+      imv \
+      libreoffice-fresh \
+      imagemagick
+
+  log_info "Disabling & masking getty service on tty1..."
+  sudo systemctl disable getty@tty1.service
+  sudo systemctl mask getty@tty1.service
+
+  log_info "Enabling ly login manager..."
+  sudo systemctl enable ly@tty1.service
+
+  log_info "Enabling bluetooth..."
+  sudo systemctl enable bluetooth
+
+  log_info "Enabling audio..."
+  systemctl --user enable --now pipewire.service
+  systemctl --user enable --now wireplumber.service
+
+  log_info "Installing icons...";
+  mkdir -p ~/.icons
+  tar -xf ./environment-resources/icons/01-Flat-Remix-Blue-20250709.tar.xz -C ~/.icons/
+  gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Blue-Dark'
+
+  install_yay
+
+  log_info "Installing AUR packages..."
+  yay -S --removemake --noconfirm --needed \
+    neofetch \
+    ookla-speedtest-bin \
+    spotify \
+    vscodium-bin \
+    downgrade
+
+  log_info "Copying VSCodium settings to ~/.config/VSCodium/User..."
+  mkdir -p ~/.config/VSCodium/User/
+  cp -f environment-resources/vscodium/settings.json ~/.config/VSCodium/User/
+
+  log_info "Installing oh-my-zsh..."
+  RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="bira"/' ~/.zshrc
+
+  log_info "Copying nano configuration..."
+  cp environment-resources/nano-config/.nanorc ~/
+
+  log_succes "Sway environment installation completed!"
+  hypr_copy_config
+  ask_reboot
+}
+
+sway_copy_config () {
+  log_info "Select Sway config to copy:"
+  echo "  1) Config 1 for laptop"
+  echo "  2) Config 2 for desktop"
+  echo "  0) Exit the script."
+
+  log_qa "Enter choice [1/2]:"
+  read -r choice
+
+  case "$choice" in
+    1)
+      SWAY_CONFIG_OPTION="sway-config-01"
+
+      log_info "Configure Adwaita-dark theme"
+      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+      ;;
+    2)
+      SWAY_CONFIG_OPTION="sway-config-02"
+
+      log_info "Configure Adwaita-dark theme"
+      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+      ;;
+    0)
+      log_info "Exiting the script."
+      return
+      ;;
+    *)
+      log_error "Invalid choice. Aborting."
+      log_error "Use: --help options"
+      return
+      ;;
+  esac
+
+  log_qa "Do you want to copy sway config to .config? [Y/n]:"
+  read -r confirm
+  confirm=${confirm,,}
+
+  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
+    COPY_CONFIG_FOLDERS=(
+      "sway"
+      "kitty"
+      "waybar"
+      "wofi"Z
+      "mako"
+      "gtk-3.0"
+      "xfce4"
+      "Thunar"
+      "mimeapps.list"
+      "imv"
+    )
+
+    COPY_LOCAL_SHARE_FOLDERS=("Thunar")
+
+    mkdir -p "$HOME/.config"
+    for cfg in "${COPY_CONFIG_FOLDERS[@]}"; do
+      SRC="./environment-resources/$SWAY_CONFIG_OPTION/config/$cfg"
+
+      if [ -d "$SRC" ]; then
+        echo "--> Copying directory $cfg to ~/.config"
+        cp -rf "$SRC" "$HOME/.config"
+      elif [ -f "$SRC" ]; then
+        echo "--> Copying file $cfg to ~/.config"
+        cp -f "$SRC" "$HOME/.config/"
+      else
+        echo "!! $cfg not found, skipping"
+      fi
+    done
+
+    mkdir -p "$HOME/.local/share"
+    for cfg in "${COPY_LOCAL_SHARE_FOLDERS[@]}"; do
+      SRC="./environment-resources/$SWAY_CONFIG_OPTION/local/$cfg"
+
+      if [ -d "$SRC" ]; then
+        echo "--> Copying directory $cfg to ~/.local/share"
+        cp -rf "$SRC" "$HOME/.local/share"
+      elif [ -f "$SRC" ]; then
+        echo "--> Copying file $cfg to ~/.local/share"
+        cp -f "$SRC" "$HOME/.local/share/"
+      else
+        echo "!! $cfg not found, skipping"
+      fi
+    done
+
+    WALLPAPER_DIR="$HOME/.config/sway/wallpapers"
+    ZIP_FILE="/tmp/wallpapers.zip"
+    DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
+
+    if [ ! -d "$WALLPAPER_DIR" ] || [ -z "$(ls -A "$WALLPAPER_DIR")" ]; then
+      printf "${BLUE}[i] Downloading wallpapers... ${RESET}"
+      wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
+      printf "${GREEN}Done${RESET}\n"
+
+      printf "${BLUE}[i] Extracting wallpapers... ${RESET}"
+      unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
+      printf "${GREEN}Done${RESET}\n"
+
+      printf "${BLUE}[i] Removing /tmp/wallpapers.zip... ${RESET}"
+      rm "$ZIP_FILE"
+      printf "${GREEN}Done${RESET}\n"
+    else
+      log_info "Wallpapers already exist, skipping download."
+    fi
+
+    log_succes "Sway configuration $choice copy completed"
   fi
 }
 
@@ -1073,6 +1308,12 @@ case "$1" in
   --copy-hypr-config)
     hypr_copy_config
     ;;
+  --install-sway)
+    install_sway
+    ;;
+  --copy-sway-config)
+    sway_copy_config
+    ;;
   --install-yay)
     install_yay
     ;;
@@ -1107,6 +1348,8 @@ case "$1" in
     echo "    --install-plasma                 - Install KDE Plasma desktop environment"
     echo "    --install-hyprland               - Install Hyprland Wayland compositor"
     echo "    --copy-hypr-config               - Copy custom Hyprland configuration files"
+    echo "    --install-sway                   - Install Sway Wayland compositor"
+    echo "    --copy-sway-config               - Copy custom Hyprland configuration files"
     echo ""
     echo ">>> Additional options:"
     echo "    -f, --force              - Force reinstall (e.g., overwrite existing GRUB installation)"

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal Here</name>
+	<submenu></submenu>
+	<unique-id>1756039040222978-1</unique-id>
+	<command>exo-open --working-directory %f --launch TerminalEmulator</command>
+	<description>Open terminal in containing directory</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>kdenlive-show-video</icon>
+	<name>Merge Video with Audio (ffmpeg)</name>
+	<submenu></submenu>
+	<unique-id>1756920693343957-1</unique-id>
+	<command>/home/$USER/.config/Thunar/scripts/thunar-merge-audio-video.sh %F</command>
+	<description>Replace or add audio track to a video file using ffmpeg</description>
+	<range>2-2</range>
+	<patterns>*.mp4;*.MP4;*.mkv;*.MKV;*.mov;*.MOV;*.avi;*.AVI;*.mp3;*.MP3;*.aac;*.AAC;*.wav;*.WAV;*.flac;*.FLAC</patterns>
+	<audio-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>application-pdf</icon>
+	<name>Create PDF</name>
+	<submenu></submenu>
+	<unique-id>1758744792026531-1</unique-id>
+	<command>magick %F document.pdf</command>
+	<description>Creating a PDF document from images</description>
+	<range>*</range>
+	<patterns>*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.svg;*.SVG</patterns>
+	<image-files/>
+	<other-files/>
+</action>
+<action>
+	<icon>object-rotate-left</icon>
+	<name>Image rotate left</name>
+	<submenu></submenu>
+	<unique-id>1763900494629151-1</unique-id>
+	<command>jpegtran -rotate 270 -outfile %f %f</command>
+	<description>Rotate image left</description>
+	<range>1</range>
+	<patterns>*.jpg;*.JPG;*.jpeg;*.JPEG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>object-rotate-right</icon>
+	<name>Image rotate right</name>
+	<submenu></submenu>
+	<unique-id>1763900817157536-2</unique-id>
+	<command>jpegtran -rotate 90 -outfile %f %f</command>
+	<description>Rotate image right</description>
+	<range>*</range>
+	<patterns>*.jpg;*.JPG;*.jpeg;*.JPEG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>object-rotate-left</icon>
+	<name>Image rotate left (magick)</name>
+	<submenu></submenu>
+	<unique-id>1763901490000000-3</unique-id>
+	<command>magick %f -rotate -90 %f</command>
+	<description>Rotate image left</description>
+	<range>1</range>
+	<patterns>*.png;*.PNG;*.webp;*.WEBP;*.bmp;*.BMP;*.tiff;*.TIFF;*.gif;*.GIF;*.svg;*.SVG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>object-rotate-right</icon>
+	<name>Image rotate right (magick)</name>
+	<submenu></submenu>
+	<unique-id>1763916760494185-1</unique-id>
+	<command>magick %f -rotate 90 %f</command>
+	<description>Rotate image right</description>
+	<range>1</range>
+	<patterns>*.png;*.PNG;*.webp;*.WEBP;*.bmp;*.BMP;*.tiff;*.TIFF;*.gif;*.GIF;*.svg;*.SVG</patterns>
+	<image-files/>
+</action>
+</actions>
