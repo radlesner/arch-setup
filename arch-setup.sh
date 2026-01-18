@@ -777,108 +777,54 @@ install_hyprland() {
   ask_reboot
 }
 
-hypr_copy_config () {
+hypr_copy_config() {
   log_info "Select Hyprland config to copy:"
   echo "  1) Config 1 for laptop"
-  echo "  2) Config 2 fot desktop"
+  echo "  2) Config 2 for desktop"
   echo "  0) Exit the script."
 
   log_qa "Enter choice [1/2]:"
   read -r choice
 
   case "$choice" in
-    1)
-      HYPR_CONFIG_OPTION="hyprland-config-01"
-
-      log_info "Configure Adwaita-dark theme"
-      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-      ;;
-    2)
-      HYPR_CONFIG_OPTION="hyprland-config-02"
-
-      log_info "Configure Adwaita-dark theme"
-      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-      ;;
-    0)
-      log_info "Exiting the script."
-      return
-      ;;
-    *)
-      log_error "Invalid choice. Aborting."
-      log_error "Use: --help options"
-      return
-      ;;
+    1) HYPR_CONFIG_OPTION="hyprland-config-01" ;;
+    2) HYPR_CONFIG_OPTION="hyprland-config-02" ;;
+    0) log_info "Exiting the script."; return ;;
+    *) log_error "Invalid choice."; return ;;
   esac
+
+  COMMON_CONFIG_FOLDER="common-config"
+
   log_qa "Do you want to copy hyprland config to .config? [Y/n]:"
   read -r confirm
   confirm=${confirm,,}
-  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_CONFIG_FOLDERS=("hypr"
-      "kitty"
-      "waybar"
-      "wofi"
-      "mako"
-      "gtk-3.0"
-      "xfce4"
-      "Thunar"
-      "mimeapps.list"
-      "imv"
-    )
+  [[ ! "$confirm" =~ ^(y|yes|)$ ]] && return
 
-    COPY_LOCAL_SHARE_FOLDERS=("Thunar")
+  COPY_HYPR_CONFIG_FOLDERS=("hypr" "waybar")
+  COPY_COMMON_CONFIG_FOLDERS=("kitty" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list" "imv")
+  COPY_LOCAL_SHARE_FOLDERS=("Thunar")
 
-    mkdir -p "$HOME/.config"
-    for cfg in "${COPY_CONFIG_FOLDERS[@]}"; do
-        SRC="./environment-resources/$HYPR_CONFIG_OPTION/config/$cfg"
+  copy_config_items "./environment-resources/$HYPR_CONFIG_OPTION/config"   "$HOME/.config/"      "${COPY_HYPR_CONFIG_FOLDERS[@]}"
+  copy_config_items "./environment-resources/$COMMON_CONFIG_FOLDER/config" "$HOME/.config/"      "${COPY_COMMON_CONFIG_FOLDERS[@]}"
+  copy_config_items "./environment-resources/$COMMON_CONFIG_FOLDER/local"  "$HOME/.local/share/" "${COPY_LOCAL_SHARE_FOLDERS[@]}"
 
-        if [ -d "$SRC" ]; then
-          echo "--> Copying directory $cfg to ~/.config"
-          cp -rf "$SRC" "$HOME/.config"
-        elif [ -f "$SRC" ]; then
-          echo "--> Copying file $cfg ~/.config"
-          cp -f "$SRC" "$HOME/.config/"
-        else
-          echo "!! $cfg not found, skipping"
-        fi
-    done
+  WALLPAPER_DIR="$HOME/.config/hypr/wallpapers"
+  ZIP_FILE="/tmp/wallpapers.zip"
+  DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
 
-    mkdir -p "$HOME/.local/share"
-    for cfg in "${COPY_LOCAL_SHARE_FOLDERS[@]}"; do
-      SRC="./environment-resources/$HYPR_CONFIG_OPTION/local/$cfg"
-
-      if [ -d "$SRC" ]; then
-        echo "--> Copying directory $cfg to ~/.local/share"
-        cp -rf "$SRC" "$HOME/.local/share"
-      elif [ -f "$SRC" ]; then
-        echo "--> Copying file $cfg to ~/.local/share"
-        cp -f "$SRC" "$HOME/.local/share/"
-      else
-        echo "!! $cfg not found, skipping"
-      fi
-    done
-
-    WALLPAPER_DIR="$HOME/.config/hypr/wallpapers"
-    ZIP_FILE="/tmp/wallpapers.zip"
-    DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
-
-    if [ ! -d "$WALLPAPER_DIR" ] || [ -z "$(ls -A "$WALLPAPER_DIR")" ]; then
-      printf "${BLUE}[i] Downloading wallpapers... ${RESET}"
-      wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
-      printf "${GREEN}Done${RESET}\n"
-
-      printf "${BLUE}[i] Extracting wallpapers... ${RESET}"
-      unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
-      printf "${GREEN}Done${RESET}\n"
-
-      printf "${BLUE}[i] Removing /tmp/wallpapers.zip... ${RESET}"
-      rm "$ZIP_FILE"
-      printf "${GREEN}Done${RESET}\n"
-    else
-      log_info "Wallpapers already exist, skipping download."
-    fi
-
-    log_succes "Hyprland configuration $choice copy completed"
+  if [ ! -d "$WALLPAPER_DIR" ] || [ -z "$(ls -A "$WALLPAPER_DIR")" ]; then
+    printf "${BLUE}[i] Downloading wallpapers... ${RESET}"
+    wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
+    printf "${GREEN}Done${RESET}\n"
+    printf "${BLUE}[i] Extracting wallpapers... ${RESET}"
+    unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
+    printf "${GREEN}Done${RESET}\n"
+    rm "$ZIP_FILE"
+  else
+    log_info "Wallpapers already exist, skipping download."
   fi
+
+  log_succes "Hyprland configuration $choice copy completed"
 }
 
 install_sway() {
@@ -994,11 +940,11 @@ install_sway() {
   cp environment-resources/nano-config/.nanorc ~/
 
   log_succes "Sway environment installation completed!"
-  hypr_copy_config
+  sway_copy_config
   ask_reboot
 }
 
-sway_copy_config () {
+sway_copy_config() {
   log_info "Select Sway config to copy:"
   echo "  1) Config 1 for laptop"
   echo "  2) Config 2 for desktop"
@@ -1008,101 +954,44 @@ sway_copy_config () {
   read -r choice
 
   case "$choice" in
-    1)
-      SWAY_CONFIG_OPTION="sway-config-01"
-
-      log_info "Configure Adwaita-dark theme"
-      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-      ;;
-    2)
-      SWAY_CONFIG_OPTION="sway-config-02"
-
-      log_info "Configure Adwaita-dark theme"
-      gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-      ;;
-    0)
-      log_info "Exiting the script."
-      return
-      ;;
-    *)
-      log_error "Invalid choice. Aborting."
-      log_error "Use: --help options"
-      return
-      ;;
+    1) SWAY_CONFIG_OPTION="sway-config-01" ;;
+    2) SWAY_CONFIG_OPTION="sway-config-02" ;;
+    0) log_info "Exiting the script."; return ;;
+    *) log_error "Invalid choice."; return ;;
   esac
 
-  log_qa "Do you want to copy sway config to .config? [Y/n]:"
+  COMMON_CONFIG_FOLDER="common-config"
+
+  log_qa "Do you want to copy Sway config to .config? [Y/n]:"
   read -r confirm
   confirm=${confirm,,}
+  [[ ! "$confirm" =~ ^(y|yes|)$ ]] && return
 
-  if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    COPY_CONFIG_FOLDERS=(
-      "sway"
-      "kitty"
-      "waybar"
-      "wofi"Z
-      "mako"
-      "gtk-3.0"
-      "xfce4"
-      "Thunar"
-      "mimeapps.list"
-      "imv"
-    )
+  COPY_HYPR_CONFIG_FOLDERS=("sway" "waybar")
+  COPY_COMMON_CONFIG_FOLDERS=("kitty" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list" "imv")
+  COPY_LOCAL_SHARE_FOLDERS=("Thunar")
 
-    COPY_LOCAL_SHARE_FOLDERS=("Thunar")
+  copy_config_items "./environment-resources/$SWAY_CONFIG_OPTION/config"   "$HOME/.config/"      "${COPY_HYPR_CONFIG_FOLDERS[@]}"
+  copy_config_items "./environment-resources/$COMMON_CONFIG_FOLDER/config" "$HOME/.config/"      "${COPY_COMMON_CONFIG_FOLDERS[@]}"
+  copy_config_items "./environment-resources/$COMMON_CONFIG_FOLDER/local"  "$HOME/.local/share/" "${COPY_LOCAL_SHARE_FOLDERS[@]}"
 
-    mkdir -p "$HOME/.config"
-    for cfg in "${COPY_CONFIG_FOLDERS[@]}"; do
-      SRC="./environment-resources/$SWAY_CONFIG_OPTION/config/$cfg"
+  WALLPAPER_DIR="$HOME/.config/hypr/wallpapers"
+  ZIP_FILE="/tmp/wallpapers.zip"
+  DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
 
-      if [ -d "$SRC" ]; then
-        echo "--> Copying directory $cfg to ~/.config"
-        cp -rf "$SRC" "$HOME/.config"
-      elif [ -f "$SRC" ]; then
-        echo "--> Copying file $cfg to ~/.config"
-        cp -f "$SRC" "$HOME/.config/"
-      else
-        echo "!! $cfg not found, skipping"
-      fi
-    done
-
-    mkdir -p "$HOME/.local/share"
-    for cfg in "${COPY_LOCAL_SHARE_FOLDERS[@]}"; do
-      SRC="./environment-resources/$SWAY_CONFIG_OPTION/local/$cfg"
-
-      if [ -d "$SRC" ]; then
-        echo "--> Copying directory $cfg to ~/.local/share"
-        cp -rf "$SRC" "$HOME/.local/share"
-      elif [ -f "$SRC" ]; then
-        echo "--> Copying file $cfg to ~/.local/share"
-        cp -f "$SRC" "$HOME/.local/share/"
-      else
-        echo "!! $cfg not found, skipping"
-      fi
-    done
-
-    WALLPAPER_DIR="$HOME/.config/sway/wallpapers"
-    ZIP_FILE="/tmp/wallpapers.zip"
-    DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
-
-    if [ ! -d "$WALLPAPER_DIR" ] || [ -z "$(ls -A "$WALLPAPER_DIR")" ]; then
-      printf "${BLUE}[i] Downloading wallpapers... ${RESET}"
-      wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
-      printf "${GREEN}Done${RESET}\n"
-
-      printf "${BLUE}[i] Extracting wallpapers... ${RESET}"
-      unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
-      printf "${GREEN}Done${RESET}\n"
-
-      printf "${BLUE}[i] Removing /tmp/wallpapers.zip... ${RESET}"
-      rm "$ZIP_FILE"
-      printf "${GREEN}Done${RESET}\n"
-    else
-      log_info "Wallpapers already exist, skipping download."
-    fi
-
-    log_succes "Sway configuration $choice copy completed"
+  if [ ! -d "$WALLPAPER_DIR" ] || [ -z "$(ls -A "$WALLPAPER_DIR")" ]; then
+    printf "${BLUE}[i] Downloading wallpapers... ${RESET}"
+    wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
+    printf "${GREEN}Done${RESET}\n"
+    printf "${BLUE}[i] Extracting wallpapers... ${RESET}"
+    unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
+    printf "${GREEN}Done${RESET}\n"
+    rm "$ZIP_FILE"
+  else
+    log_info "Wallpapers already exist, skipping download."
   fi
+
+  log_succes "Sway configuration $choice copy completed"
 }
 
 install_xorg() {
@@ -1200,6 +1089,30 @@ ask_reboot() {
   log_qa "Do you want to restart system? [Y/n]:"
   read -r confirm
   [[ "$confirm" =~ ^(n|no)$ ]] || reboot
+}
+
+copy_config_items() {
+  local src_base="$1"
+  local dest_base="$2"
+  shift 2
+  local items=("$@")
+
+  # dest_base="$(realpath -m "$dest_base")"
+  dest_base="${dest_base/#$HOME/~}"
+
+  for item in "${items[@]}"; do
+    SRC="$src_base/$item"
+
+    if [ -d "$SRC" ]; then
+      printf -- "-->  📁  %-18s → %s\n" "$item" "$(realpath -m "$dest_base")"
+      cp -rf "$SRC" "$dest_base"
+    elif [ -f "$SRC" ]; then
+      printf -- "-->  📄  %-18s → %s\n" "$item" "$(realpath -m "$dest_base")"
+      cp -f "$SRC" "$dest_base/"
+    else
+      printf -- "!!   ⚠️   %-18s (not found)\n" "$item"
+    fi
+  done
 }
 
 # -------------------------------------------------------- MAIN --------------------------------------------------------
