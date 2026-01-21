@@ -1097,20 +1097,23 @@ copy_config_items() {
   shift 2
   local items=("$@")
 
-  # dest_base="$(realpath -m "$dest_base")"
-  dest_base="${dest_base/#$HOME/~}"
+  dest_base="${dest_base/#\~/$HOME}"
+  dest_base="${dest_base//\/\//\/}"
+  dest_base="${dest_base%/}"
+
+  local dest_print="${dest_base/#$HOME/~}"
 
   for item in "${items[@]}"; do
-    SRC="$src_base/$item"
+    local SRC="$src_base/$item"
 
     if [ -d "$SRC" ]; then
-      printf -- "-->  📁  %-18s → %s\n" "$item" "$(realpath -m "$dest_base")"
-      cp -rf "$SRC" "$dest_base"
+      printf -- "--> 📁 %-18s → %s/\n" "$item" "$dest_print/${YELLOW}$item${RESET}"
+      cp -rf "$SRC" "$dest_base/"
     elif [ -f "$SRC" ]; then
-      printf -- "-->  📄  %-18s → %s\n" "$item" "$(realpath -m "$dest_base")"
+      printf -- "--> 📄 %-18s → %s/\n" "$item" "$dest_print/${YELLOW}$item${RESET}"
       cp -f "$SRC" "$dest_base/"
     else
-      printf -- "!!   ⚠️   %-18s (not found)\n" "$item"
+      printf -- "--> ⚠️ %-18s (not found)\n" "$item"
     fi
   done
 }
