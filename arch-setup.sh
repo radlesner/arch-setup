@@ -1100,6 +1100,55 @@ copy_config_items() {
   done
 }
 
+system_opts=(
+    "--archinstall|Install from archinstall script with custom config"
+    "--install /dev/sdX|Installing the system without using the archinstall script"
+    "--chroot-postinstall|Configure post-installation system settings"
+    "--install-base-packages|Install base packages and enable services"
+)
+
+bootloaders=(
+    "--install-systemd-boot /dev/sdaX|Install systemd-boot EFI bootloader"
+    "--install-grub|Install GRUB bootloader (EFI)"
+    "--remove-grub|Remove GRUB bootloader (EFI)"
+)
+
+packages=(
+    "--install-yay|Install yay AUR helper"
+    "--install-vbox|Install VirtualBox"
+    "--install-hamradio-setup|Install Ham Radio setup"
+    "--install-game-setup|Install game setup (Radeon only)"
+)
+
+desktop_envs=(
+    "--install-xfce|Install XFCE desktop environment"
+    "--install-plasma|Install KDE Plasma desktop environment"
+    "--install-hyprland|Install Hyprland Wayland compositor"
+    "--copy-hypr-config|Copy custom Hyprland configuration files"
+    "--install-sway|Install Sway Wayland compositor"
+    "--copy-sway-config|Copy custom Sway configuration files"
+)
+
+additional=(
+    "-f, --force|Force reinstall (e.g., overwrite existing GRUB installation)"
+)
+
+print_help() {
+  local col_width=40
+  printf "    %-*s %s\n" "$col_width" "$1" "$2"
+}
+
+print_section() {
+    local title="$1"
+    shift
+    echo ">>> $title"
+    for item in "$@"; do
+        IFS="|" read -r opt desc <<< "$item"
+        print_help "$opt" "$desc"
+    done
+    echo ""
+}
+
 # -------------------------------------------------------- MAIN --------------------------------------------------------
 
 force=false
@@ -1219,35 +1268,11 @@ case "$1" in
     install_virtualbox
     ;;
   --help)
-    echo ""
-    echo ">>> System installation options:"
-    echo "    --archinstall                    - Install from archinstall script with custom config"
-    echo "    --install /dev/sdX               - Installing the system without using the archinstall script"
-    echo "    --chroot-postinstall             - Configure post-installation system settings"
-    echo "    --install-base-packages          - Install base packages and enable services"
-    echo ""
-    echo ">>> Bootloaders:"
-    echo "    --install-systemd-boot /dev/sdaX - Install systemd-boot EFI bootloader"
-    echo "    --install-grub                   - Install GRUB bootloader (EFI)"
-    echo "    --remove-grub                    - Remove GRUB bootloader (EFI)"
-    echo ""
-    echo ">>> Packages"
-    echo "    --install-yay                    - Install yay AUR helper"
-    echo "    --install-vbox                   - Install VirtualBox"
-    echo "    --install-hamradio-setup         - Install Ham Radio setup"
-    echo "    --install-game-setup             - Install game setup (Radeon only)"
-    echo ""
-    echo ">>> Desktop environment installation options:"
-    echo "    --install-xfce                   - Install XFCE desktop environment"
-    echo "    --install-plasma                 - Install KDE Plasma desktop environment"
-    echo "    --install-hyprland               - Install Hyprland Wayland compositor"
-    echo "    --copy-hypr-config               - Copy custom Hyprland configuration files"
-    echo "    --install-sway                   - Install Sway Wayland compositor"
-    echo "    --copy-sway-config               - Copy custom Hyprland configuration files"
-    echo ""
-    echo ">>> Additional options:"
-    echo "    -f, --force              - Force reinstall (e.g., overwrite existing GRUB installation)"
-    echo ""
+    print_section "System installation options" "${system_opts[@]}"
+    print_section "Bootloaders" "${bootloaders[@]}"
+    print_section "Packages" "${packages[@]}"
+    print_section "Desktop environment" "${desktop_envs[@]}"
+    print_section "Additional options" "${additional[@]}"
     ;;
   *)
     echo "Use: --help options"
