@@ -1030,24 +1030,6 @@ install_yay() {
   fi
 }
 
-install_fingerprint() {
-  echo -e "\e[32m[i] Installing fingerprint login method...\e[0m"
-  echo -e "\e[32m[i] Update repository...\e[0m"
-  sudo pacman -Syu --noconfirm
-
-  echo -e "\e[32m[i] Installing fprintd & pam...\e[0m"
-  sudo pacman -S --noconfirm --needed \
-    fprintd \
-    pam
-
-  echo -e "\e[32m[i] Scaning finger print, please scan your finger...\e[0m"
-  sudo fprintd-enroll $(whoami)
-
-  # sudo cp ./environment-resources/pam/ly                  /etc/pam.d/
-  # sudo cp ./environment-resources/pam/swaylock            /etc/pam.d/
-  # sudo cp ./environment-resources/pam/system-local-login  /etc/pam.d/
-}
-
 install_game_setup() {
   log_info "Installing game setup..."
 
@@ -1236,9 +1218,6 @@ case "$1" in
   --install-vbox)
     install_virtualbox
     ;;
-  --install-fingerprint)
-    install_fingerprint
-    ;;
   --help)
     echo ""
     echo ">>> System installation options:"
@@ -1255,7 +1234,6 @@ case "$1" in
     echo ">>> Packages"
     echo "    --install-yay                    - Install yay AUR helper"
     echo "    --install-vbox                   - Install VirtualBox"
-    echo "    --install-fingerprint            - Install fingerprint login option (Untested yet, not work with pam configuration)"
     echo "    --install-hamradio-setup         - Install Ham Radio setup"
     echo "    --install-game-setup             - Install game setup (Radeon only)"
     echo ""
