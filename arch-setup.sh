@@ -1100,6 +1100,8 @@ copy_config_items() {
   done
 }
 
+# ---------------------------------------------------- HELP SECTION ----------------------------------------------------
+
 system_opts=(
     "--archinstall|Install from archinstall script with custom config"
     "--install /dev/sdX|Installing the system without using the archinstall script"
