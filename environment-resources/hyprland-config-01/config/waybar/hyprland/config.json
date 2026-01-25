@@ -151,7 +151,7 @@
         "tooltip-format": " {ifname}: {ipaddr}/{cidr} via {gwaddr}",
         "format-linked": " {ifname} (No IP)",
         "format-disconnected": "⚠ Disconnected",
-        "on-click": "kitty nmtui"
+        "on-click": "kitty --class waybar-nmtui --title waybar-nmtui nmtui"
     },
     "pulseaudio": {
         "format": "{icon} {volume}%  {format_source}",
