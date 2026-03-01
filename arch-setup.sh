@@ -728,7 +728,7 @@ install_hyprland() {
     filezilla \
     \
     mpv \
-    imv \
+    ristretto \
     libreoffice-fresh \
     imagemagick
 
