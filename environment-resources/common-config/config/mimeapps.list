@@ -1,6 +1,6 @@
 [Default Applications]
 x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop
-image/svg+xml=imv-dir.desktop
+image/svg+xml=org.xfce.ristretto.desktop
 inode/directory=thunar.desktop
 
 [Added Associations]
@@ -8,6 +8,6 @@ x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;
 application/x-shellscript=org.xfce.mousepad.desktop;
 text/plain=org.xfce.mousepad.desktop;
 application/xml=org.xfce.mousepad.desktop;
-image/png=imv-dir.desktop;
-image/jpeg=imv-dir.desktop;
-image/svg+xml=imv-dir.desktop;
+image/png=org.xfce.ristretto.desktop;imv-dir.desktop;imv.desktop;
+image/jpeg=org.xfce.ristretto.desktop;imv-dir.desktop;imv.desktop;
+image/svg+xml=org.xfce.ristretto.desktop;imv-dir.desktop;imv.desktop;
