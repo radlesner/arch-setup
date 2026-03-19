@@ -72,10 +72,12 @@
     },
     "cpu": {
         "format": " {usage}%",
-        "tooltip": false
+        "tooltip": false,
+        "interval": 1
     },
     "memory": {
-        "format": " {}%"
+        "format": " {}%",
+        "interval": 1
     },
     "custom/disk-usage": {
         "exec": "~/.config/waybar/scripts/disk-used.sh / ",
@@ -91,7 +93,8 @@
             "",
             "",
             ""
-        ]
+        ],
+        "interval": 1
     },
     "backlight": {
         // "device": "acpi_video1",
@@ -193,20 +196,17 @@
     "custom/power": {
         "format": "",
         "tooltip": false,
-        "on-click": "poweroff",
-        "interval": 0
+        "on-click": "poweroff"
     },
     "custom/reboot": {
         "format": "",
         "tooltip": false,
-        "on-click": "reboot",
-        "interval": 0
+        "on-click": "reboot"
     },
     "custom/logout": {
         "format": "󰿅",
         "tooltip": false,
-        "on-click": "hyprctl dispatch exit",
-        "interval": 0
+        "on-click": "hyprctl dispatch exit"
     },
     "custom/uptime": {
         "format": " {}",

@@ -73,10 +73,12 @@
     },
     "cpu": {
         "format": " {usage}%",
-        "tooltip": false
+        "tooltip": false,
+        "interval": 1
     },
     "memory": {
-        "format": " {}%"
+        "format": " {}%",
+        "interval": 1
     },
     "custom/disk-usage": {
         "exec": "~/.config/waybar/scripts/disk-used.sh / ",
@@ -107,7 +109,8 @@
             "",
             ""
         ],
-        "tooltip-format": "CPU temperature: {}°C"
+        "tooltip-format": "CPU temperature: {}°C",
+        "interval": 1
     },
     "temperature#gpu": {
         "hwmon-path": "/sys/class/hwmon/hwmon1/temp1_input",
@@ -118,7 +121,8 @@
             "",
             ""
         ],
-        "tooltip-format": "GPU temperature: {}°C"
+        "tooltip-format": "GPU temperature: {}°C",
+        "interval": 1
     },
     "power-profiles-daemon": {
         "format": "{icon}",
@@ -179,20 +183,17 @@
     "custom/power": {
         "format": "",
         "tooltip": false,
-        "on-click": "poweroff",
-        "interval": 0
+        "on-click": "poweroff"
     },
     "custom/reboot": {
         "format": "",
         "tooltip": false,
-        "on-click": "reboot",
-        "interval": 0
+        "on-click": "reboot"
     },
     "custom/logout": {
         "format": "󰿅",
         "tooltip": false,
-        "on-click": "hyprctl dispatch exit",
-        "interval": 0
+        "on-click": "hyprctl dispatch exit"
     },
     "custom/kernel": {
         "format": " {}",
