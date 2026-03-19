@@ -410,11 +410,13 @@ install_base_packages() {
     htop \
     base-devel \
     \
+    acpi \
+    \
     networkmanager \
     inetutils \
     openssh \
+    nmap \
     iperf3 \
-    atftp \
     \
     cups \
     cups-filters \
