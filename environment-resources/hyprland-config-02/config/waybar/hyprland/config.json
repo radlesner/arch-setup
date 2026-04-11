@@ -15,6 +15,7 @@
         "clock"
     ],
     "modules-right": [
+        "idle_inhibitor",
         "pulseaudio",
         "network",
         "power-profiles-daemon",
@@ -70,6 +71,13 @@
         "tooltip": false,
         "interval": 1
         // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
     },
     "cpu": {
         "format": " {usage}%",

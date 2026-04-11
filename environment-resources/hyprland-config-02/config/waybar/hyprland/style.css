@@ -86,7 +86,8 @@ window#waybar.chromium {
 
 
 #network:hover,
-#pulseaudio:hover {
+#pulseaudio:hover,
+#idle_inhibitor:hover {
     background: rgba(255, 255, 255, 0.1);
 }
 
@@ -102,7 +103,8 @@ window#waybar.chromium {
 #backlight,
 #battery,
 #network,
-#pulseaudio {
+#pulseaudio,
+#idle_inhibitor {
     background: rgba(255, 255, 255, 0.2);
     font-size: 14px;
 }
@@ -268,4 +270,15 @@ window#waybar.chromium {
 
 #custom-logout:hover {
     background: rgba(212, 148, 0, 0.5);
+}
+
+/* ------------------------------------------------------- IDLE INHIBITOR */
+#idle_inhibitor.activated:hover {
+    background-color: rgba(236, 240, 241, 0.5);
+    color: #2d3436;
+}
+
+#idle_inhibitor.activated {
+    background-color: #ecf0f1;
+    color: #2d3436;
 }
