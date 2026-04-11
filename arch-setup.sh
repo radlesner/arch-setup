@@ -404,7 +404,6 @@ install_base_packages() {
     zsh \
     git \
     cmake \
-    screen \
     which \
     wget \
     htop \
@@ -415,8 +414,6 @@ install_base_packages() {
     networkmanager \
     inetutils \
     openssh \
-    nmap \
-    iperf3 \
     \
     cups \
     cups-filters \
@@ -732,7 +729,11 @@ install_hyprland() {
     mpv \
     ristretto \
     libreoffice-fresh \
-    imagemagick
+    imagemagick \
+    \
+    keepassxc \
+    \
+    jq
 
   log_info "Disabling & masking getty service on tty1..."
   sudo systemctl disable getty@tty1.service
@@ -758,10 +759,10 @@ install_hyprland() {
   log_info "Installing AUR packages..."
   yay -S --removemake --noconfirm --needed \
     neofetch \
-    ookla-speedtest-bin \
     spotify \
-    vscodium-bin \
-    downgrade
+    vscodium-bin
+
+  install_net_diag_setup
 
   log_info "Copying VSCodium settings to ~/.config/VSCodium/User..."
   mkdir -p ~/.config/VSCodium/User/
@@ -925,10 +926,10 @@ install_sway() {
   log_info "Installing AUR packages..."
   yay -S --removemake --noconfirm --needed \
     neofetch \
-    ookla-speedtest-bin \
     spotify \
-    vscodium-bin \
-    downgrade
+    vscodium-bin
+
+  install_net_diag_setup
 
   log_info "Copying VSCodium settings to ~/.config/VSCodium/User..."
   mkdir -p ~/.config/VSCodium/User/
@@ -1030,6 +1031,23 @@ install_yay() {
   else
     log_succes "yay already installed."
   fi
+}
+
+install_net_diag_setup() {
+  log_info "Installing network diagnostic packages"
+
+  install_yay
+
+  sudo pacman -S --noconfirm --needed \
+    nmap \
+    iperf3 \
+    mtr \
+    wireshark-qt \
+    screen
+
+  yay -S --removemake --noconfirm --needed \
+    winbox \
+    ookla-speedtest-bin
 }
 
 install_game_setup() {
