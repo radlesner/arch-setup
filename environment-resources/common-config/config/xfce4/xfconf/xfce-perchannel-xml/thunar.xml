@@ -6,9 +6,10 @@
   <property name="last-window-maximized" type="bool" value="true"/>
   <property name="last-details-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_38_PERCENT"/>
   <property name="last-separator-position" type="int" value="170"/>
-  <property name="last-details-view-column-widths" type="string" value="157,139,132,50,50,50,50,166,840,78,117,78,50,435"/>
+  <property name="last-details-view-column-widths" type="string" value="157,139,160,50,50,50,50,166,1119,78,117,79,50,152"/>
   <property name="last-show-hidden" type="bool" value="false"/>
-  <property name="last-details-view-visible-columns" type="string" value="THUNAR_COLUMN_DATE_CREATED,THUNAR_COLUMN_NAME,THUNAR_COLUMN_OWNER,THUNAR_COLUMN_PERMISSIONS,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE"/>
+  <property name="last-details-view-visible-columns" type="string" value="THUNAR_COLUMN_DATE_MODIFIED,THUNAR_COLUMN_NAME,THUNAR_COLUMN_OWNER,THUNAR_COLUMN_PERMISSIONS,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE"/>
   <property name="misc-single-click" type="bool" value="false"/>
   <property name="misc-date-style" type="string" value="THUNAR_DATE_STYLE_YYYYMMDD"/>
+  <property name="last-toolbar-items" type="string" value="menu:0,back:1,forward:1,open-parent:1,open-home:1,new-tab:0,new-window:0,toggle-split-view:0,undo:0,redo:0,zoom-out:0,zoom-in:0,zoom-reset:0,view-as-icons:0,view-as-detailed-list:0,view-as-compact-list:0,view-switcher:0,reload:1,location-bar:1,search:1,uca-action-1756039040222978-1:0"/>
 </channel>
