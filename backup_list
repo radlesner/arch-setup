@@ -31,3 +31,5 @@
 ~/.local/share/Steam/config/
 ~/.local/share/Steam/userdata/
 ~/.local/share/Steam/steamapps/libraryfolders.vdf
+
+~/.config/netchecker
