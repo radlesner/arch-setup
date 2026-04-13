@@ -1047,7 +1047,9 @@ install_net_diag_setup() {
 
   yay -S --removemake --noconfirm --needed \
     winbox \
-    ookla-speedtest-bin
+    ookla-speedtest-bin \
+    netcalc \
+    netchecker \
 }
 
 install_game_setup() {
