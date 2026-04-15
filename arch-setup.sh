@@ -1049,7 +1049,7 @@ install_net_diag_setup() {
     winbox \
     ookla-speedtest-bin \
     netcalc \
-    netchecker \
+    netchecker
 }
 
 install_game_setup() {
