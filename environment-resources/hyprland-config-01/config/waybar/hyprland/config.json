@@ -1,4 +1,8 @@
 {
+    "output": [
+        "eDP-1",
+        "DP-5"
+    ],
     "position": "top",
     "layer": "top",
     "margin-top": 10,
@@ -26,8 +30,6 @@
         "custom/uptime",
         "backlight",
         "battery",
-        // "battery#bat0",
-        // "battery#bat1",
         "custom/logout",
         "custom/reboot",
         "custom/power"
@@ -38,13 +40,13 @@
         "warp-on-scroll": false,
         "format": "{icon}",
         "format-icons": {
-            "1": "", // Terminals
-            "2": "", // Firefox
-            "3": "", // Thunderbird
-            "4": "", // Thunar
-            "5": "", // VS Code
-            "6": "󱄙", // CQRLOG
-            "10": "", // Spotify
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "6": "󱄙",
+            "10": "",
             "urgent": "",
             "focused": "",
             "default": ""
@@ -69,7 +71,6 @@
         "format": "{:%H:%M:%S - %d.%m.%Y}",
         "tooltip": false,
         "interval": 1
-        // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -93,8 +94,6 @@
         "tooltip": true
     },
     "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 80,
         "format": "{icon} {temperatureC}°C",
         "format-icons": [
@@ -105,7 +104,6 @@
         "interval": 1
     },
     "backlight": {
-        // "device": "acpi_video1",
         "format": "{icon} {percent}%",
         "format-icons": [
             "",
@@ -122,7 +120,7 @@
     "battery": {
         "interval": 1,
         "states": {
-            // "good": 95,
+            "good": 95,
             "warning": 30,
             "critical": 15
         },
