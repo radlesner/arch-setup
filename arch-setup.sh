@@ -24,10 +24,16 @@ RED=$'\e[31m'
 BLUE=$'\e[94m'
 RESET=$'\e[0m'
 
-log_info() { echo -e "${BLUE}[i] $1${RESET} "; }
-log_error() { echo -e "${RED}[!] $1${RESET} "; }
-log_qa() { printf "${YELLOW}[?] %s${RESET} " "$1"; }
-log_succes() { echo -e "${GREEN}[✓] $1${RESET}"; }
+CHAR_SUCCESS="✓"
+CHAR_WARN="▲"
+CHAR_ERROR="✗"
+CHAR_INFO="ℹ"
+CHAR_QA="❓"
+
+log_info() { echo -e "${BLUE}[${CHAR_INFO}] $1${RESET} "; }
+log_error() { echo -e "${RED}[${CHAR_ERROR}] $1${RESET} "; }
+log_qa() { printf "${YELLOW}[${CHAR_QA}] %s${RESET} " "$1"; }
+log_succes() { echo -e "${GREEN}[${CHAR_SUCCESS}] $1${RESET}"; }
 
 root_check() {
   if [ "$(id -u)" -ne 0 ]; then
