@@ -2,7 +2,7 @@
 set -uo pipefail
 
 LOGFILE="/tmp/hyprland-lid-handler.log"
-LOCK_CMD="swaylock -f -c 000000"
+LOCK_CMD="swaylock -f -i ~/.config/hypr/wallpapers/firewatch-01-blur-0x15.jpeg"
 
 INTERNAL="eDP-1"
 
