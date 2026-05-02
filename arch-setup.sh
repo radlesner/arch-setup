@@ -24,11 +24,11 @@ RED=$'\e[31m'
 BLUE=$'\e[94m'
 RESET=$'\e[0m'
 
-CHAR_SUCCESS="✓"
-CHAR_WARN="▲"
-CHAR_ERROR="✗"
-CHAR_INFO="ℹ"
-CHAR_QA="❓"
+CHAR_SUCCESS="+"
+CHAR_WARN="!"
+CHAR_ERROR="x"
+CHAR_INFO="i"
+CHAR_QA="?"
 
 log_info() { echo -e "${BLUE}[${CHAR_INFO}] $1${RESET} "; }
 log_error() { echo -e "${RED}[${CHAR_ERROR}] $1${RESET} "; }
