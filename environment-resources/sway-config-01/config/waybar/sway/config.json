@@ -1,4 +1,7 @@
 {
+    "output": [
+        "LVDS-1"
+    ],
     "position": "top",
     "layer": "top",
     "margin-top": 0,
@@ -15,6 +18,7 @@
         "clock"
     ],
     "modules-right": [
+        "idle_inhibitor",
         "pulseaudio",
         "network",
         "power-profiles-daemon",
@@ -25,8 +29,6 @@
         "custom/uptime",
         "backlight",
         "battery",
-        // "battery#bat0",
-        // "battery#bat1",
         "custom/logout",
         "custom/reboot",
         "custom/power"
@@ -37,9 +39,27 @@
         "warp-on-scroll": false,
         "format": "{icon}",
         "format-icons": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "6": "󱄙",
+            "10": "",
             "urgent": "",
-            "focused": "",
             "default": ""
+        },
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": []
         }
     },
     "clock": {
@@ -47,14 +67,22 @@
         "format": "{:%H:%M:%S - %d.%m.%Y}",
         "tooltip": false,
         "interval": 1
-        // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
     },
     "cpu": {
         "format": " {usage}%",
-        "tooltip": false
+        "tooltip": false,
+        "interval": 1
     },
     "memory": {
-        "format": " {}%"
+        "format": " {}%",
+        "interval": 1
     },
     "custom/disk-usage": {
         "exec": "~/.config/waybar/scripts/disk-used.sh / ",
@@ -62,18 +90,16 @@
         "tooltip": true
     },
     "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 80,
         "format": "{icon} {temperatureC}°C",
         "format-icons": [
             "",
             "",
             ""
-        ]
+        ],
+        "interval": 1
     },
     "backlight": {
-        // "device": "acpi_video1",
         "format": "{icon} {percent}%",
         "format-icons": [
             "",
@@ -90,7 +116,7 @@
     "battery": {
         "interval": 1,
         "states": {
-            // "good": 95,
+            "good": 95,
             "warning": 30,
             "critical": 15
         },
@@ -126,11 +152,11 @@
     },
     "network": {
         "format-wifi": " {essid} ({signalStrength}%)",
-        "format-ethernet": " {ipaddr}/{cidr}",
-        "tooltip-format": " {ifname} via {gwaddr}",
+        "format-ethernet": " {ipaddr}",
+        "tooltip-format": " {ifname}: {ipaddr}/{cidr} via {gwaddr}",
         "format-linked": " {ifname} (No IP)",
         "format-disconnected": "⚠ Disconnected",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+        "on-click": "kitty --class waybar-nmtui --title waybar-nmtui nmtui"
     },
     "pulseaudio": {
         "format": "{icon} {volume}%  {format_source}",
@@ -172,20 +198,17 @@
     "custom/power": {
         "format": "",
         "tooltip": false,
-        "on-click": "poweroff",
-        "interval": 0
+        "on-click": "poweroff"
     },
     "custom/reboot": {
         "format": "",
         "tooltip": false,
-        "on-click": "reboot",
-        "interval": 0
+        "on-click": "reboot"
     },
     "custom/logout": {
         "format": "󰿅",
         "tooltip": false,
-        "on-click": "swaymsg exit",
-        "interval": 0
+        "on-click": "hyprctl dispatch exit"
     },
     "custom/uptime": {
         "format": " {}",
