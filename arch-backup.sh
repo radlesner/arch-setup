@@ -24,17 +24,28 @@ RED=$'\e[31m'
 BLUE=$'\e[94m'
 RESET=$'\e[0m'
 
+CHAR_SUCCESS="+"
+CHAR_WARN="!"
+CHAR_ERROR="x"
+CHAR_INFO="i"
+CHAR_QA="?"
+
+log_info() { echo -e "${BLUE}[${CHAR_INFO}] $1${RESET} "; }
+log_error() { echo -e "${RED}[${CHAR_ERROR}] $1${RESET} "; }
+log_qa() { printf "${YELLOW}[${CHAR_QA}] %s${RESET} " "$1"; }
+log_succes() { echo -e "${GREEN}[${CHAR_SUCCESS}] $1${RESET}"; }
+
 LIST="backup_list"
 BACKUP_BASE="./backup"
 DATE=$(date +%Y%m%d-%H%M)
 BACKUP_DIR="$BACKUP_BASE/$(whoami)-on-$(hostname)-backup-$DATE"
 
 do_backup_local() {
-  echo "${BLUE}[i] Starting backup to $BACKUP_DIR${RESET}"
+  log_info "Starting backup to $BACKUP_DIR"
   mkdir -p "$BACKUP_DIR"
 
   if [ ! -f "$LIST" ]; then
-    echo "${RED}[!] No list file: $LIST${RESET}"
+    log_error "No list file: $LIST"
     exit 1
   fi
 
@@ -51,28 +62,28 @@ do_backup_local() {
       fi
   done < "$LIST"
 
-  echo "${GREEN}[✓] Backup completed: $BACKUP_DIR${RESET}"
+  log_succes "Backup completed: $BACKUP_DIR"
 }
 
 do_restore_local() {
   if [ -z "$1" ]; then
-    echo "${RED}[!] You must provide a backup directory (e.g. $BACKUP_BASE/$DATE)${RESET}"
+    log_error "You must provide a backup directory (e.g. $BACKUP_BASE/$DATE)"
     exit 1
   fi
 
   SRC="$1"
 
   if [ ! -d "$SRC" ]; then
-    echo "${RED}[!] Backup directory not found: $SRC${RESET}"
+    log_error "Backup directory not found: $SRC"
     exit 1
   fi
 
-  echo "${BLUE}[i] Restoring backup from $SRC${RESET}"
+  log_info "Restoring backup from $SRC"
 
   cd "$SRC" || exit 1
   rsync -a --relative --no-owner --no-group . /
 
-  echo "${GREEN}[✓] Restore completed.${RESET}"
+  log_succes "Restore completed."
 }
 
 case "$1" in
