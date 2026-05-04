@@ -22,6 +22,7 @@ GREEN=$'\e[32m'
 YELLOW=$'\e[33m'
 RED=$'\e[31m'
 BLUE=$'\e[94m'
+BLUE_LIGHT=$'\e[36m'
 RESET=$'\e[0m'
 
 CHAR_SUCCESS="+"
@@ -35,9 +36,16 @@ log_error() { echo -e "${RED}[${CHAR_ERROR}] $1${RESET} "; }
 log_qa() { printf "${YELLOW}[${CHAR_QA}] %s${RESET} " "$1"; }
 log_succes() { echo -e "${GREEN}[${CHAR_SUCCESS}] $1${RESET}"; }
 
-root_check() {
-  if [ "$(id -u)" -ne 0 ]; then
+required_root() {
+  if [[ $EUID -ne 0 ]]; then
     log_error "This script option must be run as root."
+    exit 1
+  fi
+}
+
+required_archiso() {
+  if ! [[ -d /run/archiso ]]; then
+    log_error "This option can only be run in the Archiso environment"
     exit 1
   fi
 }
@@ -50,7 +58,7 @@ install_from_archinstall() (
 )
 
 partition_disk() {
-  root_check
+  required_root
 
   DISK="$1"
 
@@ -154,14 +162,14 @@ EOF
 }
 
 install_grub() {
-  root_check
+  required_root
 
   if ! mount | grep -q '/boot type vfat'; then
     log_error "/boot is not mounted or is not a vfat EFI partition!"
     exit 1
   fi
 
-  if [ -d /boot/EFI/GRUB ]; then
+  if [[ -d /boot/EFI/GRUB ]]; then
     log_info "[i] GRUB seems to be already installed."
   else
     log_qa "Do you want to install GRUB loader? [Y/n]:"
@@ -190,18 +198,18 @@ install_grub() {
 }
 
 remove_grub() {
-  root_check
+  required_root
 
   log_qa "Do you realy want remove GRUB bootloader? [N/y]:"
   read -r confirm
   confirm=${confirm,,}
   if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-    if [ -d /boot/EFI ]; then
+    if [[ -d /boot/EFI ]]; then
       log_info "Deleting /boot/EFI..."
       rm -rf /boot/EFI
     fi
 
-    if [ -d /boot/grub ]; then
+    if [[ -d /boot/grub ]]; then
       log_info "Deleting /boot/grub..."
       rm -rf /boot/grub
     fi
@@ -209,7 +217,7 @@ remove_grub() {
 }
 
 chroot_postinstall() {
-  root_check
+  required_root
 
   log_info "Configuring locale..."
   locale-gen
@@ -405,7 +413,7 @@ configure_mirrors() {
 }
 
 install_base_packages() {
-  root_check
+  required_root
 
   log_info "Installing essential packages..."
   pacman -S --noconfirm --needed \
@@ -470,7 +478,7 @@ install_hamradio_packages() {
 }
 
 install_virtualbox() {
-  root_check
+  required_root
 
   log_info "Select VirtualBox installation method:"
   echo "  1) Install from Arch repository"
@@ -516,7 +524,7 @@ install_virtualbox() {
   if lsmod | grep -q 'kvm'; then
       log_info "KVM modules are active, disabling KVM..."
 
-      if [ ! -f /etc/modprobe.d/disable-kvm.conf ]; then
+      if [[ ! -f /etc/modprobe.d/disable-kvm.conf ]]; then
         touch /etc/modprobe.d/disable-kvm.conf
       fi
 
@@ -543,7 +551,7 @@ install_virtualbox() {
   log_info "Fetching latest VirtualBox version..."
   latest_version=$(curl -s https://download.virtualbox.org/virtualbox/LATEST.TXT)
 
-  if [ -z "$latest_version" ]; then
+  if [[ -z "$latest_version" ]]; then
       log_error "Could not fetch latest version. Installation aborted."
       return 1
   fi
@@ -561,7 +569,7 @@ install_virtualbox() {
   /tmp/virtualbox.run
 
   log_info "Building VirtualBox kernel modules..."
-  if [ -x /sbin/vboxconfig ]; then
+  if [[ -x /sbin/vboxconfig ]]; then
       /sbin/vboxconfig
   else
       log_error "vboxconfig not found, you may need to manually load modules."
@@ -865,13 +873,11 @@ copy_wm_config() {
   ZIP_FILE="/tmp/wallpapers.zip"
   DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
 
-  if [ ! -d "$WALLPAPER_DIR" ] || [ -z "$(ls -A "$WALLPAPER_DIR")" ]; then
-    printf "${BLUE}[i] Downloading wallpapers... ${RESET}"
+  if [[ ! -d $WALLPAPER_DIR || -z $(compgen -A file "$WALLPAPER_DIR") ]]; then
+    log_info "Downloading wallpapers..."
     wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
-    printf "${GREEN}Done${RESET}\n"
-    printf "${BLUE}[i] Extracting wallpapers... ${RESET}"
+    log_info "Extracting wallpapers..."
     unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
-    printf "${GREEN}Done${RESET}\n"
     rm "$ZIP_FILE"
   else
     log_info "Wallpapers already exist, skipping download."
@@ -993,10 +999,10 @@ copy_config_items() {
   for item in "${items[@]}"; do
     local SRC="$src_base/$item"
 
-    if [ -d "$SRC" ]; then
+    if [[ -d "$SRC" ]]; then
       printf -- "--> 📁 %-18s → %s/\n" "$item" "$dest_print/${YELLOW}$item${RESET}"
       cp -rf "$SRC" "$dest_base/"
-    elif [ -f "$SRC" ]; then
+    elif [[ -f "$SRC" ]]; then
       printf -- "--> 📄 %-18s → %s/\n" "$item" "$dest_print/${YELLOW}$item${RESET}"
       cp -f "$SRC" "$dest_base/"
     else
@@ -1069,6 +1075,7 @@ done
 
 case "$1" in
   --archinstall)
+    required_archiso
     install_from_archinstall
 
     log_info "Copying arch-setup repository to chroot to continue ssytem installaton.."
@@ -1078,6 +1085,7 @@ case "$1" in
     arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
     ;;
   --install)
+    required_archiso
     log_qa "Are you sure you want to proceed? This will result in ${RED}DATA LOSS${YELLOW} on the media. [y/N]:"
     read -r confirm
     confirm=${confirm,,}
