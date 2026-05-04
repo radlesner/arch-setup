@@ -1011,55 +1011,124 @@ copy_config_items() {
   done
 }
 
-# ---------------------------------------------------- HELP SECTION ----------------------------------------------------
+print_summary() {
+  local DISK_INSTALL=$1
+  local P1_INSTALL
+  local P2_INSTALL
 
-system_opts=(
-    "--archinstall|Install from archinstall script with custom config"
-    "--install /dev/sdX|Installing the system without using the archinstall script"
-    "--chroot-postinstall|Configure post-installation system settings"
-    "--install-base-packages|Install base packages and enable services"
-)
+  if [[ "$DISK_INSTALL" == *"nvme"* || "$DISK_INSTALL" == *"mmcblk"* ]]; then
+      P1_INSTALL="${DISK_INSTALL}p1"
+      P2_INSTALL="${DISK_INSTALL}p2"
+  else
+      P1_INSTALL="${DISK_INSTALL}1"
+      P2_INSTALL="${DISK_INSTALL}2"
+  fi
 
-bootloaders=(
-    "--install-systemd-boot /dev/sdaX|Install systemd-boot EFI bootloader"
-    "--install-grub|Install GRUB bootloader (EFI)"
-    "--remove-grub|Remove GRUB bootloader (EFI)"
-)
+  print_logo bl
+  cat << EOF
+   ========================================
+      Arch Setup - Installation Summary
+   ========================================
 
-packages=(
-    "--install-yay|Install yay AUR helper"
-    "--install-vbox|Install VirtualBox"
-    "--install-hamradio-setup|Install Ham Radio setup"
-    "--install-game-setup|Install game setup (Radeon only)"
-)
+   Disk:        $DISK_INSTALL
 
-desktop_envs=(
-    "--install-xfce|Install XFCE desktop environment"
-    "--install-plasma|Install KDE Plasma desktop environment"
-    "--install-hyprland|Install Hyprland Wayland compositor"
-    "--copy-hypr-config|Copy custom Hyprland configuration files"
-    "--install-sway|Install Sway Wayland compositor"
-    "--copy-sway-config|Copy custom Sway configuration files"
-)
+   Partitions (planned):
+     - EFI:     ${P1_INSTALL}  (512MiB, FAT32)
+     - Root:    ${P2_INSTALL}  (rest, Btrfs)
 
-additional=(
-    "-f, --force|Force reinstall (e.g., overwrite existing GRUB installation)"
-)
+   Filesystem:  Btrfs
 
-print_help() {
-  local col_width=40
-  printf "    %-*s %s\n" "$col_width" "$1" "$2"
+   Subvolumes:
+     - @             -> /
+     - @root         -> /root
+     - @home         -> /home
+     - @var_cache    -> /var/cache
+     - @var_log      -> /var/log
+     - @.snapshots   -> /.snapshots
+
+   ========================================
+   ${RED}⚠️  ALL DATA ON $DISK_INSTALL WILL BE LOST!${RESET}
+   ========================================
+
+EOF
 }
 
-print_section() {
-    local title="$1"
-    shift
-    echo ">>> $title"
-    for item in "$@"; do
-        IFS="|" read -r opt desc <<< "$item"
-        print_help "$opt" "$desc"
+installation_countdown() {
+    for i in 5 4 3 2 1; do
+        for c in / - \\ \|; do
+            printf "\r${BLUE}[%s] Start installation in %d second... ${RESET}" "$c" "$i"
+            sleep 0.25
+        done
     done
-    echo ""
+    printf "\r\033[K${BLUE}[i] Installation in progress...${RESET}\n"
+}
+
+print_logo() {
+    local color_name="${1:-white}"
+    local COLOR
+
+case "${color_name,,}" in
+    g|green) COLOR=$GREEN ;;
+    y|yellow) COLOR=$YELLOW ;;
+    r|red) COLOR=$RED ;;
+    b|blue) COLOR=$BLUE ;;
+    bl|blue-light) COLOR=$BLUE_LIGHT ;;
+    w|white|"") COLOR=$WHITE ;;
+    *) COLOR=$WHITE ;;
+esac
+
+  printf "%b" "${COLOR}"
+  cat << 'EOF'
+
+       /\                                                                            .--.
+      /  \           ___    ____  ________  __     _____ ______________  ______     |o_o |
+     /\   \         /   |  / __ \/ ____/ / / /    / ___// ____/_  __/ / / / __ \    ||_/ |
+    /      \       / /| | / /_/ / /   / /_/ /_____\__ \/ __/   / / / / / / /_/ /   //   \ \
+   /   ,,   \     / ___ |/ _, _/ /___/ __  /_____/__/ / /___  / / / /_/ / ____/   (|     | )
+  /   |  |  -\   /_/  |_/_/ |_|\____/_/ /_/     /____/_____/ /_/  \____/_/        /'\_  _/`\
+ /_-''    ''-_\                                                                   \__)=(___/
+
+EOF
+  printf "%b" "${RESET}"
+}
+
+print_help() {
+  print_logo bl
+
+  cat << 'EOF'
+USAGE:
+    arch-setup [option]
+
+COMMANDS:
+
+SYSTEM:
+    --archinstall                       Install from archinstall script with custom config
+    --install /dev/sdX                  Installing the system without using the archinstall script
+    --chroot-postinstall                Configure post-installation system settings
+    --install-base-packages             Install base packages and enable services
+
+BOOTLOADERS:
+    --install-systemd-boot /dev/sdaX    Install systemd-boot EFI bootloader
+    --install-grub                      Install GRUB bootloader (EFI)
+    --remove-grub                       Remove GRUB bootloader (EFI)
+
+PACKAGES:
+    --install-yay                       Install yay AUR helper
+    --install-vbox                      Install VirtualBox
+    --install-hamradio-setup            Install Ham Radio setup
+    --install-game-setup                Install game setup (Radeon only)
+
+DESKTOP:
+    --install-xfce                      Install XFCE desktop environment
+    --install-plasma                    Install KDE Plasma desktop environment
+    --install-hyprland                  Install Hyprland Wayland compositor
+    --copy-hypr-config                  Copy custom Hyprland configuration files
+    --install-sway                      Install Sway Wayland compositor
+    --copy-sway-config                  Copy custom Sway configuration files
+
+OPTIONS:
+    -f, --force                         Force reinstall (e.g., overwrite existing GRUB installation)
+EOF
 }
 
 # -------------------------------------------------------- MAIN --------------------------------------------------------
@@ -1076,6 +1145,9 @@ done
 case "$1" in
   --archinstall)
     required_archiso
+
+    clear
+    print_logo bl
     install_from_archinstall
 
     log_info "Copying arch-setup repository to chroot to continue ssytem installaton.."
@@ -1086,6 +1158,10 @@ case "$1" in
     ;;
   --install)
     required_archiso
+    clear
+
+    print_summary "$2"
+
     log_qa "Are you sure you want to proceed? This will result in ${RED}DATA LOSS${YELLOW} on the media. [y/N]:"
     read -r confirm
     confirm=${confirm,,}
@@ -1094,6 +1170,8 @@ case "$1" in
       echo "Operation cancelled."
       exit 1
     else
+      installation_countdown
+
       partition_disk "$2"
       install_pacstrap
       generate_fstab
@@ -1183,11 +1261,7 @@ case "$1" in
     install_virtualbox
     ;;
   --help)
-    print_section "System installation options" "${system_opts[@]}"
-    print_section "Bootloaders" "${bootloaders[@]}"
-    print_section "Packages" "${packages[@]}"
-    print_section "Desktop environment" "${desktop_envs[@]}"
-    print_section "Additional options" "${additional[@]}"
+    print_help
     ;;
   *)
     echo "Use: --help options"
