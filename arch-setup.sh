@@ -90,14 +90,19 @@ partition_disk() {
   btrfs subvolume create /mnt/@
   btrfs subvolume create /mnt/@root
   btrfs subvolume create /mnt/@home
+  btrfs subvolume create /mnt/@var_cache
+  btrfs subvolume create /mnt/@var_log
   btrfs subvolume create /mnt/@.snapshots
   umount /mnt
 
   log_info "Mounting subvolumes..."
   mount -o subvol=@ "$P2" /mnt
   mkdir -p /mnt/{root,home,.snapshots,boot}
-  mount -o subvol=@root "$P2" /mnt/root
-  mount -o subvol=@home "$P2" /mnt/home
+  mkdir -p /mnt/var/{cache,log}
+  mount -o subvol=@root       "$P2" /mnt/root
+  mount -o subvol=@home       "$P2" /mnt/home
+  mount -o subvol=@var_cache  "$P2" /mnt/var/cache
+  mount -o subvol=@var_log    "$P2" /mnt/var/log
   mount -o subvol=@.snapshots "$P2" /mnt/.snapshots
   mount "$P1" /mnt/boot
 
