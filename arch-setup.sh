@@ -18,23 +18,23 @@
 
 set -e
 
-GREEN=$'\e[32m'
-YELLOW=$'\e[33m'
-RED=$'\e[31m'
-BLUE=$'\e[94m'
-BLUE_LIGHT=$'\e[36m'
-RESET=$'\e[0m'
+color_green=$'\e[32m'
+color_yellow=$'\e[33m'
+color_red=$'\e[31m'
+color_blue=$'\e[94m'
+color_blue_light=$'\e[36m'
+color_reset=$'\e[0m'
 
-CHAR_SUCCESS="+"
-CHAR_WARN="!"
-CHAR_ERROR="x"
-CHAR_INFO="i"
-CHAR_QA="?"
+char_success="+"
+char_warn="!"
+char_error="x"
+char_info="i"
+char_qa="?"
 
-log_info() { echo -e "${BLUE}[${CHAR_INFO}] $1${RESET} "; }
-log_error() { echo -e "${RED}[${CHAR_ERROR}] $1${RESET} "; }
-log_qa() { printf "${YELLOW}[${CHAR_QA}] %s${RESET} " "$1"; }
-log_succes() { echo -e "${GREEN}[${CHAR_SUCCESS}] $1${RESET}"; }
+log_info() { echo -e "${color_blue}[${char_info}] $1${color_reset} "; }
+log_error() { echo -e "${color_red}[${char_error}] $1${color_reset} "; }
+log_qa() { printf "${color_yellow}[${char_qa}] %s${color_reset} " "$1"; }
+log_succes() { echo -e "${color_green}[${char_success}] $1${color_reset}"; }
 
 required_root() {
   if [[ $EUID -ne 0 ]]; then
@@ -60,41 +60,41 @@ install_from_archinstall() (
 partition_disk() {
   required_root
 
-  DISK="$1"
+  disk="$1"
 
-  log_info "Creating a new GPT table on... $DISK"
+  log_info "Creating a new GPT table on... $disk"
 
-  parted -s "$DISK" mklabel gpt
+  parted -s "$disk" mklabel gpt
 
   log_info "Creating the EFI partition (512MiB)..."
-  parted -s "$DISK" --align optimal mkpart ESP fat32 1MiB 513MiB
-  parted -s "$DISK" set 1 esp on
+  parted -s "$disk" --align optimal mkpart ESP fat32 1MiB 513MiB
+  parted -s "$disk" set 1 esp on
 
   log_info "Creating the root partition (rest of the disk, Btrfs)..."
-  parted -s "$DISK" --align optimal mkpart primary btrfs 513MiB 100%
+  parted -s "$disk" --align optimal mkpart primary btrfs 513MiB 100%
 
   log_info "Setting correct partition type GUIDs..."
-  sgdisk --typecode=1:ef00 "$DISK"                                 # EFI System Partition tyoe
-  sgdisk --typecode=2:4f68bce3-e8cd-4db1-96e7-fbcaf984b709 "$DISK" # Linux root (x86_64) type
+  sgdisk --typecode=1:ef00 "$disk"                                 # EFI System Partition tyoe
+  sgdisk --typecode=2:4f68bce3-e8cd-4db1-96e7-fbcaf984b709 "$disk" # Linux root (x86_64) type
 
-  if [[ "$DISK" == *"nvme"* || "$DISK" == *"mmcblk"* ]]; then
-      P1="${DISK}p1"
-      P2="${DISK}p2"
+  if [[ "$disk" == *"nvme"* || "$disk" == *"mmcblk"* ]]; then
+      partition_1="${disk}p1"
+      partition_2="${disk}p2"
   else
-      P1="${DISK}1"
-      P2="${DISK}2"
+      partition_1="${disk}1"
+      partition_2="${disk}2"
   fi
 
-  ROOTFS_PARTITION=$P2
+  rootfs_partition=$partition_2
 
-  log_info "Formatting EFI... ($P1)"
-  mkfs.fat -F32 "$P1"
+  log_info "Formatting EFI... ($partition_1)"
+  mkfs.fat -F32 "$partition_1"
 
-  log_info "Formatting Btrfs... ($P2)"
-  mkfs.btrfs -f "$P2"
+  log_info "Formatting Btrfs... ($partition_2)"
+  mkfs.btrfs -f "$partition_2"
 
   log_info "Creating Btrfs subvolumes..."
-  mount "$P2" /mnt
+  mount "$partition_2" /mnt
   btrfs subvolume create /mnt/@
   btrfs subvolume create /mnt/@root
   btrfs subvolume create /mnt/@home
@@ -104,17 +104,17 @@ partition_disk() {
   umount /mnt
 
   log_info "Mounting subvolumes..."
-  mount -o subvol=@ "$P2" /mnt
+  mount -o subvol=@ "$partition_2" /mnt
   mkdir -p /mnt/{root,home,.snapshots,boot}
   mkdir -p /mnt/var/{cache,log}
-  mount -o subvol=@root       "$P2" /mnt/root
-  mount -o subvol=@home       "$P2" /mnt/home
-  mount -o subvol=@var_cache  "$P2" /mnt/var/cache
-  mount -o subvol=@var_log    "$P2" /mnt/var/log
-  mount -o subvol=@.snapshots "$P2" /mnt/.snapshots
-  mount "$P1" /mnt/boot
+  mount -o subvol=@root       "$partition_2" /mnt/root
+  mount -o subvol=@home       "$partition_2" /mnt/home
+  mount -o subvol=@var_cache  "$partition_2" /mnt/var/cache
+  mount -o subvol=@var_log    "$partition_2" /mnt/var/log
+  mount -o subvol=@.snapshots "$partition_2" /mnt/.snapshots
+  mount "$partition_1" /mnt/boot
 
-  log_succes "Done! The $DISK disk has been prepared and mounted to /mnt"
+  log_succes "Done! The $disk disk has been prepared and mounted to /mnt"
   log_info "Now run: genfstab -U /mnt >> /mnt/etc/fstab"
 }
 
@@ -127,7 +127,7 @@ generate_fstab() {
 }
 
 install_systemd_boot() {
-  local DISK="$1"
+  local disk="$1"
 
   log_info "Installing systemd-boot..."
   bootctl install
@@ -138,24 +138,24 @@ timeout 1
 EOF
 
   log_info "Creating boot entries..."
-  ROOT_PARTUUID=$(blkid -s PARTUUID -o value "$DISK")
-  DATE=$(date +%Y-%m-%d_%H-%M-%S)
-  ENTRY_DIR="/boot/loader/entries"
+  root_partuuid=$(blkid -s PARTUUID -o value "$disk")
+  date=$(date +%Y-%m-%d_%H-%M-%S)
+  entry_dir="/boot/loader/entries"
 
-  mkdir -p "$ENTRY_DIR"
+  mkdir -p "$entry_dir"
 
-  cat <<EOF > "$ENTRY_DIR/${DATE}_linux.conf"
+  cat <<EOF > "$entry_dir/${date}_linux.conf"
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
-options root=PARTUUID=$ROOT_PARTUUID rootflags=subvol=@ rw rootfstype=btrfs
+options root=PARTUUID=$root_partuuid rootflags=subvol=@ rw rootfstype=btrfs
 EOF
 
-  cat <<EOF > "$ENTRY_DIR/${DATE}_linux-fallback.conf"
+  cat <<EOF > "$entry_dir/${date}_linux-fallback.conf"
 title   Arch Linux (linux-fallback)
 linux   /vmlinuz-linux
 initrd  /initramfs-linux-fallback.img
-options root=PARTUUID=$ROOT_PARTUUID rootflags=subvol=@ rw rootfstype=btrfs
+options root=PARTUUID=$root_partuuid rootflags=subvol=@ rw rootfstype=btrfs
 EOF
 
   log_succes "systemd-boot has been installed and boot entries created"
@@ -241,12 +241,12 @@ chroot_postinstall() {
 
   log_info "Configuring hostname..."
   log_qa "Enter a new hostname for this system:"
-  read -r HOSTNAME
-  if [[ -z "$HOSTNAME" ]]; then
+  read -r hostname
+  if [[ -z "$hostname" ]]; then
     log_error "No hostname entered, using default: archlinux"
-    HOSTNAME="archlinux"
+    hostname="archlinux"
   fi
-  echo "$HOSTNAME" > /etc/hostname
+  echo "$hostname" > /etc/hostname
   log_succes "Hostname configuration complete"
 
   log_info "Configuring pacman..."
@@ -291,7 +291,7 @@ chroot_postinstall() {
 configure_mirrors() {
   log_info "Configuring full mirrorlist (Germany + Poland)..."
 
-  MIRRORS=(
+  mirrors=(
     # Germany
     "http://ftp.tu-chemnitz.de/pub/linux/archlinux/\$repo/os/\$arch"
     "http://ftp.hosteurope.de/mirror/ftp.archlinux.org/\$repo/os/\$arch"
@@ -405,7 +405,7 @@ configure_mirrors() {
   mkdir -p /mnt/etc/pacman.d
   : > /mnt/etc/pacman.d/mirrorlist  # clear file
 
-  for mirror in "${MIRRORS[@]}"; do
+  for mirror in "${mirrors[@]}"; do
     echo "Server = $mirror" >> /mnt/etc/pacman.d/mirrorlist
   done
 
@@ -679,9 +679,9 @@ install_plasma() {
 }
 
 install_wayland_env() {
-  local WM="$1"
+  local window_manager="$1"
 
-  if [[ "$WM" != "hyprland" && "$WM" != "sway" ]]; then
+  if [[ "$window_manager" != "hyprland" && "$window_manager" != "sway" ]]; then
     log_error "Usage: install_wayland_env [hyprland|sway]"
     return 1
   fi
@@ -691,7 +691,7 @@ install_wayland_env() {
 
   log_info "Installing base Wayland environment..."
 
-  BASE_PACKAGES=(
+  base_packages=(
     xdg-desktop-portal
     xdg-utils
     wl-clipboard
@@ -743,9 +743,9 @@ install_wayland_env() {
     jq
   )
 
-case "$WM" in
+case "$window_manager" in
   hyprland)
-    WM_PACKAGES=(
+    wm_packages=(
       hyprland
       xdg-desktop-portal-hyprland
       hypridle
@@ -755,7 +755,7 @@ case "$WM" in
     )
     ;;
   sway)
-    WM_PACKAGES=(
+    wm_packages=(
       sway
       swayidle
       swaybg
@@ -765,16 +765,16 @@ case "$WM" in
     )
     ;;
   *)
-    log_error "Unsupported window manager: $WM"
+    log_error "Unsupported window manager: $window_manager"
     log_info "Available options: hyprland, sway"
     return 1
     ;;
 esac
 
-  log_info "Installing $WM..."
+  log_info "Installing $window_manager..."
   sudo pacman -S --noconfirm --needed \
-    "${BASE_PACKAGES[@]}" \
-    "${WM_PACKAGES[@]}"
+    "${base_packages[@]}" \
+    "${wm_packages[@]}"
 
   log_info "Installing flatpak packages..."
   flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -821,16 +821,16 @@ esac
   log_info "Copying nano configuration..."
   cp environment-resources/nano-config/.nanorc ~/
 
-  log_succes "$WM environment installation completed!"
+  log_succes "$window_manager environment installation completed!"
 
-  copy_wm_config "$WM"
+  copy_wm_config "$window_manager"
   ask_reboot
 }
 
 copy_wm_config() {
-  local WM="$1"
+  local window_manager="$1"
 
-  log_info "Select $WM config to copy:"
+  log_info "Select $window_manager config to copy:"
   echo "  1) Config 1 for laptop"
   echo "  2) Config 2 for desktop"
   echo "  0) Exit the script."
@@ -838,47 +838,47 @@ copy_wm_config() {
   log_qa "Enter choice [1/2]:"
   read -r choice
 
-  case "$WM" in
-    hyprland) WM_CONFIG_DIR="hypr" ;;
-    sway) WM_CONFIG_DIR="sway" ;;
+  case "$window_manager" in
+    hyprland) wm_config_dir="hypr" ;;
+    sway) wm_config_dir="sway" ;;
     *)
-      log_error "Unsupported WM: $WM"
+      log_error "Unsupported window_manager: $window_manager"
       return 1
       ;;
   esac
 
   case "$choice" in
-    1) WM_CONFIG_OPTION="$WM-config-01" ;;
-    2) WM_CONFIG_OPTION="$WM-config-02" ;;
+    1) wm_config_option="$window_manager-config-01" ;;
+    2) wm_config_option="$window_manager-config-02" ;;
     0) log_info "Exiting the script."; return ;;
     *) log_error "Invalid choice."; return ;;
   esac
 
-  COMMON_CONFIG_FOLDER="common-config"
+  common_config_folder="common-config"
 
-  log_qa "Do you want to copy $WM config to .config? [Y/n]:"
+  log_qa "Do you want to copy $window_manager config to .config? [Y/n]:"
   read -r confirm
   confirm=${confirm,,}
   [[ ! "$confirm" =~ ^(y|yes|)$ ]] && return
 
-  COPY_WM_CONFIG_FOLDERS=("$WM_CONFIG_DIR" "waybar")
-  COPY_COMMON_CONFIG_FOLDERS=("kitty" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list" "imv")
-  COPY_LOCAL_SHARE_FOLDERS=("Thunar")
+  copy_wm_config_folders=("$wm_config_dir" "waybar")
+  copy_common_config_folders=("kitty" "wofi" "mako" "gtk-3.0" "xfce4" "Thunar" "mimeapps.list" "imv")
+  copy_local_share_folders=("Thunar")
 
-  copy_config_items "./environment-resources/$WM_CONFIG_OPTION/config"   "$HOME/.config/"       "${COPY_WM_CONFIG_FOLDERS[@]}"
-  copy_config_items "./environment-resources/$COMMON_CONFIG_FOLDER/config" "$HOME/.config/"      "${COPY_COMMON_CONFIG_FOLDERS[@]}"
-  copy_config_items "./environment-resources/$COMMON_CONFIG_FOLDER/local"  "$HOME/.local/share/" "${COPY_LOCAL_SHARE_FOLDERS[@]}"
+  copy_config_items "./environment-resources/$wm_config_option/config"   "$HOME/.config/"       "${copy_wm_config_folders[@]}"
+  copy_config_items "./environment-resources/$common_config_folder/config" "$HOME/.config/"      "${copy_common_config_folders[@]}"
+  copy_config_items "./environment-resources/$common_config_folder/local"  "$HOME/.local/share/" "${copy_local_share_folders[@]}"
 
-  WALLPAPER_DIR="$HOME/.config/wallpapers"
-  ZIP_FILE="/tmp/wallpapers.zip"
-  DROPBOX_URL="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
+  wallpapers_dir="$HOME/.config/wallpapers"
+  zip_file="/tmp/wallpapers.zip"
+  dropbox_url="https://www.dropbox.com/scl/fo/0m9gabhe0xs9hb5akkkg6/APAqNzDTPFV-xaLhs1ivcaw?rlkey=i56zh4sma32ydrianlmdy3dzj&st=wha573co&dl=1"
 
-  if [[ ! -d $WALLPAPER_DIR || -z $(compgen -A file "$WALLPAPER_DIR") ]]; then
+  if [[ ! -d $wallpapers_dir || -z $(compgen -A file "$wallpapers_dir") ]]; then
     log_info "Downloading wallpapers..."
-    wget -q -O "$ZIP_FILE" "$DROPBOX_URL"
+    wget -q -O "$zip_file" "$dropbox_url"
     log_info "Extracting wallpapers..."
-    unzip -o "$ZIP_FILE" -d "$WALLPAPER_DIR" &>/dev/null || true
-    rm "$ZIP_FILE"
+    unzip -o "$zip_file" -d "$wallpapers_dir" &>/dev/null || true
+    rm "$zip_file"
   else
     log_info "Wallpapers already exist, skipping download."
   fi
@@ -997,14 +997,14 @@ copy_config_items() {
   local dest_print="${dest_base/#$HOME/~}"
 
   for item in "${items[@]}"; do
-    local SRC="$src_base/$item"
+    local src="$src_base/$item"
 
-    if [[ -d "$SRC" ]]; then
-      printf -- "--> 📁 %-18s → %s/\n" "$item" "$dest_print/${YELLOW}$item${RESET}"
-      cp -rf "$SRC" "$dest_base/"
-    elif [[ -f "$SRC" ]]; then
-      printf -- "--> 📄 %-18s → %s/\n" "$item" "$dest_print/${YELLOW}$item${RESET}"
-      cp -f "$SRC" "$dest_base/"
+    if [[ -d "$src" ]]; then
+      printf -- "--> 📁 %-18s → %s/\n" "$item" "$dest_print/${color_yellow}$item${color_reset}"
+      cp -rf "$src" "$dest_base/"
+    elif [[ -f "$src" ]]; then
+      printf -- "--> 📄 %-18s → %s/\n" "$item" "$dest_print/${color_yellow}$item${color_reset}"
+      cp -f "$src" "$dest_base/"
     else
       printf -- "--> ⚠️ %-18s (not found)\n" "$item"
     fi
@@ -1012,16 +1012,16 @@ copy_config_items() {
 }
 
 print_summary() {
-  local DISK_INSTALL=$1
-  local P1_INSTALL
-  local P2_INSTALL
+  local disk=$1
+  local part_1
+  local part_2
 
-  if [[ "$DISK_INSTALL" == *"nvme"* || "$DISK_INSTALL" == *"mmcblk"* ]]; then
-      P1_INSTALL="${DISK_INSTALL}p1"
-      P2_INSTALL="${DISK_INSTALL}p2"
+  if [[ "$disk" == *"nvme"* || "$disk" == *"mmcblk"* ]]; then
+      part_1="${disk}p1"
+      part_2="${disk}p2"
   else
-      P1_INSTALL="${DISK_INSTALL}1"
-      P2_INSTALL="${DISK_INSTALL}2"
+      part_1="${disk}1"
+      part_2="${disk}2"
   fi
 
   print_logo bl
@@ -1030,11 +1030,11 @@ print_summary() {
       Arch Setup - Installation Summary
    ========================================
 
-   Disk:        $DISK_INSTALL
+   Disk:        $disk
 
    Partitions (planned):
-     - EFI:     ${P1_INSTALL}  (512MiB, FAT32)
-     - Root:    ${P2_INSTALL}  (rest, Btrfs)
+     - EFI:     ${part_1}  (512MiB, FAT32)
+     - Root:    ${part_2}  (rest, Btrfs)
 
    Filesystem:  Btrfs
 
@@ -1047,7 +1047,7 @@ print_summary() {
      - @.snapshots   -> /.snapshots
 
    ========================================
-   ${RED}⚠️  ALL DATA ON $DISK_INSTALL WILL BE LOST!${RESET}
+   ${color_red}⚠️  ALL DATA ON $disk WILL BE LOST!${color_reset}
    ========================================
 
 EOF
@@ -1056,28 +1056,28 @@ EOF
 installation_countdown() {
     for i in 5 4 3 2 1; do
         for c in / - \\ \|; do
-            printf "\r${BLUE}[%s] Start installation in %d second... ${RESET}" "$c" "$i"
+            printf "\r${color_blue}[%s] Start installation in %d second... ${color_reset}" "$c" "$i"
             sleep 0.25
         done
     done
-    printf "\r\033[K${BLUE}[i] Installation in progress...${RESET}\n"
+    printf "\r\033[K${color_blue}[${char_info}] Installation in progress...${color_reset}\n"
 }
 
 print_logo() {
     local color_name="${1:-white}"
-    local COLOR
+    local color
 
 case "${color_name,,}" in
-    g|green) COLOR=$GREEN ;;
-    y|yellow) COLOR=$YELLOW ;;
-    r|red) COLOR=$RED ;;
-    b|blue) COLOR=$BLUE ;;
-    bl|blue-light) COLOR=$BLUE_LIGHT ;;
-    w|white|"") COLOR=$WHITE ;;
-    *) COLOR=$WHITE ;;
+    g|green) color=$color_green ;;
+    y|yellow) color=$color_yellow ;;
+    r|red) color=$color_red ;;
+    b|blue) color=$color_blue ;;
+    bl|blue-light) color=$color_blue_light ;;
+    w|white|"") color=$WHITE ;;
+    *) color=$WHITE ;;
 esac
 
-  printf "%b" "${COLOR}"
+  printf "%b" "${color}"
   cat << 'EOF'
 
        /\                                                                            .--.
@@ -1089,7 +1089,7 @@ esac
  /_-''    ''-_\                                                                   \__)=(___/
 
 EOF
-  printf "%b" "${RESET}"
+  printf "%b" "${color_reset}"
 }
 
 print_help() {
@@ -1162,7 +1162,7 @@ case "$1" in
 
     print_summary "$2"
 
-    log_qa "Are you sure you want to proceed? This will result in ${RED}DATA LOSS${YELLOW} on the media. [y/N]:"
+    log_qa "Are you sure you want to proceed? This will result in ${color_red}DATA LOSS${color_yellow} on the media. [y/N]:"
     read -r confirm
     confirm=${confirm,,}
 
@@ -1180,7 +1180,7 @@ case "$1" in
       read -r confirm
       confirm=${confirm,,}
       if [[ "$confirm" =~ ^(y|yes|)$ ]]; then
-        echo "${BLUE}[i] Copying arch-setup to /mnt/root...${RESET}"
+        echo "${color_blue}[i] Copying arch-setup to /mnt/root...${color_reset}"
         cp -r ../arch-setup /mnt/root/
         arch-chroot /mnt /root/arch-setup/arch-setup.sh --chroot-postinstall
 
@@ -1193,7 +1193,7 @@ case "$1" in
 
         case "$choice" in
           1)
-            arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot "$ROOTFS_PARTITION"
+            arch-chroot /mnt /root/arch-setup/arch-setup.sh --install-systemd-boot "$rootfs_partition"
             ask_reboot
             ;;
           2)

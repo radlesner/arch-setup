@@ -18,27 +18,27 @@
 
 set -e
 
-GREEN=$'\e[32m'
-YELLOW=$'\e[33m'
-RED=$'\e[31m'
-BLUE=$'\e[94m'
-RESET=$'\e[0m'
+color_green=$'\e[32m'
+color_yellow=$'\e[33m'
+color_red=$'\e[31m'
+color_blue=$'\e[94m'
+color_reset=$'\e[0m'
 
-CHAR_SUCCESS="+"
-CHAR_WARN="!"
-CHAR_ERROR="x"
-CHAR_INFO="i"
-CHAR_QA="?"
+char_success="+"
+char_warn="!"
+char_error="x"
+char_info="i"
+char_qa="?"
 
-log_info() { echo -e "${BLUE}[${CHAR_INFO}] $1${RESET} "; }
-log_error() { echo -e "${RED}[${CHAR_ERROR}] $1${RESET} "; }
-log_qa() { printf "${YELLOW}[${CHAR_QA}] %s${RESET} " "$1"; }
-log_succes() { echo -e "${GREEN}[${CHAR_SUCCESS}] $1${RESET}"; }
+log_info() { echo -e "${color_blue}[${char_info}] $1${color_reset} "; }
+log_error() { echo -e "${color_red}[${char_error}] $1${color_reset} "; }
+log_qa() { printf "${color_yellow}[${char_qa}] %s${color_reset} " "$1"; }
+log_succes() { echo -e "${color_green}[${char_success}] $1${color_reset}"; }
 
 LIST="backup_list"
 BACKUP_BASE="./backup"
-DATE=$(date +%Y%m%d-%H%M)
-BACKUP_DIR="$BACKUP_BASE/$(whoami)-on-$(hostname)-backup-$DATE"
+date=$(date +%Y%m%d-%H%M)
+BACKUP_DIR="$BACKUP_BASE/$(whoami)-on-$(hostname)-backup-$date"
 
 do_backup_local() {
   log_info "Starting backup to $BACKUP_DIR"
@@ -58,7 +58,7 @@ do_backup_local() {
         echo "--> Copying: $ITEM_EXPANDED"
         rsync -a --relative "$ITEM_EXPANDED" "$BACKUP_DIR"
       else
-        echo "${YELLOW}--> File or directory not found: $ITEM_EXPANDED${RESET}"
+        echo "${color_yellow}--> File or directory not found: $ITEM_EXPANDED${color_reset}"
       fi
   done < "$LIST"
 
@@ -67,20 +67,20 @@ do_backup_local() {
 
 do_restore_local() {
   if [ -z "$1" ]; then
-    log_error "You must provide a backup directory (e.g. $BACKUP_BASE/$DATE)"
+    log_error "You must provide a backup directory (e.g. $BACKUP_BASE/$date)"
     exit 1
   fi
 
-  SRC="$1"
+  src="$1"
 
-  if [ ! -d "$SRC" ]; then
-    log_error "Backup directory not found: $SRC"
+  if [ ! -d "$src" ]; then
+    log_error "Backup directory not found: $src"
     exit 1
   fi
 
-  log_info "Restoring backup from $SRC"
+  log_info "Restoring backup from $src"
 
-  cd "$SRC" || exit 1
+  cd "$src" || exit 1
   rsync -a --relative --no-owner --no-group . /
 
   log_succes "Restore completed."
