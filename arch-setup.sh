@@ -36,6 +36,13 @@ log_error() { echo -e "${color_red}[${char_error}] $1${color_reset} "; }
 log_qa() { printf "${color_yellow}[${char_qa}] %s${color_reset} " "$1"; }
 log_succes() { echo -e "${color_green}[${char_success}] $1${color_reset}"; }
 
+required_archiso() {
+  if ! [[ -d /run/archiso ]]; then
+    log_error "This option can only be run in the Archiso environment"
+    exit 1
+  fi
+}
+
 required_root() {
   if [[ $EUID -ne 0 ]]; then
     log_error "This script option must be run as root."
@@ -43,9 +50,9 @@ required_root() {
   fi
 }
 
-required_archiso() {
-  if ! [[ -d /run/archiso ]]; then
-    log_error "This option can only be run in the Archiso environment"
+require_non_root() {
+  if [[ $EUID -eq 0 ]]; then
+    log_error "This script must NOT be run as root."
     exit 1
   fi
 }
@@ -459,6 +466,7 @@ install_base_packages() {
 }
 
 install_hamradio_packages() {
+  require_non_root
   install_yay
 
   yay -S --removemake --noconfirm --needed \
@@ -594,6 +602,7 @@ install_audio() {
 }
 
 install_xfce() {
+  require_non_root
   install_audio
   install_display_stack "x11"
 
@@ -626,6 +635,7 @@ install_xfce() {
 }
 
 install_plasma() {
+  require_non_root
   install_audio
   install_display_stack "wayland"
 
@@ -679,6 +689,7 @@ install_plasma() {
 }
 
 install_wayland_env() {
+  require_non_root
   local window_manager="$1"
 
   if [[ "$window_manager" != "hyprland" && "$window_manager" != "sway" ]]; then
@@ -828,6 +839,7 @@ esac
 }
 
 copy_wm_config() {
+  require_non_root
   local window_manager="$1"
 
   log_info "Select $window_manager config to copy:"
@@ -912,6 +924,7 @@ esac
 }
 
 install_yay() {
+  require_non_root
   if ! command -v yay &>/dev/null; then
     log_info "Installing yay AUR helper..."
     sudo pacman -S --noconfirm --needed git base-devel
@@ -923,6 +936,7 @@ install_yay() {
 }
 
 install_net_diag_setup() {
+  require_non_root
   log_info "Installing network diagnostic packages"
 
   install_yay
@@ -942,6 +956,7 @@ install_net_diag_setup() {
 }
 
 install_game_setup() {
+  require_non_root
   log_info "Installing game setup..."
 
   log_info "Enabling miltilib repository..."
