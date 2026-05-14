@@ -5,7 +5,7 @@
     "margin-left": 20,
     "margin-right": 20,
     "margin-bottom": 0,
-    "height": 30,
+    "height": 40,
     "spacing": 0,
     "modules-left": [
         "hyprland/workspaces",
@@ -82,11 +82,11 @@
     "cpu": {
         "format": " {usage}%",
         "tooltip": false,
-        "interval": 1
+        "interval": 2
     },
     "memory": {
         "format": " {}%",
-        "interval": 1
+        "interval": 5
     },
     "custom/disk-usage": {
         "exec": "~/.config/waybar/scripts/disk-used.sh / ",
@@ -118,7 +118,7 @@
             ""
         ],
         "tooltip-format": "CPU temperature: {}°C",
-        "interval": 1
+        "interval": 5
     },
     "temperature#gpu": {
         "hwmon-path": "/sys/class/hwmon/hwmon1/temp1_input",
@@ -130,7 +130,7 @@
             ""
         ],
         "tooltip-format": "GPU temperature: {}°C",
-        "interval": 1
+        "interval": 5
     },
     "power-profiles-daemon": {
         "format": "{icon}",

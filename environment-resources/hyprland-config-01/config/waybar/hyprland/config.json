@@ -1,15 +1,11 @@
 {
-    "output": [
-        "eDP-1",
-        "DP-5"
-    ],
     "position": "top",
     "layer": "top",
     "margin-top": 10,
     "margin-left": 20,
     "margin-right": 20,
     "margin-bottom": 0,
-    "height": 30,
+    "height": 40,
     "spacing": 0,
     "modules-left": [
         "hyprland/workspaces",
@@ -22,14 +18,14 @@
         "idle_inhibitor",
         "pulseaudio",
         "network",
-        "power-profiles-daemon",
         "cpu",
         "temperature",
         "memory",
         "custom/disk-usage",
-        "custom/uptime",
         "backlight",
-        "battery",
+        "battery#bat0",
+        "battery#bat1",
+        "custom/uptime",
         "custom/logout",
         "custom/reboot",
         "custom/power"
@@ -82,26 +78,16 @@
     "cpu": {
         "format": " {usage}%",
         "tooltip": false,
-        "interval": 1
+        "interval": 2
     },
     "memory": {
         "format": " {}%",
-        "interval": 1
+        "interval": 5
     },
     "custom/disk-usage": {
         "exec": "~/.config/waybar/scripts/disk-used.sh / ",
         "interval": 10,
         "tooltip": true
-    },
-    "temperature": {
-        "critical-threshold": 80,
-        "format": "{icon} {temperatureC}°C",
-        "format-icons": [
-            "",
-            "",
-            ""
-        ],
-        "interval": 1
     },
     "backlight": {
         "format": "{icon} {percent}%",
@@ -118,7 +104,6 @@
         ]
     },
     "battery": {
-        "interval": 1,
         "states": {
             "good": 95,
             "warning": 30,
@@ -138,21 +123,56 @@
         ]
     },
     "battery#bat0": {
-        "bat": "BAT0"
+        "bat": "BAT0",
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-full": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
     },
     "battery#bat1": {
-        "bat": "BAT1"
+        "bat": "BAT1",
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-full": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
     },
-    "power-profiles-daemon": {
-        "format": "{icon}",
-        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-        "tooltip": true,
-        "format-icons": {
-            "default": "",
-            "performance": "",
-            "balanced": "",
-            "power-saver": ""
-        }
+    "temperature": {
+        "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        "critical-threshold": 80,
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": [
+            "",
+            "",
+            ""
+        ],
+        "tooltip-format": "CPU temperature: {}°C",
+        "interval": 5
     },
     "network": {
         "format-wifi": " {essid} ({signalStrength}%)",

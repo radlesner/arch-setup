@@ -18,6 +18,7 @@
 #backlight,
 #network,
 #pulseaudio,
+#wireplumber,
 #custom-media,
 #mode,
 #idle_inhibitor,
@@ -41,11 +42,11 @@
 #backlight,
 #temperature,
 #cpu,
-#memory,
-#custom-disk-usage,
 #custom-uptime,
 #custom-kernel,
-#battery {
+#battery,
+#memory,
+#custom-disk-usage {
     padding: 0 5px;
     margin-right: 0px;
     border-radius: 0;
@@ -57,7 +58,7 @@
     border-top-left-radius: 10px;
 }
 
-#battery {
+#custom-uptime {
     padding-right: 10px;
     margin-right: 4px;
     border-bottom-right-radius: 10px;
@@ -87,7 +88,6 @@ window#waybar.chromium {
 
 #cpu,
 #custom-uptime,
-#custom-kernel,
 #temperature,
 #memory,
 #custom-disk-usage,
@@ -135,7 +135,7 @@ window#waybar.chromium {
 }
 
 #workspaces button.active {
-    background: #1780d3;
+    background: rgb(23, 128, 211);
 }
 
 #workspaces button.focused {
@@ -187,6 +187,15 @@ window#waybar.chromium {
 /* ------------------------------------------------------- AUDIO */
 #pulseaudio.muted {
     color: #818181;
+}
+
+#wireplumber {
+    background-color: #fff0f5;
+    color: #000000;
+}
+
+#wireplumber.muted {
+    background-color: #f53c3c;
 }
 
 #custom-media {
