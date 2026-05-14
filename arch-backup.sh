@@ -35,39 +35,39 @@ log_error() { echo -e "${color_red}[${char_error}] $1${color_reset} "; }
 log_qa() { printf "${color_yellow}[${char_qa}] %s${color_reset} " "$1"; }
 log_succes() { echo -e "${color_green}[${char_success}] $1${color_reset}"; }
 
-LIST="backup_list"
-BACKUP_BASE="./backup"
+list="backup_list"
+backup_base="./backup"
 date=$(date +%Y%m%d-%H%M)
-BACKUP_DIR="$BACKUP_BASE/$(whoami)-on-$(hostname)-backup-$date"
+backup_dir="$backup_base/$(whoami)-on-$(hostname)-backup-$date"
 
 do_backup_local() {
-  log_info "Starting backup to $BACKUP_DIR"
-  mkdir -p "$BACKUP_DIR"
+  log_info "Starting backup to $backup_dir"
+  mkdir -p "$backup_dir"
 
-  if [ ! -f "$LIST" ]; then
-    log_error "No list file: $LIST"
+  if [ ! -f "$list" ]; then
+    log_error "No list file: $list"
     exit 1
   fi
 
-  while read -r ITEM; do
-    [[ -z "$ITEM" || "$ITEM" =~ ^# ]] && continue
-      ITEM_EXPANDED=$(eval echo "$ITEM")
-      ITEM_EXPANDED=$(realpath -m "$ITEM_EXPANDED")
+  while read -r item; do
+    [[ -z "$item" || "$item" =~ ^# ]] && continue
+      item_expanded=$(eval echo "$item")
+      item_expanded=$(realpath -m "$item_expanded")
 
-      if [ -e "$ITEM_EXPANDED" ]; then
-        echo "--> Copying: $ITEM_EXPANDED"
-        rsync -a --relative "$ITEM_EXPANDED" "$BACKUP_DIR"
+      if [ -e "$item_expanded" ]; then
+        echo "--> Copying: $item_expanded"
+        rsync -a --relative "$item_expanded" "$backup_dir"
       else
-        echo "${color_yellow}--> File or directory not found: $ITEM_EXPANDED${color_reset}"
+        echo "${color_yellow}--> File or directory not found: $item_expanded${color_reset}"
       fi
-  done < "$LIST"
+  done < "$list"
 
-  log_succes "Backup completed: $BACKUP_DIR"
+  log_succes "Backup completed: $backup_dir"
 }
 
 do_restore_local() {
   if [ -z "$1" ]; then
-    log_error "You must provide a backup directory (e.g. $BACKUP_BASE/$date)"
+    log_error "You must provide a backup directory (e.g. $backup_base/$date)"
     exit 1
   fi
 
@@ -94,7 +94,7 @@ case "$1" in
     do_restore_local "$2"
     ;;
   *)
-    echo ">>> System installation options:"
+    echo "OPTIONS:"
     echo "    --backup-local                     - Creating a local disk backup"
     echo "    --restore-local <backup_directory> - Restoring a local backup"
     exit 1

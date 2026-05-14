@@ -18,6 +18,7 @@
 
 set -e
 
+text_blink="\e[5m"
 color_green=$'\e[32m'
 color_yellow=$'\e[33m'
 color_red=$'\e[31m'
@@ -1062,7 +1063,7 @@ print_summary() {
      - @.snapshots   -> /.snapshots
 
    ========================================
-   ${color_red}⚠️  ALL DATA ON $disk WILL BE LOST!${color_reset}
+   ${text_blink}${color_red}⚠️  ALL DATA ON $disk WILL BE LOST!${color_reset}
    ========================================
 
 EOF

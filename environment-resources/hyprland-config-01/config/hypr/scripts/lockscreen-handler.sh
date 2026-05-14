@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -uo pipefail
+set -euo pipefail
 
 log_file="/tmp/hyprland-lid-handler.log"
 lockscreen="swaylock -f -i ~/.config/wallpapers/firewatch-01-blur-0x25.jpeg"
@@ -28,7 +28,7 @@ case "${1:-}" in
       log "No external monitor -> disabling internal and locking"
       hyprctl dispatch dpms off "$internal_monitor"
       hyprctl keyword monitor "$internal_monitor,disable"
-      [ -n "$lockscreen" ] && eval "$lockscreen" &
+      [ -n "$lockscreen" ] && eval "$lockscreen"
     fi
     ;;
   open)
@@ -39,8 +39,7 @@ case "${1:-}" in
     ;;
   lock-only)
     eval "$lockscreen"
-    pkill waybar
-    waybar --config ~/.config/waybar/hyprland/config.json --style ~/.config/waybar/hyprland/style.css
+    ~/.config/hypr/scripts/start-waybar.sh &
     ;;
   *)
     log "Bad/empty argument: '$1'"
