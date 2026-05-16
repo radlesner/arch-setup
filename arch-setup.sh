@@ -844,11 +844,13 @@ copy_wm_config() {
   local window_manager="$1"
 
   log_info "Select $window_manager config to copy:"
-  echo "  1) Config 1 for laptop"
-  echo "  2) Config 2 for desktop"
-  echo "  0) Exit the script."
+    cat << EOF
+ 1) Config 1 for Lenovo ThinkPad T470
+ 2) Config 2 for PC
+ 0) Exit the script
+EOF
 
-  log_qa "Enter choice [1/2]:"
+  log_qa "Enter choice:"
   read -r choice
 
   case "$window_manager" in

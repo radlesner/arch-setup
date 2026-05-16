@@ -1,10 +1,10 @@
-background-color=#32323280
-progress-color=#ffffff20
+background-color=#323232
+progress-color=#ffffff
 font=nunito
 border-size=2
-border-color=#bebebecc
+border-color=#33ccffee
 margin=30,30,0
-border-radius=12
+border-radius=10
 default-timeout=5000
 ignore-timeout=false
 max-history=10
