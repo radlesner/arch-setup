@@ -810,8 +810,10 @@ esac
 
   log_info "Installing icons..."
   mkdir -p ~/.icons
-  tar -xf ./environment-resources/icons/01-Flat-Remix-Blue-20250709.tar.xz -C ~/.icons/
-  gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Blue-Dark'
+  tar -xf ./environment-resources/icons/Flat-Remix-Blue-20251119.tar.xz -C ~/.icons/
+  tar -xf ./environment-resources/icons/Flat-Remix-Orange-20251119.tar.xz -C ~/.icons/
+  tar -xf ./environment-resources/icons/Flat-Remix-Red-20251119.tar.xz -C ~/.icons/
+  tar -xf ./environment-resources/icons/Flat-Remix-Yellow-20251119.tar.xz -C ~/.icons/
 
   install_yay
 
@@ -863,8 +865,14 @@ EOF
   esac
 
   case "$choice" in
-    1) wm_config_option="$window_manager-config-01" ;;
-    2) wm_config_option="$window_manager-config-02" ;;
+    1)
+      wm_config_option="$window_manager-config-01"
+      gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Blue-Dark'
+      ;;
+    2)
+      wm_config_option="$window_manager-config-02"
+      gsettings set org.gnome.desktop.interface icon-theme 'Flat-Remix-Orange-Dark'
+      ;;
     0) log_info "Exiting the script."; return ;;
     *) log_error "Invalid choice."; return ;;
   esac
