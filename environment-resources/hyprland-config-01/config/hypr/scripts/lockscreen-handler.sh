@@ -39,7 +39,6 @@ case "${1:-}" in
     ;;
   lock-only)
     eval "$lockscreen"
-    ~/.config/hypr/scripts/start-waybar.sh &
     ;;
   *)
     log "Bad/empty argument: '$1'"
