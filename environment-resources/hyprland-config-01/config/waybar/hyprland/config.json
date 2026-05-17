@@ -104,6 +104,7 @@
         ]
     },
     "battery": {
+        "interval": 1,
         "states": {
             "good": 95,
             "warning": 30,
@@ -124,6 +125,7 @@
     },
     "battery#bat0": {
         "bat": "BAT0",
+        "interval": 1,
         "states": {
             "good": 95,
             "warning": 30,
@@ -144,6 +146,7 @@
     },
     "battery#bat1": {
         "bat": "BAT1",
+        "interval": 1,
         "states": {
             "good": 95,
             "warning": 30,
@@ -163,8 +166,8 @@
         ]
     },
     "temperature": {
-        "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 80,
+        "thermal-zone": 3,
         "format": "{icon} {temperatureC}°C",
         "format-icons": [
             "",

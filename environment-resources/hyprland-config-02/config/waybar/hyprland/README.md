@@ -7,10 +7,10 @@ Waybar configuration for Hyprland focused on a minimal and functional desktop la
 
 ### Left modules
 
-| Module | Description |
-|---|---|
+| Module                | Description                           |
+| -----------------------| ---------------------------------------|
 | `hyprland/workspaces` | Workspace indicator with custom icons |
-| `custom/media` | Currently playing media information |
+| `custom/media`        | Currently playing media information   |
 
 ### Center modules
 
@@ -27,11 +27,12 @@ Waybar configuration for Hyprland focused on a minimal and functional desktop la
 | `network`           | Network connection information          |
 | `cpu`               | CPU usage                               |
 | `temperature`       | CPU temperature                         |
+| `temperature#gpu`   | GPU temperature                         |
 | `memory`            | RAM usage                               |
 | `custom/disk-usage` | Root filesystem usage                   |
-| `backlight`         | Screen brightness                       |
-| `battery#bat0`      | Internal battery                        |
-| `battery#bat1`      | Secondary battery                       |
+| `custom/disk-02`    | Pictures disk usage                     |
+| `custom/disk-01`    | Games disk usage                        |
+| `custom/disk-03`    | Virtualbox disk usage                   |
 | `custom/uptime`     | System uptime                           |
 | `custom/logout`     | Logout button                           |
 | `custom/reboot`     | Reboot button                           |
@@ -39,45 +40,16 @@ Waybar configuration for Hyprland focused on a minimal and functional desktop la
 
 ## Workspace icons
 
-| Workspace | Application |
-| -----------| -------------|
-| 1         | Terminals   |
-| 2         | Firefox     |
-| 3         | Thunderbird |
-| 4         | Thunar      |
-| 5         | VS Code     |
-| 6         | CQRLOG      |
-| 10        | Spotify     |
-
-
-## Battery module
-
-Set the battery device name in the Waybar configuration:
-
-```json
-"bat": "BAT0"
-```
-
-Battery devices are available under:
-
-```text
-/sys/class/power_supply/
-```
-
-To check the correct battery name on your system, run:
-
-```bash
-ls -l /sys/class/power_supply
-```
-
-Example output:
-
-```text
-AC
-BAT0
-BAT1
-```
-
+| Workspace | Application      |
+| -----------| ------------------|
+| 1         | Terminals        |
+| 2         | Firefox          |
+| 3         | Thunderbird      |
+| 4         | Thunar           |
+| 5         | VS Code          |
+| 6         | Steam and Heroic |
+| 9         | Discord          |
+| 10        | Spotify          |
 
 ## Temperature module
 
@@ -188,7 +160,6 @@ Icons used from:
 ## Notes
 
 - Designed for Hyprland and Sway
-- Supports multi-battery ThinkPads
-- Optimized for laptops
+- Optimized for desktop PC
 - Persistent workspaces enabled
 - Uses Unicode and Nerd Font glyphs

@@ -18,7 +18,6 @@
         "idle_inhibitor",
         "pulseaudio",
         "network",
-        "power-profiles-daemon",
         "cpu",
         "temperature",
         "temperature#gpu",
@@ -38,14 +37,14 @@
         "warp-on-scroll": false,
         "format": "{icon}",
         "format-icons": {
-            "1": "", // Terminals
-            "2": "", // Firefox
-            "3": "", // Thunderbird
-            "4": "", // Thunar
-            "5": "", // VS Code
-            "6": "", //STEAM
-            "9": "󰙯", // DISCORD
-            "10": "", // Spotify
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "6": "",
+            "9": "󰙯",
+            "10": "",
             "urgent": "",
             "focused": "",
             "default": ""
@@ -70,7 +69,6 @@
         "format": "{:%H:%M:%S - %d.%m.%Y}",
         "tooltip": false,
         "interval": 1
-        // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -131,17 +129,6 @@
         ],
         "tooltip-format": "GPU temperature: {}°C",
         "interval": 5
-    },
-    "power-profiles-daemon": {
-        "format": "{icon}",
-        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-        "tooltip": true,
-        "format-icons": {
-            "default": "",
-            "performance": "",
-            "balanced": "",
-            "power-saver": ""
-        }
     },
     "network": {
         "format-wifi": " {essid} ({signalStrength}%)",
