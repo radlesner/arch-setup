@@ -21,12 +21,10 @@ case "${1:-}" in
     log "Lid closed (internal='$internal_monitor')"
     if [ -n "$external_monitors" ]; then
       log "External monitor(s) detected -> disabling internal. Details: $(echo "$external_monitors" | tr '\n' ' | ')"
-      hyprctl dispatch dpms off "$internal_monitor"
       hyprctl keyword monitor "$internal_monitor,disable"
       log "Skipped locking because external monitor present."
     else
       log "No external monitor -> disabling internal and locking"
-      hyprctl dispatch dpms off "$internal_monitor"
       hyprctl keyword monitor "$internal_monitor,disable"
       [ -n "$lockscreen" ] && eval "$lockscreen"
     fi
@@ -34,7 +32,6 @@ case "${1:-}" in
   open)
     log "Lid opened"
     hyprctl keyword monitor "$internal_monitor,preferred,auto,1"
-    hyprctl dispatch dpms on "$internal_monitor"
     log "Internal re-enabled"
     ;;
   lock-only)
