@@ -41,62 +41,62 @@ date=$(date +%Y%m%d-%H%M)
 backup_dir="$backup_base/$(whoami)-on-$(hostname)-backup-$date"
 
 do_backup_local() {
-  log_info "Starting backup to $backup_dir"
-  mkdir -p "$backup_dir"
+    log_info "Starting backup to $backup_dir"
+    mkdir -p "$backup_dir"
 
-  if [ ! -f "$list" ]; then
-    log_error "No list file: $list"
-    exit 1
-  fi
+    if [ ! -f "$list" ]; then
+        log_error "No list file: $list"
+        exit 1
+    fi
 
-  while read -r item; do
-    [[ -z "$item" || "$item" =~ ^# ]] && continue
-      item_expanded=$(eval echo "$item")
-      item_expanded=$(realpath -m "$item_expanded")
+    while read -r item; do
+        [[ -z "$item" || "$item" =~ ^# ]] && continue
+        item_expanded=$(eval echo "$item")
+        item_expanded=$(realpath -m "$item_expanded")
 
-      if [ -e "$item_expanded" ]; then
-        echo "--> Copying: $item_expanded"
-        rsync -a --relative "$item_expanded" "$backup_dir"
-      else
-        echo "${color_yellow}--> File or directory not found: $item_expanded${color_reset}"
-      fi
-  done < "$list"
+        if [ -e "$item_expanded" ]; then
+            echo "--> Copying: $item_expanded"
+            rsync -a --relative "$item_expanded" "$backup_dir"
+        else
+            echo "${color_yellow}--> File or directory not found: $item_expanded${color_reset}"
+        fi
+    done < "$list"
 
-  log_succes "Backup completed: $backup_dir"
+    log_succes "Backup completed: $backup_dir"
 }
 
-do_restore_local() {
-  if [ -z "$1" ]; then
-    log_error "You must provide a backup directory (e.g. $backup_base/$date)"
-    exit 1
-  fi
+    do_restore_local() {
+    if [ -z "$1" ]; then
+        log_error "You must provide a backup directory (e.g. $backup_base/$date)"
+        exit 1
+    fi
 
-  src="$1"
+    src="$1"
 
-  if [ ! -d "$src" ]; then
-    log_error "Backup directory not found: $src"
-    exit 1
-  fi
+    if [ ! -d "$src" ]; then
+        log_error "Backup directory not found: $src"
+        exit 1
+    fi
 
-  log_info "Restoring backup from $src"
+    log_info "Restoring backup from $src"
 
-  cd "$src" || exit 1
-  rsync -a --relative --no-owner --no-group . /
+    cd "$src" || exit 1
+    rsync -a --relative --no-owner --no-group . /
 
-  log_succes "Restore completed."
+    log_succes "Restore completed."
 }
 
 case "$1" in
-  --backup-local)
-    do_backup_local
-    ;;
-  --restore-local)
-    do_restore_local "$2"
-    ;;
-  *)
-    echo "OPTIONS:"
-    echo "    --backup-local                     - Creating a local disk backup"
-    echo "    --restore-local <backup_directory> - Restoring a local backup"
-    exit 1
-    ;;
+    --backup-local)
+        do_backup_local
+        ;;
+    --restore-local)
+        do_restore_local "$2"
+        ;;
+    *)
+        echo "OPTIONS:"
+        echo "    --backup-local                     - Creating a local disk backup"
+        echo "    --restore-local <backup_directory> - Restoring a local backup"
+        exit 1
+        ;;
 esac
