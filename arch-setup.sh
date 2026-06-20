@@ -822,7 +822,7 @@ esac
     neofetch \
     vscodium-bin
 
-  install_net_diag_setup
+  install_network_diagnostic_setup
 
   log_info "Copying VSCodium settings..."
   mkdir -p ~/.config/VSCodium/User/
@@ -946,7 +946,7 @@ install_yay() {
   fi
 }
 
-install_net_diag_setup() {
+install_network_diagnostic_setup() {
   require_non_root
   log_info "Installing network diagnostic packages"
 
@@ -957,13 +957,18 @@ install_net_diag_setup() {
     iperf3 \
     mtr \
     wireshark-qt \
-    screen
+    screen \
+    remmina \
+    freerdp
 
   yay -S --removemake --noconfirm --needed \
     winbox \
     ookla-speedtest-bin \
     netcalc \
     netchecker
+
+  flatpak install --user -y \
+    com.rustdesk.RustDesk
 }
 
 install_game_setup() {
