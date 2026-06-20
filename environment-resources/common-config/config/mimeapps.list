@@ -1,13 +1,20 @@
 [Default Applications]
-x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop
-image/svg+xml=org.xfce.ristretto.desktop
 inode/directory=thunar.desktop
+text/plain=org.xfce.mousepad.desktop
+application/x-shellscript=org.xfce.mousepad.desktop
+application/xml=org.xfce.mousepad.desktop
+image/png=org.xfce.ristretto.desktop
+image/jpeg=org.xfce.ristretto.desktop
+image/svg+xml=org.xfce.ristretto.desktop
+x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop
 
 [Added Associations]
-x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;
-application/x-shellscript=org.xfce.mousepad.desktop;
 text/plain=org.xfce.mousepad.desktop;
+application/x-shellscript=org.xfce.mousepad.desktop;
 application/xml=org.xfce.mousepad.desktop;
-image/png=org.xfce.ristretto.desktop;imv-dir.desktop;imv.desktop;
-image/jpeg=org.xfce.ristretto.desktop;imv-dir.desktop;imv.desktop;
-image/svg+xml=org.xfce.ristretto.desktop;imv-dir.desktop;imv.desktop;
+
+image/png=org.xfce.ristretto.desktop;imv.desktop;imv-dir.desktop;
+image/jpeg=org.xfce.ristretto.desktop;imv.desktop;imv-dir.desktop;
+image/svg+xml=org.xfce.ristretto.desktop;imv.desktop;imv-dir.desktop;
+
+x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;
