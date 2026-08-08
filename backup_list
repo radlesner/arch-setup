@@ -5,6 +5,7 @@
 ~/Pictures/
 ~/Templates/
 ~/Videos/
+~/.config/audacious
 ~/.config/user-dirs.dirs
 ~/.config/filezilla/
 ~/.config/gtk-3.0/bookmarks
@@ -12,6 +13,7 @@
 ~/.config/VSCodium/
 ~/.local/share/remmina/
 ~/.local/share/keyrings/
+~/.local/state/syncthing/
 ~/.mozilla/
 ~/.ssh/
 ~/.thunderbird/
@@ -19,6 +21,8 @@
 ~/.wireguard/
 ~/.gitconfig
 ~/.nanorc
+
+~/.config/whipper
 
 ~/.config/cqrlog/
 ~/.config/WSJT-X.ini
