@@ -4,7 +4,7 @@ set -euo pipefail
 log_file="/tmp/hypr-lid-handler.log"
 scripts_dir="$HOME/.config/hypr/scripts"
 disable_script="$scripts_dir/disable-monitor.sh"
-lockscreen='swaylock -f -i ~/.config/wallpapers/firewatch-01-blur-0x25.jpeg'
+lockscreen='swaylock -f -i ~/.config/wallpapers/network-01.jpg'
 
 log() {
   echo "$(date '+%F %T') $1" >> "$log_file"
