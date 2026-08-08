@@ -36,6 +36,7 @@
         "on-click": "activate",
         "all-outputs": true,
         "warp-on-scroll": false,
+        "tooltip": false,
         "format": "{icon}",
         "format-icons": {
             "1": "",
