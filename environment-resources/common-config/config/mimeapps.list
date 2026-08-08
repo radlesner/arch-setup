@@ -6,15 +6,27 @@ application/xml=org.xfce.mousepad.desktop
 image/png=org.xfce.ristretto.desktop
 image/jpeg=org.xfce.ristretto.desktop
 image/svg+xml=org.xfce.ristretto.desktop
-x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop
+x-scheme-handler/mailto=userapp-Thunderbird-DL5BS3.desktop
+x-scheme-handler/mid=userapp-Thunderbird-DL5BS3.desktop
+message/rfc822=userapp-Thunderbird-DL5BS3.desktop
+x-scheme-handler/net.thunderbird=userapp-Thunderbird-8DQ7R3.desktop
+application/octet-stream=org.xfce.mousepad.desktop
+video/vnd.radgamettools.bink=mpv.desktop
+image/vnd.microsoft.icon=org.xfce.ristretto.desktop
 
 [Added Associations]
 text/plain=org.xfce.mousepad.desktop;
 application/x-shellscript=org.xfce.mousepad.desktop;
 application/xml=org.xfce.mousepad.desktop;
-
 image/png=org.xfce.ristretto.desktop;imv.desktop;imv-dir.desktop;
 image/jpeg=org.xfce.ristretto.desktop;imv.desktop;imv-dir.desktop;
 image/svg+xml=org.xfce.ristretto.desktop;imv.desktop;imv-dir.desktop;
-
-x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;
+x-scheme-handler/mailto=userapp-Thunderbird-DL5BS3.desktop;org.mozilla.Thunderbird.desktop;
+inode/directory=audacious.desktop;
+x-scheme-handler/mid=userapp-Thunderbird-DL5BS3.desktop;
+message/rfc822=userapp-Thunderbird-DL5BS3.desktop;
+x-scheme-handler/net.thunderbird=userapp-Thunderbird-8DQ7R3.desktop;
+application/octet-stream=org.xfce.mousepad.desktop;
+application/vnd.efi.iso=gnome-disk-image-mounter.desktop;xfburn.desktop;gnome-disk-image-writer.desktop;
+video/vnd.radgamettools.bink=mpv.desktop;
+image/vnd.microsoft.icon=org.xfce.ristretto.desktop;

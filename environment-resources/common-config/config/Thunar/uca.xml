@@ -25,6 +25,17 @@
 	<video-files/>
 </action>
 <action>
+	<icon>audio-x-flac</icon>
+	<name>Convert WAV to FLAC</name>
+	<submenu></submenu>
+	<unique-id>1753123456789001-1</unique-id>
+	<command>/home/$USER/.config/Thunar/scripts/wav-to-flac.sh %F</command>
+	<description>Convert selected WAV files to FLAC using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.wav;*.WAV</patterns>
+	<audio-files/>
+</action>
+<action>
 	<icon>application-pdf</icon>
 	<name>Create PDF</name>
 	<submenu></submenu>
@@ -79,5 +90,37 @@
 	<range>1</range>
 	<patterns>*.png;*.PNG;*.webp;*.WEBP;*.bmp;*.BMP;*.tiff;*.TIFF;*.gif;*.GIF;*.svg;*.SVG</patterns>
 	<image-files/>
+</action>
+<action>
+	<icon>edit-copy</icon>
+	<name>Copy name</name>
+	<submenu></submenu>
+	<unique-id>1784310057479495-1</unique-id>
+	<command>echo -n &quot;%n&quot; | sed &quot;s/^&apos;//; s/&apos;$//; s/&apos;\\\\&apos;&apos;/&apos;/g&quot; | wl-copy</command>
+	<description>Copy name files or directories to clipboard</description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>edit-copy</icon>
+	<name>Copy path</name>
+	<submenu></submenu>
+	<unique-id>1784311892288213-1</unique-id>
+	<command>echo -n &quot;%f&quot; |  wl-copy</command>
+	<description>Copy full file or directory path to clipboard</description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
 </action>
 </actions>
