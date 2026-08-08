@@ -142,7 +142,7 @@ hl.bind(
 
 hl.bind(
     main_mod .. " + X",
-    hl.dsp.window.kill()
+    hl.dsp.window.close()
 )
 
 hl.bind(
