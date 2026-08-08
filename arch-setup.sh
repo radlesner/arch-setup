@@ -724,6 +724,8 @@ install_wayland_env() {
     thunar-media-tags-plugin
     gnome-disk-utility
 
+    syncthing
+
     gvfs gvfs-smb gvfs-nfs gvfs-mtp gvfs-gphoto2
     android-udev
 
@@ -856,8 +858,14 @@ EOF
   read -r choice
 
   case "$window_manager" in
-    hyprland) wm_config_dir="hypr" ;;
-    sway) wm_config_dir="sway" ;;
+    hyprland)
+      wm_config_dir="hypr"
+      pretty_wm_name="Hyprland"
+      ;;
+    sway)
+      wm_config_dir="sway"
+      pretty_wm_name="Sway"
+      ;;
     *)
       log_error "Unsupported window_manager: $window_manager"
       return 1
@@ -906,7 +914,7 @@ EOF
     log_info "Wallpapers already exist, skipping download."
   fi
 
-  log_succes "Sway configuration $choice copy completed"
+  log_succes "$pretty_wm_name configuration $choice copy completed"
 }
 
 install_display_stack() {
