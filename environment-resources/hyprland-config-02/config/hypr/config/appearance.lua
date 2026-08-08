@@ -7,6 +7,7 @@ hl.config({
         gaps_in = 5,
         gaps_out = 20,
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         border_size = 2,
 
@@ -17,6 +18,8 @@ hl.config({
         allow_tearing = false,
 
 =======
+=======
+>>>>>>> 0284411 (feat(hyprland config 01 & 02):)
         border_size = 2,
 
         col = {
@@ -32,7 +35,10 @@ hl.config({
 
         resize_on_border = false,
         allow_tearing = false,
+<<<<<<< HEAD
 >>>>>>> 936e6cf (feat(hyprland config 01 & 02):)
+=======
+>>>>>>> 0284411 (feat(hyprland config 01 & 02):)
         layout = "dwindle",
     },
 
