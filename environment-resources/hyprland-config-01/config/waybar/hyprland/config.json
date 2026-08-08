@@ -237,7 +237,7 @@
     "custom/logout": {
         "format": "󰿅",
         "tooltip": false,
-        "on-click": "hyprctl dispatch exit"
+        "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.exit())'"
     },
     "custom/uptime": {
         "format": " {}",
