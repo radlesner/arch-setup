@@ -59,7 +59,7 @@ windowrule = workspace 4, match:class ^(Thunar|thunar)$
 windowrule = workspace 5, match:class ^(codium)$
 windowrule = workspace 6, match:class ^(Cqrlog)$
 windowrule = workspace 7, match:class ^(WSJT-X)$
-windowrule = workspace 10, match:class ^(Spotify|spotify)$
+windowrule = workspace 10, match:class ^(Spotify|spotify|Audacious|audacious)$
 
 # =============================================
 # ================ KEYBINDINGS ================
@@ -84,7 +84,7 @@ bind = $main_mod, 5, exec, codium --enable-features=UseOzonePlatform,WaylandWind
 bind = $main_mod, 6, exec, cqrlog
 bind = $main_mod, 9, exec, discord
 # --- Flatpak bind run version
-bind = $main_mod, 0, exec, com.spotify.Client
+bind = $main_mod, 0, exec, audacious
 # --- AUR bind run version
 #bind = $main_mod, 0, exec, spotify
 
@@ -275,6 +275,14 @@ windowrule = float 1, size 400 100,   center 1,       match:class ^(Thunar|thuna
 windowrule = float 1, size 400 130,   center 1,       match:class ^(Thunar|thunar)$,                match:title ^(Rename.*)$
 windowrule = float 1, size 506 482,   center 1,       match:class ^(Thunar|thunar)$,                match:title ^(.* - Properties)$
 windowrule = float 1, size 616 500,   center 1,       match:class ^(Thunar|thunar)$,                match:title ^(Rename Multiple Files)$
+# AUDACIOUS
+# windowrule = float 1, size 830 530,   move 1068 528,  match:class ^(Audacious|audacious)$,          match:title ^(.*Audacious)$
+windowrule = float 1, size 260 290,   center 1,       match:class ^(Audacious|audacious)$,          match:title ^(Equalizer Presets)$
+windowrule = float 1, size 395 485,   center 1,       match:class ^(Audacious|audacious)$,          match:title ^(Audacious Settings)$
+windowrule = float 1, size 576 288,   center 1,       match:class ^(Audacious|audacious)$,          match:title ^(Log Inspector)$
+windowrule = float 1, size 624 412,   center 1,       match:class ^(Audacious|audacious)$,          match:title ^(Add Folder|Add Files|Open Folder|Open Files|Import Playlist|Export Playlist)$
+windowrule = float 1, size 452 123,   center 1,       match:class ^(Audacious|audacious)$,          match:title ^(Add URL|Open URL)$
+windowrule = float 1, size 576 450,   center 1,       match:class ^(Audacious|audacious)$,          match:title ^(Song Info)$
 # IMV & MPV
 windowrule = float 1, size 1876 986,  move 22 72,     match:class ^(imv|mpv)$
 # RISTRETTO
@@ -291,6 +299,8 @@ windowrule = float 1, size 670 130,   center 1,       match:class ^(firefox)$,  
 # THUNDERBIRD
 windowrule = float 1, size 1500 800,  center 1,       match:class ^(org.mozilla.Thunderbird)$,      match:title ^(Write.*)$
 windowrule = float 1, size 400 100,   center 1,       match:class ^(org.mozilla.Thunderbird)$,      match:title ^(Compact folders)$
+# KEEPASS
+windowrule = float 1, size 682 381, center 1,        match:class ^(org.keepassxc.KeePassXC)$,       match:title ^(Generate Password)$
 # LIBREOFFICE
 windowrule = float 1, size 1000 800,  center 1,       match:class ^(soffice)$,                      match:title ^(Area)$
 # GALCULATOR
