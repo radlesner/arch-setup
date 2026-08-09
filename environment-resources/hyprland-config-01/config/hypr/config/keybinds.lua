@@ -20,18 +20,25 @@ hl.bind(main_mod .. " + SPACE", exec(menu))
 
 hl.bind(
     "switch:on:Lid Switch",
-    exec("~/.config/hypr/scripts/lid-handler.sh close"),
+    hl.dsp.exec_cmd("~/.config/hypr/scripts/lid-handler.sh close"),
     { locked = true }
 )
 
 hl.bind(
     "switch:off:Lid Switch",
-    exec("~/.config/hypr/scripts/lid-handler.sh open"),
+    hl.dsp.exec_cmd("~/.config/hypr/scripts/lid-handler.sh open"),
     { locked = true }
 )
 
-hl.bind(main_mod .. " + L", exec(lockscreen))
-hl.bind(main_mod .. " + M", exec("~/.config/hypr/scripts/disable-monitor.sh"))
+hl.bind(
+    main_mod .. " + L",
+    hl.dsp.exec_cmd(lockscreen)
+)
+
+hl.bind(
+    main_mod .. " + M",
+    hl.dsp.exec_cmd("~/.config/hypr/scripts/disable-monitor.sh")
+)
 
 -- =============================================
 -- ================ APPLICATIONS ===============
