@@ -12,10 +12,10 @@ log() {
 
 # Detect internal monitor
 internal_monitor=$(
-  hyprctl monitors all 2>/dev/null \
-  | grep "Monitor" \
-  | grep -Eo 'eDP-[0-9]+|eDP|LVDS-[0-9]+|LVDS' \
-  | head -n1
+  hyprctl monitors all 2>/dev/null |
+    grep "Monitor" |
+    grep -Eo 'eDP-[0-9]+|eDP|LVDS-[0-9]+|LVDS' |
+  head -n1
 )
 
 case "${1:-}" in
@@ -24,9 +24,9 @@ close)
     log "Lid closed"
 
     external_monitors=$(
-      hyprctl monitors 2>/dev/null \
-      | grep "Monitor" \
-      | grep -v "$internal_monitor" || true
+      hyprctl monitors 2>/dev/null |
+        grep "Monitor" |
+        grep -v "$internal_monitor" || true
     )
 
     # External monitor connected
