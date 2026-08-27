@@ -15,9 +15,9 @@
 <action>
 	<icon>kdenlive-show-video</icon>
 	<name>Merge Video with Audio (ffmpeg)</name>
-	<submenu></submenu>
+	<submenu>Video Tools</submenu>
 	<unique-id>1756920693343957-1</unique-id>
-	<command>/home/$USER/.config/Thunar/scripts/thunar-merge-audio-video.sh %F</command>
+	<command>/home/$USER/.config/Thunar/scripts/video-merge-audio-video.sh %F</command>
 	<description>Replace or add audio track to a video file using ffmpeg</description>
 	<range>2-2</range>
 	<patterns>*.mp4;*.MP4;*.mkv;*.MKV;*.mov;*.MOV;*.avi;*.AVI;*.mp3;*.MP3;*.aac;*.AAC;*.wav;*.WAV;*.flac;*.FLAC</patterns>
@@ -25,14 +25,223 @@
 	<video-files/>
 </action>
 <action>
+	<icon>audio-x-generic</icon>
+	<name>Extract Audio from Video (ffmpeg)</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1756920693343957-2</unique-id>
+	<command>/home/$USER/.config/Thunar/scripts/video-extract-audio.sh %F</command>
+	<description>Extract audio track from a video file without re-encoding</description>
+	<range>1</range>
+	<patterns>*.mp4;*.MP4;*.mkv;*.MKV;*.mov;*.MOV;*.avi;*.AVI;*.webm;*.WEBM;*.flv;*.FLV;*.wmv;*.WMV;*.mpeg;*.MPEG;*.mpg;*.MPG</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>dialog-information</icon>
+	<name>Video Information</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1786307968647809-4</unique-id>
+	<command>~/.config/Thunar/scripts/video-info.sh %F</command>
+	<description>Generate detailed video, audio and subtitle information using FFprobe</description>
+	<range>*</range>
+	<patterns>*.mp4;*.MP4;*.mkv;*.MKV;*.mov;*.MOV;*.avi;*.AVI;*.webm;*.WEBM;*.flv;*.FLV;*.wmv;*.WMV;*.mpeg;*.MPEG;*.mpg;*.MPG</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>video-x-generic</icon>
+	<name>Remux Video to MKV</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1786307968647809-5</unique-id>
+	<command>~/.config/Thunar/scripts/video-remux.sh mkv %F</command>
+	<description>Remux video to Matroska without re-encoding</description>
+	<range>*</range>
+	<patterns>*.mp4;*.MP4;*.mov;*.MOV;*.avi;*.AVI;*.webm;*.WEBM;*.flv;*.FLV;*.wmv;*.WMV;*.mpeg;*.MPEG;*.mpg;*.MPG</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>video-x-generic</icon>
+	<name>Remux Video to MP4</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1786307968647809-6</unique-id>
+	<command>~/.config/Thunar/scripts/video-remux.sh mp4 %F</command>
+	<description>Remux video to MP4 without re-encoding</description>
+	<range>*</range>
+	<patterns>*.mkv;*.MKV;*.mov;*.MOV;*.avi;*.AVI;*.webm;*.WEBM;*.flv;*.FLV;*.wmv;*.WMV;*.mpeg;*.MPEG;*.mpg;*.MPG</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>video-x-generic</icon>
+	<name>Remux Video to WebM</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1786307968647809-7</unique-id>
+	<command>~/.config/Thunar/scripts/video-remux.sh webm %F</command>
+	<description>Remux video to WebM without re-encoding</description>
+	<range>*</range>
+	<patterns>*.mkv;*.MKV;*.mp4;*.MP4;*.mov;*.MOV;*.avi;*.AVI</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>text-x-generic</icon>
+	<name>Extract Subtitles</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1786307968647809-8</unique-id>
+	<command>~/.config/Thunar/scripts/video-extract-subtitles.sh %F</command>
+	<description>Extract all subtitle streams from selected video files without re-encoding</description>
+	<range>*</range>
+	<patterns>*.mkv;*.MKV;*.mp4;*.MP4;*.mov;*.MOV;*.webm;*.WEBM;*.avi;*.AVI;*.ts;*.TS;*.m2ts;*.M2TS</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>image-x-generic</icon>
+	<name>Extract Frame</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1786307968647809-9</unique-id>
+	<command>~/.config/Thunar/scripts/video-extract-frame.sh %F</command>
+	<description>Extract a frame from the selected video at 00:00:05</description>
+	<range>*</range>
+	<patterns>*.mp4;*.MP4;*.mkv;*.MKV;*.mov;*.MOV;*.avi;*.AVI;*.webm;*.WEBM;*.flv;*.FLV;*.wmv;*.WMV;*.mpeg;*.MPEG;*.mpg;*.MPG</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>image-x-generic</icon>
+	<name>Create Contact Sheet</name>
+	<submenu>Video Tools</submenu>
+	<unique-id>1786307968647809-10</unique-id>
+	<command>~/.config/Thunar/scripts/video-create-contact-sheet.sh %F</command>
+	<description>Create a contact sheet from selected video files</description>
+	<range>*</range>
+	<patterns>*.mp4;*.MP4;*.mkv;*.MKV;*.mov;*.MOV;*.avi;*.AVI;*.webm;*.WEBM;*.flv;*.FLV;*.wmv;*.WMV;*.mpeg;*.MPEG;*.mpg;*.MPG</patterns>
+	<video-files/>
+</action>
+<action>
+	<icon>dialog-information</icon>
+	<name>Audio Information</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1786307968647809-3</unique-id>
+	<command>~/.config/Thunar/scripts/audio-info.sh %F</command>
+	<description>Generate audio information report using FFprobe</description>
+	<range>*</range>
+	<patterns>*.mp3;*.MP3;*.flac;*.FLAC;*.wav;*.WAV;*.m4a;*.M4A;*.ac3;*.AC3</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>dialog-warning</icon>
+	<name>Check Clipping</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1786307968647809-2</unique-id>
+	<command>~/.config/Thunar/scripts/audio-check-clipping.sh %F</command>
+	<description>Check selected audio files for clipping</description>
+	<range>*</range>
+	<patterns>*.mp3;*.MP3;*.flac;*.FLAC;*.wav;*.WAV;*.m4a;*.M4A;*.ac3;*.AC3</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>image-x-generic</icon>
+	<name>Generate Spectrum</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1786307968647809-1</unique-id>
+	<command>~/.config/Thunar/scripts/audio-generate-spectrum.sh %F</command>
+	<description>Generate logarithmic spectrum image</description>
+	<range>*</range>
+	<patterns>*.mp3;*.MP3;*.flac;*.FLAC;*.wav;*.WAV;*.m4a;*.M4A;*.ac3;*.AC3</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>image-x-generic</icon>
+	<name>Extract Cover</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1787434567890123-1</unique-id>
+	<command>~/.config/Thunar/scripts/audio-extract-cover.sh %F</command>
+	<description>Extract embedded album cover from selected audio files</description>
+	<range>*</range>
+	<patterns>*.flac;*.FLAC;*.mp3;*.MP3;*.m4a;*.M4A;*.ogg;*.OGG;*.opus;*.OPUS</patterns>
+	<audio-files/>
+</action>
+<action>
 	<icon>audio-x-flac</icon>
-	<name>Convert WAV to FLAC</name>
-	<submenu></submenu>
+	<name>Convert WAV to FLAC (16-bit)</name>
+	<submenu>Audio Tools</submenu>
 	<unique-id>1753123456789001-1</unique-id>
-	<command>/home/$USER/.config/Thunar/scripts/wav-to-flac.sh %F</command>
-	<description>Convert selected WAV files to FLAC using FFmpeg</description>
+	<command>~/.config/Thunar/scripts/audio-convert.sh wav-flac-16 %F</command>
+	<description>Convert selected WAV files to 16-bit FLAC using FFmpeg</description>
 	<range>*</range>
 	<patterns>*.wav;*.WAV</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>audio-x-flac</icon>
+	<name>Convert WAV to FLAC (24-bit)</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1753123456789001-6</unique-id>
+	<command>~/.config/Thunar/scripts/audio-convert.sh wav-flac-24 %F</command>
+	<description>Convert selected WAV files to 24-bit FLAC using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.wav;*.WAV</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>audio-x-wav</icon>
+	<name>Convert FLAC to WAV (16-bit)</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1753123456789001-7</unique-id>
+	<command>~/.config/Thunar/scripts/audio-convert.sh flac-wav-16 %F</command>
+	<description>Convert selected FLAC files to 16-bit WAV using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.flac;*.FLAC</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>audio-x-wav</icon>
+	<name>Convert FLAC to WAV (24-bit)</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1753123456789001-2</unique-id>
+	<command>~/.config/Thunar/scripts/audio-convert.sh flac-wav-24 %F</command>
+	<description>Convert selected FLAC files to 24-bit WAV using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.flac;*.FLAC</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>audio-mpeg</icon>
+	<name>Convert WAV to MP3</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1753123456789001-3</unique-id>
+	<command>~/.config/Thunar/scripts/audio-convert.sh wav-mp3 %F</command>
+	<description>Convert selected WAV files to MP3 using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.wav;*.WAV</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>audio-mpeg</icon>
+	<name>Convert FLAC to MP3</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1753123456789001-4</unique-id>
+	<command>~/.config/Thunar/scripts/audio-convert.sh flac-mp3 %F</command>
+	<description>Convert selected FLAC files to MP3 using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.flac;*.FLAC</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>audio-x-wav</icon>
+	<name>Convert MP3 to WAV (16-bit)</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1753123456789001-8</unique-id>
+	<command>~/.config/Thunar/scripts/audio-convert.sh mp3-wav-16 %F</command>
+	<description>Convert selected MP3 files to 16-bit WAV using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.mp3;*.MP3</patterns>
+	<audio-files/>
+</action>
+<action>
+	<icon>audio-x-wav</icon>
+	<name>Convert MP3 to WAV (24-bit)</name>
+	<submenu>Audio Tools</submenu>
+	<unique-id>1753123456789001-5</unique-id>
+	<command>~/.config/Thunar/scripts/audio-convert.sh mp3-wav-24 %F</command>
+	<description>Convert selected MP3 files to 24-bit WAV using FFmpeg</description>
+	<range>*</range>
+	<patterns>*.mp3;*.MP3</patterns>
 	<audio-files/>
 </action>
 <action>
@@ -48,9 +257,240 @@
 	<other-files/>
 </action>
 <action>
+	<icon>image-jpeg</icon>
+	<name>Convert WebP → JPG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-3</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh webp-jpg %F</command>
+	<description>Convert WebP image to JPG</description>
+	<range>*</range>
+	<patterns>*.webp;*.WEBP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-png</icon>
+	<name>Convert WebP → PNG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-4</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh webp-png %F</command>
+	<description>Convert WebP image to PNG</description>
+	<range>*</range>
+	<patterns>*.webp;*.WEBP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-tiff</icon>
+	<name>Convert WebP → TIFF</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-5</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh webp-tiff %F</command>
+	<description>Convert WebP image to TIFF</description>
+	<range>*</range>
+	<patterns>*.webp;*.WEBP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-webp</icon>
+	<name>Convert JPG → WebP</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-6</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh jpg-webp %F</command>
+	<description>Convert JPG image to WebP</description>
+	<range>*</range>
+	<patterns>*.jpg;*.JPG;*.jpeg;*.JPEG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-png</icon>
+	<name>Convert JPG → PNG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-7</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh jpg-png %F</command>
+	<description>Convert JPG image to PNG</description>
+	<range>*</range>
+	<patterns>*.jpg;*.JPG;*.jpeg;*.JPEG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-tiff</icon>
+	<name>Convert JPG → TIFF</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-8</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh jpg-tiff %F</command>
+	<description>Convert JPG image to TIFF</description>
+	<range>*</range>
+	<patterns>*.jpg;*.JPG;*.jpeg;*.JPEG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-jpeg</icon>
+	<name>Convert PNG → JPG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-9</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh png-jpg %F</command>
+	<description>Convert PNG image to JPG</description>
+	<range>*</range>
+	<patterns>*.png;*.PNG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-webp</icon>
+	<name>Convert PNG → WebP</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-10</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh png-webp %F</command>
+	<description>Convert PNG image to WebP</description>
+	<range>*</range>
+	<patterns>*.png;*.PNG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-tiff</icon>
+	<name>Convert PNG → TIFF</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-11</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh png-tiff %F</command>
+	<description>Convert PNG image to TIFF</description>
+	<range>*</range>
+	<patterns>*.png;*.PNG</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-jpeg</icon>
+	<name>Convert TIFF → JPG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-12</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh tiff-jpg %F</command>
+	<description>Convert TIFF image to JPG</description>
+	<range>*</range>
+	<patterns>*.tif;*.TIF;*.tiff;*.TIFF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-png</icon>
+	<name>Convert TIFF → PNG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-13</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh tiff-png %F</command>
+	<description>Convert TIFF image to PNG</description>
+	<range>*</range>
+	<patterns>*.tif;*.TIF;*.tiff;*.TIFF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-webp</icon>
+	<name>Convert TIFF → WebP</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-14</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh tiff-webp %F</command>
+	<description>Convert TIFF image to WebP</description>
+	<range>*</range>
+	<patterns>*.tif;*.TIF;*.tiff;*.TIFF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-jpeg</icon>
+	<name>Convert BMP → JPG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-15</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh bmp-jpg %F</command>
+	<description>Convert BMP image to JPG</description>
+	<range>*</range>
+	<patterns>*.bmp;*.BMP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-png</icon>
+	<name>Convert BMP → PNG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-16</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh bmp-png %F</command>
+	<description>Convert BMP image to PNG</description>
+	<range>*</range>
+	<patterns>*.bmp;*.BMP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-webp</icon>
+	<name>Convert BMP → WebP</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-17</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh bmp-webp %F</command>
+	<description>Convert BMP image to WebP</description>
+	<range>*</range>
+	<patterns>*.bmp;*.BMP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-jpeg</icon>
+	<name>Convert AVIF → JPG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-18</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh avif-jpg %F</command>
+	<description>Convert AVIF image to JPG</description>
+	<range>*</range>
+	<patterns>*.avif;*.AVIF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-png</icon>
+	<name>Convert AVIF → PNG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-19</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh avif-png %F</command>
+	<description>Convert AVIF image to PNG</description>
+	<range>*</range>
+	<patterns>*.avif;*.AVIF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-webp</icon>
+	<name>Convert AVIF → WebP</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-20</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh avif-webp %F</command>
+	<description>Convert AVIF image to WebP</description>
+	<range>*</range>
+	<patterns>*.avif;*.AVIF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-jpeg</icon>
+	<name>Convert GIF → JPG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-21</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh gif-jpg %F</command>
+	<description>Convert first GIF frame to JPG</description>
+	<range>*</range>
+	<patterns>*.gif;*.GIF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-png</icon>
+	<name>Convert GIF → PNG</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-22</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh gif-png %F</command>
+	<description>Convert first GIF frame to PNG</description>
+	<range>*</range>
+	<patterns>*.gif;*.GIF</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>image-webp</icon>
+	<name>Convert GIF → WebP</name>
+	<submenu>Image Tools</submenu>
+	<unique-id>1786307968647809-23</unique-id>
+	<command>~/.config/Thunar/scripts/image-convert.sh gif-webp %F</command>
+	<description>Convert first GIF frame to WebP</description>
+	<range>*</range>
+	<patterns>*.gif;*.GIF</patterns>
+	<image-files/>
+</action>
+<action>
 	<icon>object-rotate-left</icon>
 	<name>Image rotate left</name>
-	<submenu></submenu>
+	<submenu>Image Tools</submenu>
 	<unique-id>1763900494629151-1</unique-id>
 	<command>jpegtran -rotate 270 -outfile %f %f</command>
 	<description>Rotate image left</description>
@@ -61,7 +501,7 @@
 <action>
 	<icon>object-rotate-right</icon>
 	<name>Image rotate right</name>
-	<submenu></submenu>
+	<submenu>Image Tools</submenu>
 	<unique-id>1763900817157536-2</unique-id>
 	<command>jpegtran -rotate 90 -outfile %f %f</command>
 	<description>Rotate image right</description>
@@ -72,7 +512,7 @@
 <action>
 	<icon>object-rotate-left</icon>
 	<name>Image rotate left (magick)</name>
-	<submenu></submenu>
+	<submenu>Image Tools</submenu>
 	<unique-id>1763901490000000-3</unique-id>
 	<command>magick %f -rotate -90 %f</command>
 	<description>Rotate image left</description>
@@ -83,7 +523,7 @@
 <action>
 	<icon>object-rotate-right</icon>
 	<name>Image rotate right (magick)</name>
-	<submenu></submenu>
+	<submenu>Image Tools</submenu>
 	<unique-id>1763916760494185-1</unique-id>
 	<command>magick %f -rotate 90 %f</command>
 	<description>Rotate image right</description>

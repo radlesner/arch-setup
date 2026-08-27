@@ -1,6 +1,6 @@
 /* ------------------------------------------------------- MAIN WAYBAR */
 * {
-    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: "FreeSans";
     border-radius: 14px;
 }
 
@@ -199,9 +199,14 @@ window#waybar.chromium {
 }
 
 #custom-media {
-    background-color: #00a2d3;
+    background-color: rgb(0, 162, 211);
     color: #ffffff;
     min-width: 50px;
+}
+
+#custom-media:hover {
+    background-color: rgba(0, 162, 211, 0.5);
+    color: #ffffff;
 }
 
 #custom-media.custom-spotify:hover {

@@ -755,6 +755,21 @@ install_wayland_env() {
 
         flatpak
         jq
+
+        clang
+
+        ttf-liberation
+        ttf-dejavu
+        noto-fonts
+        noto-fonts-cjk
+        noto-fonts-emoji
+        noto-fonts-extra
+        ttf-carlito
+        ttf-caladea
+        ttf-roboto
+        ttf-opensans
+        ttf-ubuntu-font-family
+        ttf-lato
     )
 
 case "$window_manager" in

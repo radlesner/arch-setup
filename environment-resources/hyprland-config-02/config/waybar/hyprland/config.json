@@ -46,7 +46,7 @@
             "5": "",
             "6": "",
             "9": "󰙯",
-            "10": "",
+            "10": "󰝚",
             "urgent": "",
             "focused": "",
             "default": ""
@@ -168,8 +168,8 @@
         "max-length": 40,
         "format-icons": {
             "spotify": "",
-            "firefox": "",
-            "default": "🎜"
+            "firefox": "",
+            "default": "󰝚"
         },
         "escape": true,
         "on-click": "playerctl play-pause",

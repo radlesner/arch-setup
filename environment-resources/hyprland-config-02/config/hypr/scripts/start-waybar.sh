@@ -12,6 +12,6 @@ echo "Waybar start: $(date)" >> "$LOG_FILE"
 echo "==============================" >> "$LOG_FILE"
 
 waybar \
-  --config ~/.config/waybar/hyprland/config.json \
-  --style ~/.config/waybar/hyprland/style.css \
-  >> "$LOG_FILE" 2>&1
+    --config ~/.config/waybar/hyprland/config.json \
+    --style ~/.config/waybar/hyprland/style.css \
+    >> "$LOG_FILE" 2>&1
