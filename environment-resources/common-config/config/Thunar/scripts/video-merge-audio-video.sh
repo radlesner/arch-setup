@@ -5,6 +5,12 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
 source "$SCRIPT_DIR/lib/notify.sh"
 
+notify_progress \
+    "video-x-generic" \
+    "merge-media" \
+    "Merging media files" \
+    "Detecting selected video and audio files..."
+
 video=""
 audio=""
 
