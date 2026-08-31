@@ -900,6 +900,10 @@ EOF
         *) log_error "Invalid choice."; return ;;
     esac
 
+    gsettings set org.gtk.Settings.FileChooser sort-column name
+    gsettings set org.gtk.Settings.FileChooser sort-order ascending
+    gsettings set org.gtk.Settings.FileChooser sort-directories-first true
+
     common_config_folder="common-config"
 
     log_qa "Do you want to copy $window_manager config to .config? [Y/n]:"
