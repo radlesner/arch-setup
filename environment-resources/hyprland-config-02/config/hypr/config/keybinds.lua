@@ -160,6 +160,7 @@ hl.bind(
 hl.bind(
     main_mod .. " + F",
     hl.dsp.window.fullscreen({
+        mode = "maximized",
         action = "toggle",
     })
 )
